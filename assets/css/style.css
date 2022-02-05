@@ -1,0 +1,136 @@
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: #36393f;
+}
+
+body * {
+  outline: black;
+}
+
+.no-select {
+  user-select: none;
+}
+
+#topTitle {
+  width: 100%;
+  background-color: #36393f;
+  text-align: center;
+}
+
+#titleMain {
+  color: #5865f2;
+  font-size: 5em;
+  line-height: 75px;
+}
+
+.coffeeLink,
+.coffeeLink:visited,
+.coffeeLink:active {
+  font-size: 0.8em;
+  text-decoration: none;
+}
+
+.top-links {
+  margin-top: 0;
+}
+
+a,
+a:active,
+a:visited,
+a:hover {
+  text-decoration: underline;
+  color: #5865f2;
+}
+
+.container-top1 {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 70vw;
+}
+
+#exampleImage {
+  width: 50%;
+  height: auto;
+}
+
+.section-title {
+  color: #99aab5;
+  text-decoration: underline;
+  margin: 0;
+}
+
+#section {
+  display: flex;
+  flex-flow: column;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 70vw;
+}
+
+.text {
+  font-size: 25px;
+  color: #99aab5;
+}
+
+.textSmall {
+  font-size: 20px;
+  color: #99aab5;
+}
+
+.button {
+  position: relative;
+  bottom: 3px;
+  margin-left: 5px;
+  color: white;
+  border-radius: 3px;
+  width: auto;
+  height: 30px;
+  font-family: "Roboto", sans-serif;
+  border: 0px;
+  outline: 0px;
+  background-color: #5865f2;
+  cursor: pointer;
+}
+
+.buttonBig {
+  height: 70px;
+  font-size: 3em;
+  border-radius: 10px;
+  padding: 0 20px;
+}
+
+.button:hover {
+  background-color: #4752c4;
+}
+
+.button:active {
+  background-color: #3c45a5;
+}
+
+::-webkit-scrollbar {
+  width: auto;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #2e3338;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #202225;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-corner {
+  background: #f04747;
+  border: 0px;
+  border-radius: 50%;
+}
+
+::-webkit-resizer {
+  border-radius: 50%;
+  background-color: #f04747;
+}
