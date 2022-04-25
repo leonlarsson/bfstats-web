@@ -52,7 +52,7 @@ a:hover {
 }
 
 #exampleImage {
-  width: 50%;
+  max-width: 100%;
   height: auto;
 }
 
@@ -133,4 +133,11 @@ a:hover {
 ::-webkit-resizer {
   border-radius: 50%;
   background-color: #f04747;
+}
+
+@media only screen and (max-width: 1140px) {
+  #titleMain {
+    font-size: 6vw;
+    line-height: 6vw;
+  }
 }
