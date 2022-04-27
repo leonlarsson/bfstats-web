@@ -52,8 +52,13 @@ a:hover {
 }
 
 #exampleImage {
-  max-width: 100%;
+  max-width: 50%;
   height: auto;
+}
+
+#imageDisplay {
+  display: flex;
+  flex-direction: row;
 }
 
 .section-title {
