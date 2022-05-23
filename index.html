@@ -57,6 +57,7 @@
                     Discord!</strong></u>
             <br>
         </p>
+        <div class="text" id="statsText">Loading...</div>
         <div id="imageDisplay">
             <img id="exampleImage" src="./assets/images/example6_bf2042.png" alt="An image of the bot's output.">
             <img id="exampleImage" src="./assets/images/example.png" alt="An image of the bot's output.">
@@ -120,6 +121,17 @@
         </span>
     </div>
     <br><br><br>
+
+    <script>
+
+        fetch("https://bfstats-api.leonlarsson.com")
+            .then(async response => {
+                const json = await response.json();
+                document.getElementById("statsText").textContent = `In ${json.totalGuilds.toLocaleString("en-US")} servers, with ${json.totalMembers.toLocaleString("en-US")} members, and ${json.totalStatsSent.total.toLocaleString("en-US")} stats sent.`;
+            }).catch(error => {
+                document.getElementById("statsText").remove();
+            });
+    </script>
 </body>
 
 </html>
