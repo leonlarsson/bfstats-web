@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 
 <head>
     <!-- Primary Meta Tags -->
@@ -29,96 +29,115 @@
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/7ebec69507.js" crossorigin="anonymous"></script>
 </head>
 
-<style>
-    body {
-        text-align: center;
-    }
-
-    .title {
-        margin-bottom: 5px;
-    }
-
-    .text {
-        padding: 0 10%;
-    }
-</style>
-
 <body>
-    <div id="topTitle">
-        <div id="titleMain">
-            <a style="text-decoration: none;" href="https://www.ko-fi.com/mozzy" target="_blank"
-                title="A link to ko-fi.com" class="coffeeLink">☕</a>
-            <a style="text-decoration: underline;" href="/">Battlefield Stats Discord Bot</a>
-            <br>
-            <span style="font-size: .7em;">Privacy Policy</span>
+
+    <nav class="navbar navbar-expand-md sticky-top bg-light mb-3">
+        <div class="container-fluid">
+            <a class="navbar-brand mb-0 h1" href="/">
+                <img src="../assets/images/avatar.png" width="30px" height="30px" class="d-inline-block align-text-top">
+                Battlefield Stats
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav"
+                aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="nav">
+                <div class="navbar-nav">
+                    <a href="/" class="nav-link"><i class="fa-solid fa-house"></i> Home</a>
+                    <a href="/privacy" class="nav-link active"><i class="fa-solid fa-lock"></i> Privacy Policy</a>
+                    <a href="/tos" class="nav-link"><i class="fa-solid fa-book"></i> Terms of Service</a>
+                    <a href="https://bfstats-api.leonlarsson.com" target="_blank" class="nav-link">
+                        <i class="fa-solid fa-code"></i> API</a>
+                    <a href="https://top.gg/bot/842768680252997662" target="_blank" class="nav-link">
+                        <i class="fa-solid fa-link"></i> Top.gg</a>
+                    <a href="https://discord.com/oauth2/authorize?client_id=842768680252997662&scope=bot%20applications.commands"
+                        target="_blank" class="nav-link link-primary fw-bold">
+                        <i class="fa-solid fa-right-to-bracket"></i> Invite</a>
+                </div>
+            </div>
         </div>
-        <a href="../tos">Read the Terms of Service</a>
-    </div>
+    </nav>
 
-    <hr>
+    <div class="container-md">
 
-    <span class="text">(Updated March 6, 2022)</span>
+        <h1 class=" text-decoration-underline">Privacy Policy</h1>
+        <h5>(Updated March 6, 2022)</h5>
 
-    <div class="text" id="data">
-        <h2 class="title">User Data handling and usage:</h2>
-        For each direct interaction with the bot, I collect and store the name and ID of the user and Discord server.
-        The bot's output (the stats) is also stored.
-        <br><br>
-        The way I use this data is for statistical, analytical, and quality purposes, as well as monitoring for any bad
-        content that breaks the <a href="../tos">Terms of Service</a>, such as harmful usernames or server names.
-        I store basic user and server data for the purposes of being able to block users and servers from using the bot
-        if they are found to be abusing the bot. I store the bot output (stats, image or text format) to continously
-        improve the quality of the bot and to correct potential issues. No identifying information is ever shared with
-        any parties.
-    </div>
+        <div class="pb-3">
+            <h2>User Data handling and usage:</h2>
+            For each direct interaction with the bot, I collect and store the name and ID of the user and Discord
+            server. The bot's
+            output (the stats) is also stored.
+            <br><br>
+            The way I use this data is for statistical, analytical, and quality purposes, as well as monitoring for any
+            bad
+            content that breaks the <a class="link-primary fw-bold" href="../tos">Terms of Service</a>, such as harmful
+            usernames or server names.
+            I store basic user and server data for the purposes of being able to block users and servers from using the
+            bot
+            if they are found to be abusing the bot. I store the bot output (stats, image or text format) to continously
+            improve the quality of the bot and to correct potential issues. No identifying information is ever shared
+            with
+            any parties.
+        </div>
 
-    <div class="text" id="locale">
-        <h2 class="title">User Locale, and how I use it:</h2>
-        This bot has access to the language your Discord client currently is set to. It uses this language to
-        <strong>PUBLICLY</strong> display stats and messages in your language*. If you don't want the bot to use your
-        client language, you must specify a language yourself with the "language" option in the command.
-    </div>
+        <div class="pb-3">
+            <h2>User Locale, and how I use it:</h2>
+            This bot has access to the language your Discord client currently is set to. It uses this language to
+            <strong>PUBLICLY</strong> display stats and messages in your language*. If you don't want the bot to use
+            your
+            client language, you must specify a language yourself with the "language" option in the command.
+        </div>
 
-    <div class="text" id="deleting">
-
-        <h2 class="title">Deleting your stats image**:</h2>
-        After every stats output, you have 15 seconds to delete it by clicking the red "Delete" button.
-        <br>
-        Since these images are ONLY hosted on Discord, this will remove the image completely***.
-        <br>
-        <img src="../assets/images/StatsDeleteButton.png">
-    </div>
-
-    <div class="text" id="api">
-        <h2 class="title">API Information:</h2>
-        This bot gets data from <a target="_blank" href="https://battlefieldtracker.com/">Battlefield Tracker</a> and <a
-            target="_blank" href="https://gametools.network/">Community Network</a> and does not alter the data
-        received, and is not responsible for it.
-        <br><br>
-        If you do not want your stats to be visible, you can disable this. Info in the links below:
-        <br>
-        <a target="_blank"
-            href="https://help.ea.com/en/help/battlefield/battlefield-2042/battlefield-2042-stats-and-privacy/">Battlefield
-            2042</a>
-        <br>
-        <a target="_blank" href="https://help.ea.com/en/help/battlefield/battlefield-stats-display/">Battlefield V/1</a>
-        <br><br>
-        <i>For Battlelog games, you can probably disable this on Battlelog or inside the respective games.</i>
-    </div>
-
-    <hr>
-
-    <div class="text" id="disclaimers">
-        <h5>
-            <i>*Only displays your language if it's one of the supported ones.</i>
+        <div class="pb-3">
+            <h2>Deleting your stats image**:</h2>
+            After every stats output, you have 15 seconds to delete it by clicking the red "Delete" button.
             <br>
-            <i>**Not available in threads where the bot can't see the main channel.</i>
+            Since these images are ONLY hosted on Discord, this will remove the image completely***.
             <br>
-            <i>***Unless the image was saved elsewhere.</i>
-        </h5>
+            <img src="../assets/images/StatsDeleteButton.png">
+        </div>
+
+        <div class="pb-3">
+            <h2>API Information:</h2>
+            This bot gets data from <a class="link-primary fw-bold" target="_blank"
+                href="https://battlefieldtracker.com/">Battlefield Tracker</a>
+            and <a class="link-primary fw-bold" target="_blank" href="https://gametools.network/">Community Network</a>
+            and does not alter the data
+            received, and is not responsible for it.
+            <br><br>
+            If you do not want your stats to be visible, you can disable this. Info in the links below:
+            <br>
+            <a class="link-primary fw-bold" target="_blank"
+                href="https://help.ea.com/en/help/battlefield/battlefield-2042/battlefield-2042-stats-and-privacy/">Battlefield
+                2042</a>
+            <br>
+            <a class="link-primary fw-bold" target="_blank"
+                href="https://help.ea.com/en/help/battlefield/battlefield-stats-display/">Battlefield
+                V/1</a>
+            <br><br>
+            <i>For Battlelog games, you can probably disable this on Battlelog or inside the respective games.</i>
+        </div>
+
+        <div class="pb-3">
+            <h2>Disclaimers:</h2>
+            <i>
+                *Only displays your language if it's one of the supported ones.
+                <br>
+                **Not available in threads where the bot can't see the main channel.
+                <br>
+                ***Unless the image was saved elsewhere.
+            </i>
+        </div>
     </div>
 </body>
 
