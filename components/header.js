@@ -8,7 +8,7 @@ class Header extends HTMLElement {
         const privacyActive = this.getAttribute("page") === "privacy" ? "active" : "";
         const tosActive = this.getAttribute("page") === "tos" ? "active" : "";
         this.innerHTML = `
-        <nav class="navbar navbar-expand-md sticky-top bg-light mb-3">
+        <nav class="navbar navbar-expand-lg sticky-top bg-light mb-3">
         <div class="container-fluid">
             <a class="navbar-brand mb-0 h1" href="/">
                 <img src="../assets/images/avatar.png" width="30px" height="30px" class="d-inline-block align-text-top">
