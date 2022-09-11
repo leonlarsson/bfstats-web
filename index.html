@@ -210,7 +210,7 @@
         fetch("https://bfstats-api.leonlarsson.com")
             .then(async response => {
                 const json = await response.json();
-                document.getElementById("infoText").textContent = `In ${json.totalGuilds.toLocaleString("en-US")} servers, with ${json.totalMembers.toLocaleString("en-US")} members, and ${json.totalStatsSent.total.toLocaleString("en-US")} stats sent.`;
+                document.getElementById("infoText").innerHTML = `In <b>${json.totalGuilds.toLocaleString("en-US")}</b> servers, with <b>${json.totalMembers.toLocaleString("en-US")}</b> members, and <b>${json.totalStatsSent.total.toLocaleString("en-US")}</b> stats sent.`;
             }).catch(error => {
                 document.getElementById("infoText").remove();
             });
