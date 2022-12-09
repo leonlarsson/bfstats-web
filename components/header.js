@@ -14,7 +14,7 @@ class Header extends HTMLElement {
         <nav class="navbar navbar-expand-lg sticky-top bg-light mb-3">
         <div class="container-fluid">
             <a class="navbar-brand mb-0 h1" href="/">
-                <img src="../assets/images/avatar.png" width="30px" height="30px" class="d-inline-block align-text-top">
+                <img src="/assets/images/avatar.png" width="30px" height="30px" class="d-inline-block align-text-top">
                 Battlefield Stats
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav"
@@ -38,8 +38,8 @@ class Header extends HTMLElement {
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle ${devPanelActive}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-cog"></i> Dev</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item ${devPanelActiveUser}" href="/user">Fetch User</a></li>
-                            <li><a class="dropdown-item ${devPanelActiveOutput}" href="/output">Fetch Output</a></li>
+                            <li><a class="dropdown-item ${devPanelActiveUser}" href="/dev/user">Fetch User</a></li>
+                            <li><a class="dropdown-item ${devPanelActiveOutput}" href="/dev/output">Fetch Output</a></li>
                         </ul>
                     </li>
 
