@@ -47,7 +47,7 @@ export default () => {
     }
 
     return (
-        <div className="container-md">
+        <div className="container">
             <h1>Fetch User</h1>
             <h5>Leave User ID blank to fetch a random user.</h5>
 

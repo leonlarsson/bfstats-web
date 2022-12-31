@@ -49,7 +49,7 @@ export default () => {
     }
 
     return (
-        <div className="container-md">
+        <div className="container">
             <h1>Fetch Output</h1>
             <h5>Leave User ID blank to fetch a random output from any user. Fill it in to get a random output from from that user.</h5>
 

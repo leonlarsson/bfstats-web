@@ -5,7 +5,7 @@ import image_statsDeleteButton from "../assets/images/StatsDeleteButton.png";
 
 export default () => {
   return (
-    <div className="container-md">
+    <div className="container">
 
       <h1 className=" text-decoration-underline">Privacy Policy</h1>
       <h5>(Updated November 18, 2022)</h5>

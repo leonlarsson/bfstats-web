@@ -13,7 +13,7 @@ export default () => {
   }, []);
 
   return (
-    <div className="container-md">
+    <div className="container">
 
       <h3 className="text-center" id="infoText">{data}</h3>
 

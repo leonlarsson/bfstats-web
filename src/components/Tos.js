@@ -2,7 +2,7 @@
 
 export default () => {
   return (
-    <div className="container-md">
+    <div className="container">
 
       <h1 className=" text-decoration-underline">Terms of Service</h1>
       <h5>(Updated March 6, 2022)</h5>
