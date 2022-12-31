@@ -29,10 +29,10 @@ export default () => {
                                 <a className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="fa-solid fa-cog"></i> Dev</a>
                                 <ul className="dropdown-menu">
                                     <li>
-                                        <a href="/dev/user" target="_blank" className="dropdown-item">Fetch User <i className="fa-solid fa-arrow-up-right-from-square"></i></a>
+                                        <NavLink to="/dev-user" className="dropdown-item">Fetch User</NavLink>
                                     </li>
                                     <li>
-                                        <a href="/dev/output" target="_blank" className="dropdown-item">Fetch Output <i className="fa-solid fa-arrow-up-right-from-square"></i></a>
+                                        <NavLink to="/dev-output" className="dropdown-item">Fetch Output</NavLink>
                                     </li>
                                 </ul>
                             </li>
