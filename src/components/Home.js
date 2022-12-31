@@ -1,15 +1,5 @@
 import { useEffect, useState, Fragment } from "react";
 import { Link } from "react-router-dom";
-import image_bf2042 from "../assets/images/example_bf2042.png";
-import image_bfv from "../assets/images/example_bfv.png";
-import image_bf1 from "../assets/images/example_bf1.png";
-import image_bfh from "../assets/images/example_bfh.png";
-import image_bf4 from "../assets/images/example_bf4.png";
-import image_bf3 from "../assets/images/example_bf3.png";
-import image_bfbc2 from "../assets/images/example_bfbc2.png";
-import image_bf2 from "../assets/images/example_bf2.png";
-import image_bf2042w from "../assets/images/example_bf2042w.png";
-import image_bf1v from "../assets/images/example_bf1v.png";
 
 export default () => {
 
@@ -126,34 +116,34 @@ export default () => {
 
         <div className="carousel-inner rounded">
           <div className="carousel-item active">
-            <img src={image_bf2042} className="d-block w-100" alt="..." />
+            <img src="/assets/images/example_bf2042.png" className="d-block w-100" alt="..." />
           </div>
           <div className="carousel-item">
-            <img src={image_bfv} className="d-block w-100" alt="..." />
+            <img src="/assets/images/example_bfv.png" className="d-block w-100" alt="..." />
           </div>
           <div className="carousel-item">
-            <img src={image_bf1} className="d-block w-100" alt="..." />
+            <img src="/assets/images/example_bf1.png" className="d-block w-100" alt="..." />
           </div>
           <div className="carousel-item">
-            <img src={image_bfh} className="d-block w-100" alt="..." />
+            <img src="/assets/images/example_bfh.png" className="d-block w-100" alt="..." />
           </div>
           <div className="carousel-item">
-            <img src={image_bf4} className="d-block w-100" alt="..." />
+            <img src="/assets/images/example_bf4.png" className="d-block w-100" alt="..." />
           </div>
           <div className="carousel-item">
-            <img src={image_bf3} className="d-block w-100" alt="..." />
+            <img src="/assets/images/example_bf3.png" className="d-block w-100" alt="..." />
           </div>
           <div className="carousel-item">
-            <img src={image_bfbc2} className="d-block w-100" alt="..." />
+            <img src="/assets/images/example_bfbc2.png" className="d-block w-100" alt="..." />
           </div>
           <div className="carousel-item">
-            <img src={image_bf2} className="d-block w-100" alt="..." />
+            <img src="/assets/images/example_bf2.png" className="d-block w-100" alt="..." />
           </div>
           <div className="carousel-item">
-            <img src={image_bf2042w} className="d-block w-100" alt="..." />
+            <img src="/assets/images/example_bf2042w.png" className="d-block w-100" alt="..." />
           </div>
           <div className="carousel-item">
-            <img src={image_bf1v} className="d-block w-100" alt="..." />
+            <img src="/assets/images/example_bf1v.png" className="d-block w-100" alt="..." />
           </div>
         </div>
         <button className="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
