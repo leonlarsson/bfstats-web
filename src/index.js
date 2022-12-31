@@ -5,6 +5,7 @@ import Header from "./components/Header";
 import Home from "./components/Home";
 import Privacy from "./components/Privacy";
 import Tos from "./components/Tos";
+import NotFound from "./components/NotFound";
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
             <Route index element={<Home />} />
             <Route path="privacy" element={<Privacy />} />
             <Route path="tos" element={<Tos />} />
+            <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
       </BrowserRouter>
