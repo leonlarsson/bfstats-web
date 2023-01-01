@@ -59,7 +59,7 @@ export default () => {
             <input type="text" className="form-control" id="idInput" required placeholder="Discord User ID" />
             <div style={{ color: "darkred" }}><u>{data.errorText}</u></div>
             <br />
-            <button className="btn btn-secondary" disabled={data.buttonDisabled ?? true} onClick={fetchOutput} id="button">Fetch User</button>
+            <button className="btn btn-secondary" disabled={data.buttonDisabled ?? true} onClick={fetchOutput} id="button">Fetch Output</button>
             <hr />
             <span>{data.loadingText}</span>
             <h3>User: {data.username} {data.userId ? `(${data.userId})` : ""}</h3>
