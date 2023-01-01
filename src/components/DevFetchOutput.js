@@ -16,10 +16,10 @@ export default () => {
         const apiKey = document.getElementById("apiKeyInput").value;
         const userId = document.getElementById("idInput").value;
 
-        const res = await fetch("https://bfstats-api.leonlarsson.com/d1/output", {
+        const res = await fetch("https://bfstats-api.leonlarsson.com/d1/outputs", {
             headers: {
                 "API-KEY": apiKey,
-                "D1-Query": userId ? `SELECT * FROM output WHERE user_id = "${userId}"` : "SELECT * FROM output"
+                "D1-Query": userId ? `SELECT * FROM outputs WHERE user_id = "${userId}"` : "SELECT * FROM outputs"
             }
         });
 

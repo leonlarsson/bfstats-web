@@ -15,7 +15,7 @@ export default () => {
 
         const apiKey = document.getElementById("apiKeyInput").value;
 
-        const res = await fetch("https://bfstats-api.leonlarsson.com/d1/output", { headers: { "API-KEY": apiKey } });
+        const res = await fetch("https://bfstats-api.leonlarsson.com/d1/outputs", { headers: { "API-KEY": apiKey } });
 
         // If fetch is not okay, return and set data
         if (!res.ok) return setData({ buttonDisabled: data.buttonDisabled, errorText: res.status === 401 ? "Incorrect API key" : "Failed to fetch" });
