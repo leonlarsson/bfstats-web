@@ -1,36 +1,30 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export default () => {
 
-    const [data, setData] = useState([]);
+    const [errorText, setErrorText] = useState("");
+    const [buttonDisabled, setButtonDisabled] = useState(true);
+    const [outputs, setOutputs] = useState([]);
+    const [query, setQuery] = useState("");
+    const apiKey = useRef();
 
-    const handleButtonDisabled = () => {
-        const apiKey = document.getElementById("apiKeyInput").value;
-        setData({ ...data, buttonDisabled: !/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/.test(apiKey) });
-    }
+    const filteredOutputs = outputs.filter(output => output.username.toLowerCase().includes(query.toLowerCase()) || output.user_id.toLowerCase().includes(query.toLowerCase()));
+
+    const handleButtonDisabled = () => setButtonDisabled(!/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/.test(apiKey.current.value));
 
     const fetchOutputs = async () => {
 
-        setData({ ...data, loadingText: "Fetching..." });
-
-        const apiKey = document.getElementById("apiKeyInput").value;
-
-        const res = await fetch("https://bfstats-api.leonlarsson.com/d1/outputs", { headers: { "API-KEY": apiKey } });
+        const res = await fetch("https://bfstats-api.leonlarsson.com/d1/outputs", { headers: { "API-KEY": apiKey.current.value } });
 
         // If fetch is not okay, return and set data
-        if (!res.ok) return setData({ buttonDisabled: data.buttonDisabled, errorText: res.status === 401 ? "Incorrect API key" : "Failed to fetch" });
+        if (!res.ok) return setErrorText(res.status === 401 ? "Incorrect API key" : "Failed to fetch");
 
-        // If user is not found, return and set data
-        const outputs = await res.json();
-        if (!outputs.length) return setData({ buttonDisabled: data.buttonDisabled, errorText: "No outputs found" });
+        // If outputs are not found, return and set data
+        const outputsArray = await res.json();
+        if (!outputsArray.length) return setErrorText("No outputs found");
 
         // Set data for when outputs are found
-        setData({
-            ...data,
-            errorText: "",
-            loadingText: "",
-            outputs
-        });
+        setOutputs(outputsArray);
     }
 
     return (
@@ -39,14 +33,16 @@ export default () => {
             <h5>Press the button to fetch outputs.</h5>
 
             <label htmlFor="apiKeyInput">API Key*</label>
-            <input type="text" className="form-control" id="apiKeyInput" required onInput={handleButtonDisabled} placeholder="API Key" />
-            <div style={{ color: "darkred" }}><u>{data.errorText}</u></div>
+            <input type="text" className="form-control" id="apiKeyInput" required ref={apiKey} onInput={handleButtonDisabled} placeholder="API Key" />
+            <div style={{ color: "darkred" }}><u>{errorText}</u></div>
             <br />
-            <button className="btn btn-secondary" disabled={data.buttonDisabled ?? true} onClick={fetchOutputs} id="button">Fetch Outputs</button>
+            <button className="btn btn-secondary" disabled={buttonDisabled} onClick={fetchOutputs}>Fetch Outputs</button>
             <hr />
-            {data.outputs?.length && <h3>{data.outputs?.length} outputs:</h3>}
+            <label htmlFor="searchInput">Search:</label>
+            <input type="search" className="form-control mb-2" id="searchInput" onInput={e => setQuery(e.target.value)} placeholder="Username or ID" />
+            <h3>{filteredOutputs.length} {filteredOutputs.length === 1 ? "output" : "outputs"}:</h3>
             <div className="row">
-                {data.outputs?.map(output => <Output key={output.date} output={output} />)}
+                {filteredOutputs.map(output => <Output key={output.date} output={output} />)}
             </div>
         </div >
     );
