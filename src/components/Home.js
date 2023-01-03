@@ -3,19 +3,19 @@ import { Link } from "react-router-dom";
 
 export default () => {
 
-  const [data, setData] = useState([]);
+  const [statsText, setStatsText] = useState("");
   useEffect(() => {
-    setData("Loading...");
-
+    setStatsText("Loading...");
     fetch("https://bfstats-api.leonlarsson.com")
       .then(res => res.json())
-      .then(json => setData(<Fragment>In <b>{json.totalGuilds.toLocaleString("en-US")}</b> servers, with <b>{json.totalMembers.toLocaleString("en-US")}</b> members, and <b>{json.totalStatsSent.total.toLocaleString("en-US")}</b> stats sent.</Fragment>))
+      .then(json => setStatsText(<Fragment>In <b>{json.totalGuilds.toLocaleString("en-US")}</b> servers, with <b>{json.totalMembers.toLocaleString("en-US")}</b> members, and <b>{json.totalStatsSent.total.toLocaleString("en-US")}</b> stats sent.</Fragment>))
+      .catch(() => setStatsText(""));
   }, []);
 
   return (
     <div className="container">
 
-      <h3 className="text-center" id="infoText">{data}</h3>
+      <h3 className="text-center" id="infoText">{statsText}</h3>
 
       <div className="accordion mb-3" id="accordion">
         <div className="accordion-item">
