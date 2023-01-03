@@ -8,7 +8,8 @@ export default () => {
     const [query, setQuery] = useState("");
     const apiKey = useRef();
 
-    const filteredOutputs = outputs.filter(output => output.username.toLowerCase().includes(query.toLowerCase()) || output.user_id.toLowerCase().includes(query.toLowerCase()));
+    // Get outputs where the username/guild name or IDs match the search
+    const filteredOutputs = outputs.filter(output => [output.username, output.user_id, output.guild_name, output.guild_id].some(x => x?.toLowerCase().includes(query.toLowerCase())));
 
     const handleButtonDisabled = () => setButtonDisabled(!/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/.test(apiKey.current.value));
 
@@ -39,7 +40,7 @@ export default () => {
             <button className="btn btn-secondary" disabled={buttonDisabled} onClick={fetchOutputs}>Fetch Outputs</button>
             <hr />
             <label htmlFor="searchInput">Search:</label>
-            <input type="search" className="form-control mb-2" id="searchInput" onInput={e => setQuery(e.target.value)} placeholder="Username or ID" />
+            <input type="search" className="form-control mb-2" id="searchInput" onInput={e => setQuery(e.target.value)} placeholder="Username, Guild name or IDs" />
             <h3>{filteredOutputs.length} {filteredOutputs.length === 1 ? "output" : "outputs"}:</h3>
             <div className="row">
                 {filteredOutputs.map(output => <Output key={output.date} output={output} />)}
