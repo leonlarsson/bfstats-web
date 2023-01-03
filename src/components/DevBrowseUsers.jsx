@@ -8,7 +8,8 @@ export default () => {
     const [query, setQuery] = useState("");
     const apiKey = useRef();
 
-    const filteredUsers = users.filter(user => user.username.toLowerCase().includes(query.toLowerCase()) || user.user_id.toLowerCase().includes(query.toLowerCase()));
+    // Get users where the username or ID matches the search
+    const filteredUsers = users.filter(user => [user.username, user.user_id].some(x => x.toLowerCase().includes(query.toLowerCase())));
 
     const handleButtonDisabled = () => setButtonDisabled(!/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/.test(apiKey.current.value));
 
