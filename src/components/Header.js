@@ -6,7 +6,7 @@ import logo from "../assets/images/avatar.png";
 export default () => {
     return (
         <div>
-            <nav className="navbar navbar-expand-lg sticky-top bg-light mb-3">
+            <nav className="navbar navbar-expand-lg sticky-top bg-light mb-3 border-bottom">
                 <div className="container-fluid">
                     <Link to="/" className="navbar-brand mb-0 h1">
                         <img src={logo} width="30px" height="30px" className="d-inline-block align-text-top" alt="Battlefield Stats Logo" /> Battlefield Stats
