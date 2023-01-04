@@ -56,7 +56,7 @@ const Output = ({ output }) => {
             <h5>Guild: {output.guild_name} ({output.guild_id})</h5>
             <h5>Language: {output.language}</h5>
             <h5>Date: {new Date(output.date).toUTCString()}</h5>
-            <img src={output.image_url} alt="Stats Image" className="w-100 mb-1" />
+            <img src={output.image_url} alt="Stats Image" className="w-100 mb-1" loading="lazy" />
         </div>
     );
 }
