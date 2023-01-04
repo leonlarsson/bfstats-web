@@ -43,19 +43,34 @@ export default () => {
             <input type="search" className="form-control mb-2" id="searchInput" onInput={e => setQuery(e.target.value)} placeholder="Username or ID" />
             <h3>{filteredUsers.length} {filteredUsers.length === 1 ? "user" : "users"}:</h3>
             <div className="row">
-                {filteredUsers.filter(user => user.username).map(user => <User key={user.user_id} user={user} />)}
+                {filteredUsers.filter(user => user.username).map(user => <User key={user.user_id} user={user} apiKey={apiKey.current.value} />)}
             </div>
         </div >
     );
 };
 
-const User = ({ user }) => {
+const User = ({ user, apiKey }) => {
+
+    const showUserOutputs = async () => {
+        const res = await fetch("https://bfstats-api.leonlarsson.com/d1/outputs", {
+            headers: {
+                "API-KEY": apiKey,
+                "D1-Query": `SELECT * FROM outputs WHERE user_id = ${user.user_id}`
+            }
+        });
+        const json = await res.json();
+        console.log(`Outputs from ${user.username} (${user.user_id})\n`, json);
+
+        return <h1>Hello</h1>
+    }
+
     return (
-        <div className="browseBox col border border-2 border-primary rounded m-2">
+        <div className="d-flex flex-column browseBox col border border-2 border-primary rounded p-2 m-2">
             <h4>{user.username} ({user.user_id})</h4>
             <h6>Stats sent: {user.total_stats_sent}</h6>
             <h6>Last language: {user.last_language}</h6>
             <h6>Last sent: {new Date(user.last_stats_sent).toUTCString()}</h6>
+            <button className="btn btn-primary w-100 mt-auto" onClick={showUserOutputs}>Show Outputs (Console)</button>
         </div>
     );
 }
