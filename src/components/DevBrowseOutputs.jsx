@@ -53,7 +53,7 @@ const Output = ({ output }) => {
     return (
         <div className="browseBox col border border-2 border-primary rounded m-2">
             <h5>User: {output.username} ({output.user_id})</h5>
-            <h5>Guild: {output.guild_name} ({output.guild_id})</h5>
+            <h5>Guild: {output.guild_id ? `${output.guild_name} (${output.guild_id})` : "DM"}</h5>
             <h5>Language: {output.language}</h5>
             <h5>Date: {new Date(output.date).toUTCString()}</h5>
             {output.image_url ? <img src={output.image_url} alt="Stats Image" className="w-100 mb-1" loading="lazy" /> : <h5>Text variant: {output.game} {output.segment}</h5>}
