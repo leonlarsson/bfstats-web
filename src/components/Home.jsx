@@ -6,6 +6,7 @@ export default () => {
   return (
     <div className="container">
       <StatsText />
+
       <div className="accordion mb-3" id="accordion">
         <div className="accordion-item">
           <h2 className="accordion-header" id="headingOne">

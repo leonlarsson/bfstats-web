@@ -1,8 +1,11 @@
 /* eslint-disable react/jsx-no-target-blank */
+import StatsText from "./StatsText";
 
 export default () => {
   return (
     <div className="container">
+      <StatsText />
+      <hr />
 
       <h1 className=" text-decoration-underline">Terms of Service</h1>
       <h5>(Updated March 6, 2022)</h5>

@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import StatsText from "./StatsText";
 
 export default () => {
 
@@ -30,6 +31,9 @@ export default () => {
 
     return (
         <div className="container">
+            <StatsText />
+            <hr />
+
             <h1>Browse Outputs</h1>
             <h5>Press the button to fetch outputs.</h5>
 

@@ -1,11 +1,13 @@
 /* eslint-disable react/jsx-no-target-blank */
-
 import { Link } from "react-router-dom";
+import StatsText from "./StatsText";
 import image_statsDeleteButton from "../assets/images/StatsDeleteButton.png";
 
 export default () => {
   return (
     <div className="container">
+      <StatsText />
+      <hr />
 
       <h1 className=" text-decoration-underline">Privacy Policy</h1>
       <h5>(Updated November 18, 2022)</h5>
