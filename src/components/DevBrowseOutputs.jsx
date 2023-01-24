@@ -34,7 +34,7 @@ export default () => {
             <StatsText />
             <hr />
 
-            <h1>Browse Outputs</h1>
+            <h1 className="text-decoration-underline">Browse Outputs</h1>
             <h5>Press the button to fetch outputs.</h5>
 
             <label htmlFor="apiKeyInput">API Key*</label>

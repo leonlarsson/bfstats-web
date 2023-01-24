@@ -9,11 +9,11 @@ export default () => {
       <StatsText />
       <hr />
 
-      <h1 className=" text-decoration-underline">Privacy Policy</h1>
+      <h1 className="text-decoration-underline">Privacy Policy</h1>
       <h5>(Updated November 18, 2022)</h5>
 
       <div className="pb-3">
-        <h2>User Data handling and usage:</h2>
+        <h3>User Data handling and usage</h3>
         For each direct interaction with the bot, I collect and store a number of properties for the user and the
         output. This includes user and server IDs and names, language used, game and segment, etc. The full code for
         the database can be viewed <a className="link-primary fw-bold" target="_blank"
@@ -33,12 +33,12 @@ export default () => {
       </div>
 
       <div className="pb-3">
-        <h2>User Locale, and how I use it:</h2>
+        <h3>User Locale, and how I use it</h3>
         This bot has access to the language your Discord client currently is set to. It uses this language to <strong>PUBLICLY</strong> display stats and messages in your language*. If you don't want the bot to use your client language, you must specify a language yourself with the "language" option in the command.
       </div>
 
       <div className="pb-3">
-        <h2>Deleting your stats image**:</h2>
+        <h3>Deleting your stats image**</h3>
         After every stats output, you have 15 seconds to delete it by clicking the red "Delete" button.
         <br />
         Since these images are ONLY hosted on Discord, this will remove the image completely***.
@@ -47,7 +47,7 @@ export default () => {
       </div>
 
       <div className="pb-3">
-        <h2>API Information:</h2>
+        <h3>API Information</h3>
         This bot gets data from <a className="link-primary fw-bold" target="_blank" href="https://battlefieldtracker.com/">Battlefield Tracker</a> and <a className="link-primary fw-bold" target="_blank" href="https://gametools.network/">Community Network</a> and does not alter the data received, and is not responsible for it.
         <br /><br />
         If you do not want your stats to be visible, you can disable this. Info in the links below:
@@ -60,7 +60,7 @@ export default () => {
       </div>
 
       <div className="pb-3">
-        <h2>Disclaimers:</h2>
+        <h3>Disclaimers</h3>
         <i>
           *Only displays your language if it's one of the supported ones.
           <br />

@@ -78,7 +78,7 @@ export default () => {
         </div>
       </div>
 
-      <h2>Image Gallery</h2>
+      <h3>Image Gallery</h3>
 
       <div id="imageCarousel" className="carousel slide mb-3" data-bs-ride="false">
         <div className="carousel-indicators">
