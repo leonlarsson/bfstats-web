@@ -16,7 +16,12 @@ export default () => {
 
     const fetchUsers = async () => {
 
-        const res = await fetch("https://bfstats-api.leonlarsson.com/d1/users", { headers: { "API-KEY": apiKey.current.value } });
+        const res = await fetch("https://bfstats-api.leonlarsson.com/d1/users", {
+            headers: {
+                "API-KEY": apiKey.current.value,
+                "D1-Query": "SELECT * FROM users ORDER BY total_stats_sent DESC"
+            }
+        });
 
         // If fetch is not okay, return and set data
         if (!res.ok) return setErrorText(res.status === 401 ? "Incorrect API key" : "Failed to fetch");
