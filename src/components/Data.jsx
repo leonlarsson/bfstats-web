@@ -3,7 +3,13 @@ import StatsText from "./StatsText";
 
 export default () => {
 
-  // Get data and refetch every 20 seconds
+  // Get data and refetch every 30 seconds
+  const { data: baseStats, status: baseStatus } = useQuery({
+    refetchOnMount: false,
+    refetchInterval: 30_000,
+    queryKey: ["baseData"], queryFn: async () => (await fetch("https://bfstats-api.leonlarsson.com/")).json()
+  });
+
   const { data: users, status: usersStatus } = useQuery({
     refetchOnMount: false,
     refetchInterval: 30_000,
@@ -21,51 +27,72 @@ export default () => {
       <StatsText />
       <hr />
 
-      <h1 className="text-decoration-underline">Data since January 1, 2023</h1>
+      <h1 className="text-decoration-underline">Data</h1>
       <h5>Updates every 30 seconds.</h5>
 
-      {usersStatus === "success" && outputsStatus === "success" ?
-        <div className="row">
+      {baseStatus === "success" && usersStatus === "success" && outputsStatus === "success" ?
+        <div>
+          <h3>Since January 1, 2023</h3>
+          <div className="row">
 
-          <div className="col-lg">
-            <h3>Base stats</h3>
-            <ul>
-              <li><strong>{outputs.length.toLocaleString("en-US")}</strong> stats sent</li>
-              <li><strong>{users.length.toLocaleString("en-US")}</strong> unique users</li>
-            </ul>
+            <div className="col-lg">
+              <h4>Base stats</h4>
+              <ul>
+                <li><strong>{outputs.length.toLocaleString("en-US")}</strong> stats sent</li>
+                <li><strong>{users.length.toLocaleString("en-US")}</strong> unique users</li>
+              </ul>
+            </div>
+
+            <div className="col-lg">
+              <h4>Stats sent per game</h4>
+              <ul>
+                {Array.from(new Set(outputs.map(x => x.game))).map((game, index) => <li key={index}>{game}: <strong>{outputs.filter(x => x.game === game).length.toLocaleString("en-US")}</strong></li>)}
+              </ul>
+            </div>
+
+            <div className="col-lg">
+              <h4>Stats sent per language</h4>
+              <ul>
+                {Array.from(new Set(outputs.map(x => x.language))).map((lang, index) => <li key={index}>{lang}: <strong>{outputs.filter(x => x.language === lang).length.toLocaleString("en-US")}</strong></li>)}
+              </ul>
+            </div>
+
+            <div className="col-lg">
+              <h4>Top 10 users were sent stats this many times</h4>
+              <ol>
+                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((x, index) => <li key={index}>User was sent <strong>{users[x].total_stats_sent.toLocaleString("en-US")}</strong> stats</li>)}
+              </ol>
+            </div>
           </div>
 
-          <div className="col-lg">
-            <h3>Stats sent per game</h3>
-            <ul>
-              {Array.from(new Set(outputs.map(x => x.game))).map((game, index) => <li key={index}>{game}: <strong>{outputs.filter(x => x.game === game).length.toLocaleString("en-US")}</strong></li>)}
-            </ul>
-          </div>
+          <hr />
 
-          <div className="col-lg">
-            <h3>Stats sent per language</h3>
-            <ul>
-              {Array.from(new Set(outputs.map(x => x.language))).map((lang, index) => <li key={index}>{lang}: <strong>{outputs.filter(x => x.language === lang).length.toLocaleString("en-US")}</strong></li>)}
-            </ul>
-          </div>
+          <h3>Total</h3>
+          <div className="row">
 
-          <div className="col-lg">
-            <h3>Top 10 users were sent stats this many times</h3>
-            <ol>
-              <li>User was sent <strong>{users[0].total_stats_sent.toLocaleString("en-US")}</strong> stats</li>
-              <li>User was sent <strong>{users[1].total_stats_sent.toLocaleString("en-US")}</strong> stats</li>
-              <li>User was sent <strong>{users[2].total_stats_sent.toLocaleString("en-US")}</strong> stats</li>
-              <li>User was sent <strong>{users[3].total_stats_sent.toLocaleString("en-US")}</strong> stats</li>
-              <li>User was sent <strong>{users[4].total_stats_sent.toLocaleString("en-US")}</strong> stats</li>
-              <li>User was sent <strong>{users[5].total_stats_sent.toLocaleString("en-US")}</strong> stats</li>
-              <li>User was sent <strong>{users[6].total_stats_sent.toLocaleString("en-US")}</strong> stats</li>
-              <li>User was sent <strong>{users[7].total_stats_sent.toLocaleString("en-US")}</strong> stats</li>
-              <li>User was sent <strong>{users[8].total_stats_sent.toLocaleString("en-US")}</strong> stats</li>
-              <li>User was sent <strong>{users[9].total_stats_sent.toLocaleString("en-US")}</strong> stats</li>
-            </ol>
+            <div className="col-lg">
+              <h4>Base stats</h4>
+              <ul>
+                <li><strong>{baseStats.totalStatsSent.total.toLocaleString("en-US")}</strong> stats sent</li>
+              </ul>
+            </div>
+
+            <div className="col-lg">
+              <h4>Stats sent per game</h4>
+              <ul>
+                {Object.entries(baseStats.totalStatsSent.games).map((game, index) => <li key={index}>{game[0]}: <strong>{game[1].toLocaleString("en-US")}</strong></li>)}
+              </ul>
+            </div>
+
+            <div className="col-lg">
+              <h4>Stats sent per language</h4>
+              <ul>
+                {Object.entries(baseStats.totalStatsSent.languages).map((lang, index) => <li key={index}>{lang[0]}: <strong>{lang[1].toLocaleString("en-US")}</strong></li>)}
+              </ul>
+            </div>
           </div>
         </div>
-        : usersStatus === "loading" || outputsStatus === "loading" ? <h3>Loading...</h3> : <h3 className="text-danger">Error. Retrying in 30 seconds...</h3>
+        : baseStatus === "loading" || usersStatus === "loading" || outputsStatus === "loading" ? <h4>Loading...</h4> : <h4 className="text-danger">Error. Retrying in 30 seconds...</h4>
       }
     </div>
   );
