@@ -21,7 +21,7 @@ export default () => {
       <StatsText />
       <hr />
 
-      <h1 className="text-decoration-underline">Data Since January 1, 2023</h1>
+      <h1 className="text-decoration-underline">Data since January 1, 2023</h1>
       <h5>Updates every 30 seconds.</h5>
 
       {usersStatus === "success" && outputsStatus === "success" ?
