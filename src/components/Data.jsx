@@ -23,7 +23,7 @@ export default () => {
   });
 
   return (
-    <div className="container">
+    <div className="container pb-5">
       <StatsText />
       <hr />
 
@@ -37,30 +37,30 @@ export default () => {
 
             <div className="col-lg">
               <h4>Base stats</h4>
-              <ul>
-                <li><strong>{outputs.length.toLocaleString("en-US")}</strong> stats sent</li>
-                <li><strong>{users.length.toLocaleString("en-US")}</strong> unique users</li>
+              <ul className="list-group">
+                <li className="list-group-item"><strong>{outputs.length.toLocaleString("en-US")}</strong> stats sent</li>
+                <li className="list-group-item"><strong>{users.length.toLocaleString("en-US")}</strong> unique users</li>
               </ul>
             </div>
 
             <div className="col-lg">
               <h4>Stats sent per game</h4>
-              <ul>
-                {Array.from(new Set(outputs.map(x => x.game))).map((game, index) => <li key={index}>{game}: <strong>{outputs.filter(x => x.game === game).length.toLocaleString("en-US")}</strong></li>)}
+              <ul className="list-group">
+                {Array.from(new Set(outputs.map(x => x.game))).map((game, index) => <li className="list-group-item" key={index}>{game}: <strong>{outputs.filter(x => x.game === game).length.toLocaleString("en-US")}</strong></li>)}
               </ul>
             </div>
 
             <div className="col-lg">
               <h4>Stats sent per language</h4>
-              <ul>
-                {Array.from(new Set(outputs.map(x => x.language))).map((lang, index) => <li key={index}>{lang}: <strong>{outputs.filter(x => x.language === lang).length.toLocaleString("en-US")}</strong></li>)}
+              <ul className="list-group">
+                {Array.from(new Set(outputs.map(x => x.language))).map((lang, index) => <li className="list-group-item" key={index}>{lang}: <strong>{outputs.filter(x => x.language === lang).length.toLocaleString("en-US")}</strong></li>)}
               </ul>
             </div>
 
             <div className="col-lg">
-              <h4>Top 10 users were sent stats this many times</h4>
-              <ol>
-                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((x, index) => <li key={index}>User was sent <strong>{users[x].total_stats_sent.toLocaleString("en-US")}</strong> stats</li>)}
+              <h4>Top 10 users</h4>
+              <ol className="list-group list-group-numbered">
+                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((x, index) => <li className="list-group-item" key={index}>User was sent <strong>{users[x].total_stats_sent.toLocaleString("en-US")}</strong> stats</li>)}
               </ol>
             </div>
           </div>
@@ -72,22 +72,22 @@ export default () => {
 
             <div className="col-lg">
               <h4>Base stats</h4>
-              <ul>
-                <li><strong>{baseStats.totalStatsSent.total.toLocaleString("en-US")}</strong> stats sent</li>
+              <ul className="list-group">
+                <li className="list-group-item"><strong>{baseStats.totalStatsSent.total.toLocaleString("en-US")}</strong> stats sent</li>
               </ul>
             </div>
 
             <div className="col-lg">
               <h4>Stats sent per game</h4>
-              <ul>
-                {Object.entries(baseStats.totalStatsSent.games).map((game, index) => <li key={index}>{game[0]}: <strong>{game[1].toLocaleString("en-US")}</strong></li>)}
+              <ul className="list-group">
+                {Object.entries(baseStats.totalStatsSent.games).map((game, index) => <li className="list-group-item" key={index}>{game[0]}: <strong>{game[1].toLocaleString("en-US")}</strong></li>)}
               </ul>
             </div>
 
             <div className="col-lg">
               <h4>Stats sent per language</h4>
-              <ul>
-                {Object.entries(baseStats.totalStatsSent.languages).map((lang, index) => <li key={index}>{lang[0]}: <strong>{lang[1].toLocaleString("en-US")}</strong></li>)}
+              <ul className="list-group">
+                {Object.entries(baseStats.totalStatsSent.languages).map((lang, index) => <li className="list-group-item" key={index}>{lang[0]}: <strong>{lang[1].toLocaleString("en-US")}</strong></li>)}
               </ul>
             </div>
           </div>
