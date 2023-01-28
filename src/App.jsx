@@ -5,6 +5,7 @@ import Privacy from "./components/Privacy";
 import Tos from "./components/Tos";
 import DevBrowseUsers from "./components/DevBrowseUsers";
 import DevBrowseOutputs from "./components/DevBrowseOutputs";
+import Data from "./components/Data";
 import NotFound from "./components/NotFound";
 
 export default () => {
@@ -17,6 +18,7 @@ export default () => {
                     <Route path="tos" element={<Tos />} />
                     <Route path="dev-browse-users" element={<DevBrowseUsers />} />
                     <Route path="dev-browse-outputs" element={<DevBrowseOutputs />} />
+                    <Route path="data" element={<Data />} />
                     <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>

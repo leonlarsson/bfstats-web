@@ -25,6 +25,9 @@ export default () => {
                             <li className="nav-item">
                                 <NavLink to="/tos" className="nav-link"><i className="fa-solid fa-book"></i> Terms of Service</NavLink>
                             </li>
+                            <li className="nav-item">
+                                <NavLink to="/data" className="nav-link"><i className="fa-solid fa-chart-simple"></i> Data</NavLink>
+                            </li>
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="fa-solid fa-cog"></i> Dev</a>
                                 <ul className="dropdown-menu">
