@@ -39,8 +39,14 @@ export default () => {
                                     </li>
                                 </ul>
                             </li>
-                            <a href="https://bfstats-api.leonlarsson.com" target="_blank" className="nav-link"> <i className="fa-solid fa-code"></i> API</a>
-                            <a href="https://top.gg/bot/842768680252997662" target="_blank" className="nav-link"> <i className="fa-solid fa-link"></i> Top.gg</a>
+                            <li className="nav-item dropdown">
+                                <a className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="fa-solid fa-code"></i> APIs</a>
+                                <ul className="dropdown-menu">
+                                    <a href="https://bfstats-api.leonlarsson.com" target="_blank" className="dropdown-item">Base <i className="fa-solid fa-up-right-from-square"></i></a>
+                                    <a href="https://bfstats-api.leonlarsson.com/d1/users" target="_blank" className="dropdown-item">d1/users <i className="fa-solid fa-up-right-from-square"></i></a>
+                                    <a href="https://bfstats-api.leonlarsson.com/d1/outputs" target="_blank" className="dropdown-item">d1/outputs <i className="fa-solid fa-up-right-from-square"></i></a>
+                                </ul>
+                            </li>
                             <a href="https://discord.com/oauth2/authorize?client_id=842768680252997662&scope=bot%20applications.commands" target="_blank" className="nav-link link-primary fw-bold"> <i className="fa-solid fa-right-to-bracket"></i> Invite</a>
                         </div>
                     </div>
