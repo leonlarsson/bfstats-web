@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
+import WordArt from "react-wordart";
 import StatsText from "./StatsText";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -31,7 +32,8 @@ export default () => {
       <StatsText />
       <hr />
 
-      <h1 className="text-decoration-underline">Data</h1>
+      {/* <h1 className="text-decoration-underline">Data</h1> */}
+      <WordArt text='Data' theme="blues" fontSize={50} />
       <h5>Updates every 60 seconds.</h5>
 
       {baseStatus === "success" && usersStatus === "success" && outputsStatus === "success" ?
