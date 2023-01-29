@@ -10,7 +10,7 @@ export default () => {
       <hr />
 
       <h1 className="text-decoration-underline">Privacy Policy</h1>
-      <h5>(Updated November 18, 2022)</h5>
+      <h5>(Updated January 29, 2023)</h5>
 
       <div className="pb-3">
         <h3>User Data handling and usage</h3>
@@ -23,7 +23,7 @@ export default () => {
         The way I use this data is for statistical, analytical, and quality purposes, as well as monitoring for any
         bad
         content that breaks the <Link to="/tos" className="link-primary fw-bold">Terms of Service</Link>, such as harmful
-        usernames or server names.
+        usernames or server names. It is also used in the <Link to="/data" className="link-primary fw-bold">data reporting page</Link>.
         I store basic user and server data for the purposes of being able to block users and servers from using the
         bot
         if they are found to be abusing the bot. I store the bot output (stats, image or text format) to continously
