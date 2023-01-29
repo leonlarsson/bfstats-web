@@ -1,5 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Doughnut } from 'react-chartjs-2';
 import StatsText from "./StatsText";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default () => {
 
@@ -33,61 +37,131 @@ export default () => {
       {baseStatus === "success" && usersStatus === "success" && outputsStatus === "success" ?
         <div>
           <h3>Since January 1, 2023</h3>
+          <div className="mb-3">
+            <ul className="list-group">
+              <li className="list-group-item"><strong>{outputs.length.toLocaleString("en-US")}</strong> stats sent</li>
+              <li className="list-group-item"><strong>{users.length.toLocaleString("en-US")}</strong> unique users</li>
+            </ul>
+          </div>
+
           <div className="row">
-
-            <div className="col-lg">
-              <h4>Base stats</h4>
-              <ul className="list-group">
-                <li className="list-group-item"><strong>{outputs.length.toLocaleString("en-US")}</strong> stats sent</li>
-                <li className="list-group-item"><strong>{users.length.toLocaleString("en-US")}</strong> unique users</li>
-              </ul>
-            </div>
-
-            <div className="col-lg">
+            <div className="col mb-3">
               <h4>Stats sent per game</h4>
               <ul className="list-group">
                 {Array.from(new Set(outputs.map(x => x.game))).map((game, index) => <li className="list-group-item" key={index}>{game}: <strong>{outputs.filter(x => x.game === game).length.toLocaleString("en-US")}</strong></li>)}
+                <li className="list-group-item">
+                  <Doughnut data={{
+                    labels: Array.from(new Set(outputs.map(x => x.game))),
+                    datasets: [
+                      {
+                        label: " # of stats sent",
+                        data: Array.from(new Set(outputs.map(x => x.game))).map(game => outputs.filter(x => x.game === game).length),
+                        hoverBackgroundColor: "grey",
+                        hoverOffset: 7
+                      }
+                    ]
+                  }} />
+                </li>
               </ul>
             </div>
 
-            <div className="col-lg">
+            <div className="col mb-3">
               <h4>Stats sent per language</h4>
               <ul className="list-group">
-                {Array.from(new Set(outputs.map(x => x.language))).map((lang, index) => <li className="list-group-item" key={index}>{lang}: <strong>{outputs.filter(x => x.language === lang).length.toLocaleString("en-US")}</strong></li>)}
+                {Array.from(new Set(outputs.map(x => x.language))).map((language, index) => <li className="list-group-item" key={index}>{language}: <strong>{outputs.filter(x => x.language === language).length.toLocaleString("en-US")}</strong></li>)}
+                <li className="list-group-item">
+                  <Doughnut data={{
+                    labels: Array.from(new Set(outputs.map(x => x.language))),
+                    datasets: [
+                      {
+                        label: " # of stats sent",
+                        data: Array.from(new Set(outputs.map(x => x.language))).map(language => outputs.filter(x => x.language === language).length),
+                        hoverBackgroundColor: "grey",
+                        hoverOffset: 7
+                      }
+                    ]
+                  }} />
+                </li>
               </ul>
             </div>
 
-            <div className="col-lg">
+            <div className="col mb-3">
+              <h4>Stats sent per segment</h4>
+              <ul className="list-group">
+                {Array.from(new Set(outputs.map(x => x.segment))).map((segment, index) => <li className="list-group-item" key={index}>{segment}: <strong>{outputs.filter(x => x.segment === segment).length.toLocaleString("en-US")}</strong></li>)}
+                <li className="list-group-item">
+                  <Doughnut data={{
+                    labels: Array.from(new Set(outputs.map(x => x.segment))),
+                    datasets: [
+                      {
+                        label: " # of stats sent",
+                        data: Array.from(new Set(outputs.map(x => x.segment))).map(segment => outputs.filter(x => x.segment === segment).length),
+                        hoverBackgroundColor: "grey",
+                        hoverOffset: 7
+                      }
+                    ]
+                  }} />
+                </li>
+              </ul>
+            </div>
+
+            <div className="col">
               <h4>Top 10 users</h4>
               <ol className="list-group list-group-numbered">
                 {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((x, index) => <li className="list-group-item" key={index}>User was sent <strong>{users[x].total_stats_sent.toLocaleString("en-US")}</strong> stats</li>)}
               </ol>
             </div>
+
           </div>
 
-          <hr />
+          <hr class="border border-primary border-2 opacity-75 rounded" />
 
           <h3>Total</h3>
+          <div className="mb-3">
+            <h4>Base stats</h4>
+            <ul className="list-group">
+              <li className="list-group-item"><strong>{baseStats.totalStatsSent.total.toLocaleString("en-US")}</strong> stats sent</li>
+            </ul>
+          </div>
+
           <div className="row">
-
-            <div className="col-lg">
-              <h4>Base stats</h4>
-              <ul className="list-group">
-                <li className="list-group-item"><strong>{baseStats.totalStatsSent.total.toLocaleString("en-US")}</strong> stats sent</li>
-              </ul>
-            </div>
-
-            <div className="col-lg">
+            <div className="col mb-3">
               <h4>Stats sent per game</h4>
               <ul className="list-group">
                 {Object.entries(baseStats.totalStatsSent.games).map((game, index) => <li className="list-group-item" key={index}>{game[0]}: <strong>{game[1].toLocaleString("en-US")}</strong></li>)}
+                <li className="list-group-item">
+                  <Doughnut data={{
+                    labels: Object.entries(baseStats.totalStatsSent.games).map(x => x[0]),
+                    datasets: [
+                      {
+                        label: " # of stats sent",
+                        data: Object.entries(baseStats.totalStatsSent.games).map(x => x[1]),
+                        hoverBackgroundColor: "grey",
+                        hoverOffset: 7
+                      }
+                    ]
+                  }} />
+                </li>
               </ul>
             </div>
 
-            <div className="col-lg">
+            <div className="col">
               <h4>Stats sent per language</h4>
               <ul className="list-group">
                 {Object.entries(baseStats.totalStatsSent.languages).map((lang, index) => <li className="list-group-item" key={index}>{lang[0]}: <strong>{lang[1].toLocaleString("en-US")}</strong></li>)}
+                <li className="list-group-item">
+                  <Doughnut data={{
+                    labels: Object.entries(baseStats.totalStatsSent.languages).map(x => x[0]),
+                    datasets: [
+                      {
+                        label: " # of stats sent",
+                        data: Object.entries(baseStats.totalStatsSent.languages).map(x => x[1]),
+                        hoverBackgroundColor: "grey",
+                        hoverOffset: 7
+                      }
+                    ]
+                  }} />
+                </li>
               </ul>
             </div>
           </div>
