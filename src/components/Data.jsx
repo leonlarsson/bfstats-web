@@ -12,18 +12,21 @@ export default () => {
   // Get data and refetch every 60 seconds
   const { data: baseStats, status: baseStatus } = useQuery({
     refetchOnMount: false,
+    refetchOnWindowFocus: false,
     refetchInterval: 60_000,
     queryKey: ["baseData"], queryFn: async () => (await fetch("https://bfstats-api.leonlarsson.com/")).json()
   });
 
   const { data: users, status: usersStatus } = useQuery({
     refetchOnMount: false,
+    refetchOnWindowFocus: false,
     refetchInterval: 60_000,
     queryKey: ["usersData"], queryFn: async () => (await fetch("https://bfstats-api.leonlarsson.com/d1/users")).json()
   });
 
   const { data: outputs, status: outputsStatus } = useQuery({
     refetchOnMount: false,
+    refetchOnWindowFocus: false,
     refetchInterval: 60_000,
     queryKey: ["outputsData"], queryFn: async () => (await fetch("https://bfstats-api.leonlarsson.com/d1/outputs")).json()
   });
