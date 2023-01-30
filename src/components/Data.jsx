@@ -175,7 +175,7 @@ export default () => {
           <h3>Last stats sent</h3>
           <div className="mb-3">
             <ul className="list-group list-group-numbered">
-              {outputs.sort((a, b) => b.date - a.date).slice(0, 20).map((output, index) => <li key={index} className="list-group-item"><strong>{output.game} {output.segment}</strong> // {new Date(output.date).toUTCString()} ({humanizeDuration(output.date - new Date(), { round: true })} ago)</li>)}
+              {outputs.sort((a, b) => b.date - a.date).slice(0, 20).map((output, index) => <li key={index} className="list-group-item"><strong>{output.game} {output.segment}</strong> - <strong>{output.language}</strong> // {new Date(output.date).toUTCString()} ({humanizeDuration(output.date - new Date(), { round: true })} ago)</li>)}
             </ul>
           </div>
         </div>
