@@ -5,6 +5,7 @@ export default () => {
     // Fetch data every 60 seconds. Don't refetch when the user switches back to the Home page
     const { data } = useQuery({
         refetchOnMount: false,
+        refetchOnWindowFocus: false,
         refetchInterval: 60_000,
         queryKey: ["statsData"], queryFn: async () => (await fetch("https://bfstats-api.leonlarsson.com")).json()
     });
