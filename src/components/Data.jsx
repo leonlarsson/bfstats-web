@@ -54,14 +54,14 @@ export default () => {
             <div className="col-lg mb-3">
               <h4>Stats sent per game</h4>
               <ul className="list-group">
-                {Array.from(new Set(outputs.map(x => x.game))).map((game, index) => <li className="list-group-item" key={index}>{game}: <strong>{outputs.filter(x => x.game === game).length.toLocaleString("en-US")}</strong> ({(outputs.filter(x => x.game === game).length / outputs.length * 100).toFixed(1)}%)</li>)}
+                {Array.from(new Set(outputs.map(output => output.game))).map((game, index) => <li className="list-group-item" key={index}>{game}: <strong>{outputs.filter(output => output.game === game).length.toLocaleString("en-US")}</strong> ({(outputs.filter(output => output.game === game).length / outputs.length * 100).toFixed(1)}%)</li>)}
                 <li className="list-group-item">
                   <Doughnut data={{
                     labels: Array.from(new Set(outputs.map(x => x.game))),
                     datasets: [
                       {
                         label: " # of stats sent",
-                        data: Array.from(new Set(outputs.map(x => x.game))).map(game => outputs.filter(x => x.game === game).length),
+                        data: Array.from(new Set(outputs.map(output => output.game))).map(game => outputs.filter(output => output.game === game).length),
                         hoverBackgroundColor: "grey",
                         hoverOffset: 7
                       }
@@ -74,14 +74,14 @@ export default () => {
             <div className="col-lg mb-3">
               <h4>Stats sent per segment</h4>
               <ul className="list-group">
-                {Array.from(new Set(outputs.map(x => x.segment))).map((segment, index) => <li className="list-group-item" key={index}>{segment}: <strong>{outputs.filter(x => x.segment === segment).length.toLocaleString("en-US")}</strong> ({(outputs.filter(x => x.segment === segment).length / outputs.length * 100).toFixed(1)}%)</li>)}
+                {Array.from(new Set(outputs.map(output => output.segment))).map((segment, index) => <li className="list-group-item" key={index}>{segment}: <strong>{outputs.filter(output => output.segment === segment).length.toLocaleString("en-US")}</strong> ({(outputs.filter(output => output.segment === segment).length / outputs.length * 100).toFixed(1)}%)</li>)}
                 <li className="list-group-item">
                   <Doughnut data={{
-                    labels: Array.from(new Set(outputs.map(x => x.segment))),
+                    labels: Array.from(new Set(outputs.map(output => output.segment))),
                     datasets: [
                       {
                         label: " # of stats sent",
-                        data: Array.from(new Set(outputs.map(x => x.segment))).map(segment => outputs.filter(x => x.segment === segment).length),
+                        data: Array.from(new Set(outputs.map(output => output.segment))).map(segment => outputs.filter(output => output.segment === segment).length),
                         hoverBackgroundColor: "grey",
                         hoverOffset: 7
                       }
@@ -94,14 +94,14 @@ export default () => {
             <div className="col-lg mb-3">
               <h4>Stats sent per language</h4>
               <ul className="list-group">
-                {Array.from(new Set(outputs.map(x => x.language))).map((language, index) => <li className="list-group-item" key={index}>{language}: <strong>{outputs.filter(x => x.language === language).length.toLocaleString("en-US")}</strong> ({(outputs.filter(x => x.language === language).length / outputs.length * 100).toFixed(1)}%)</li>)}
+                {Array.from(new Set(outputs.map(output => output.language))).map((language, index) => <li className="list-group-item" key={index}>{language}: <strong>{outputs.filter(output => output.language === language).length.toLocaleString("en-US")}</strong> ({(outputs.filter(output => output.language === language).length / outputs.length * 100).toFixed(1)}%)</li>)}
                 <li className="list-group-item">
                   <Doughnut data={{
-                    labels: Array.from(new Set(outputs.map(x => x.language))),
+                    labels: Array.from(new Set(outputs.map(output => output.language))),
                     datasets: [
                       {
                         label: " # of stats sent",
-                        data: Array.from(new Set(outputs.map(x => x.language))).map(language => outputs.filter(x => x.language === language).length),
+                        data: Array.from(new Set(outputs.map(output => output.language))).map(language => outputs.filter(output => output.language === language).length),
                         hoverBackgroundColor: "grey",
                         hoverOffset: 7
                       }
@@ -114,7 +114,7 @@ export default () => {
             <div className="col-lg">
               <h4>Top users</h4>
               <ol className="list-group list-group-numbered">
-                {[...Array(20).keys()].map(x => <li className="list-group-item" key={x}>User was sent <strong>{users[x].total_stats_sent.toLocaleString("en-US")}</strong> stats</li>)}
+                {users.slice(0, 20).map((user, index) => <li className="list-group-item" key={index}>User was sent <strong>{user.total_stats_sent.toLocaleString("en-US")}</strong> stats</li>)}
               </ol>
             </div>
           </div>
@@ -135,11 +135,11 @@ export default () => {
                 {Object.entries(baseStats.totalStatsSent.games).map((game, index) => <li className="list-group-item" key={index}>{game[0]}: <strong>{game[1].toLocaleString("en-US")}</strong> ({(game[1] / baseStats.totalStatsSent.total * 100).toFixed(1)}%)</li>)}
                 <li className="list-group-item">
                   <Doughnut data={{
-                    labels: Object.entries(baseStats.totalStatsSent.games).map(x => x[0]),
+                    labels: Object.entries(baseStats.totalStatsSent.games).map(game => game[0]),
                     datasets: [
                       {
                         label: " # of stats sent",
-                        data: Object.entries(baseStats.totalStatsSent.games).map(x => x[1]),
+                        data: Object.entries(baseStats.totalStatsSent.games).map(game => game[1]),
                         hoverBackgroundColor: "grey",
                         hoverOffset: 7
                       }
@@ -155,11 +155,11 @@ export default () => {
                 {Object.entries(baseStats.totalStatsSent.languages).map((language, index) => <li className="list-group-item" key={index}>{language[0]}: <strong>{language[1].toLocaleString("en-US")}</strong> ({(language[1] / baseStats.totalStatsSent.total * 100).toFixed(1)}%)</li>)}
                 <li className="list-group-item">
                   <Doughnut data={{
-                    labels: Object.entries(baseStats.totalStatsSent.languages).map(x => x[0]),
+                    labels: Object.entries(baseStats.totalStatsSent.languages).map(language => language[0]),
                     datasets: [
                       {
                         label: " # of stats sent",
-                        data: Object.entries(baseStats.totalStatsSent.languages).map(x => x[1]),
+                        data: Object.entries(baseStats.totalStatsSent.languages).map(language => language[1]),
                         hoverBackgroundColor: "grey",
                         hoverOffset: 7
                       }
