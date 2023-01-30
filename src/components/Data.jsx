@@ -1,7 +1,8 @@
+import humanizeDuration from "humanize-duration";
+import WordArt from "react-wordart";
 import { useQuery } from "@tanstack/react-query";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
-import WordArt from "react-wordart";
 import StatsText from "./StatsText";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -34,7 +35,7 @@ export default () => {
 
       {/* <h1 className="text-decoration-underline">Data</h1> */}
       <WordArt text='Data' theme="blues" fontSize={50} />
-      <h5>Updates every 60 seconds.</h5>
+      <h5>All data updates every 60 seconds.</h5>
 
       {baseStatus === "success" && usersStatus === "success" && outputsStatus === "success" ?
         <div>
@@ -146,7 +147,7 @@ export default () => {
               </ul>
             </div>
 
-            <div className="col-lg">
+            <div className="col-lg mb-3">
               <h4>Stats sent per language</h4>
               <ul className="list-group">
                 {Object.entries(baseStats.totalStatsSent.languages).map((language, index) => <li className="list-group-item" key={index}>{language[0]}: <strong>{language[1].toLocaleString("en-US")}</strong> ({(language[1] / baseStats.totalStatsSent.total * 100).toFixed(1)}%)</li>)}
@@ -165,6 +166,15 @@ export default () => {
                 </li>
               </ul>
             </div>
+          </div>
+
+          <hr className="border border-primary border-2 opacity-75 rounded" />
+
+          <h3>Last stats sent</h3>
+          <div className="mb-3">
+            <ul className="list-group list-group-numbered">
+              {outputs.sort((a, b) => b.date - a.date).slice(0, 20).map((output, index) => <li key={index} className="list-group-item"><strong>{output.game} {output.segment}</strong> // {new Date(output.date).toUTCString()} ({humanizeDuration(output.date - new Date(), { round: true })} ago)</li>)}
+            </ul>
           </div>
         </div>
         : baseStatus === "loading" || usersStatus === "loading" || outputsStatus === "loading" ? <h4>Loading...</h4> : <h4 className="text-danger">Error. Retrying in 30 seconds...</h4>
