@@ -120,7 +120,6 @@ export default () => {
 
           <h3>Total</h3>
           <div className="mb-3">
-            <h4>Base stats</h4>
             <ul className="list-group">
               <li className="list-group-item"><strong>{baseStats.totalStatsSent.total.toLocaleString("en-US")}</strong> stats sent</li>
             </ul>
