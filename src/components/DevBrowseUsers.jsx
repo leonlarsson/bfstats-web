@@ -74,12 +74,14 @@ const User = ({ user, apiKey }) => {
     }
 
     return (
-        <div className="d-flex flex-column browseBox col border border-2 border-primary rounded p-2 m-2">
-            <h4>{user.username} ({user.user_id})</h4>
-            <h6>Stats sent: {user.total_stats_sent}</h6>
-            <h6>Last language: {user.last_language}</h6>
-            <h6>Last sent: {new Date(user.last_stats_sent).toUTCString()}</h6>
-            <button className="btn btn-primary w-100 mt-auto" onClick={showUserOutputs}>Show Outputs (Console)</button>
+        <div className="col">
+            <div className="card card-body mb-3">
+                <h4>{user.username} ({user.user_id})</h4>
+                <h6>Stats sent: {user.total_stats_sent}</h6>
+                <h6>Last language: {user.last_language}</h6>
+                <h6>Last sent: {new Date(user.last_stats_sent).toUTCString()}</h6>
+                <button className="btn btn-primary" onClick={showUserOutputs}>Show Outputs (Console)</button>
+            </div>
         </div>
     );
 }
