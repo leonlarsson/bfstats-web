@@ -65,7 +65,7 @@ export default () => {
                       {
                         label: " # of stats sent",
                         data: Array.from(new Set(outputs.map(output => output.game))).map(game => outputs.filter(output => output.game === game).length),
-                        hoverBackgroundColor: "grey",
+                        backgroundColor: ["#f59b71", "#60ff78", "#f0e0fb", "#cfe2f3", "#655925", "#85754e", "#cd9b1d", "#301e4b", "#75758f", "#416788", "#c0c066", "#6666c0", "#333366", "#445577", "#883399", "#daccad", "#accec0", "#3c2c7d", "#ff800c", "#ad9a9d"],
                         hoverOffset: 7
                       }
                     ]
@@ -85,7 +85,7 @@ export default () => {
                       {
                         label: " # of stats sent",
                         data: Array.from(new Set(outputs.map(output => output.segment))).map(segment => outputs.filter(output => output.segment === segment).length),
-                        hoverBackgroundColor: "grey",
+                        backgroundColor: ["#f59b71", "#60ff78", "#f0e0fb", "#cfe2f3", "#655925", "#85754e", "#cd9b1d", "#301e4b", "#75758f", "#416788", "#c0c066", "#6666c0", "#333366", "#445577", "#883399", "#daccad", "#accec0", "#3c2c7d", "#ff800c", "#ad9a9d"],
                         hoverOffset: 7
                       }
                     ]
@@ -105,7 +105,7 @@ export default () => {
                       {
                         label: " # of stats sent",
                         data: Array.from(new Set(outputs.map(output => output.language))).map(language => outputs.filter(output => output.language === language).length),
-                        hoverBackgroundColor: "grey",
+                        backgroundColor: ["#f59b71", "#60ff78", "#f0e0fb", "#cfe2f3", "#655925", "#85754e", "#cd9b1d", "#301e4b", "#75758f", "#416788", "#c0c066", "#6666c0", "#333366", "#445577", "#883399", "#daccad", "#accec0", "#3c2c7d", "#ff800c", "#ad9a9d"],
                         hoverOffset: 7
                       }
                     ]
@@ -143,7 +143,7 @@ export default () => {
                       {
                         label: " # of stats sent",
                         data: Object.entries(baseStats.totalStatsSent.games).map(game => game[1]),
-                        hoverBackgroundColor: "grey",
+                        backgroundColor: ["#f59b71", "#60ff78", "#f0e0fb", "#cfe2f3", "#655925", "#85754e", "#cd9b1d", "#301e4b", "#75758f", "#416788", "#c0c066", "#6666c0", "#333366", "#445577", "#883399", "#daccad", "#accec0", "#3c2c7d", "#ff800c", "#ad9a9d"],
                         hoverOffset: 7
                       }
                     ]
@@ -163,7 +163,7 @@ export default () => {
                       {
                         label: " # of stats sent",
                         data: Object.entries(baseStats.totalStatsSent.languages).map(language => language[1]),
-                        hoverBackgroundColor: "grey",
+                        backgroundColor: ["#f59b71", "#60ff78", "#f0e0fb", "#cfe2f3", "#655925", "#85754e", "#cd9b1d", "#301e4b", "#75758f", "#416788", "#c0c066", "#6666c0", "#333366", "#445577", "#883399", "#daccad", "#accec0", "#3c2c7d", "#ff800c", "#ad9a9d"],
                         hoverOffset: 7
                       }
                     ]
