@@ -16,7 +16,7 @@ export default () => {
 
     const fetchUsers = async () => {
 
-        const res = await fetch("https://bfstats-api.leonlarsson.com/d1/users", {
+        const res = await fetch("https://api.battlefieldstats.com/d1/users", {
             headers: {
                 "API-KEY": apiKey.current.value,
                 "D1-Query": "SELECT * FROM users ORDER BY total_stats_sent DESC"
@@ -61,7 +61,7 @@ export default () => {
 const User = ({ user, apiKey }) => {
 
     const showUserOutputs = async () => {
-        const res = await fetch("https://bfstats-api.leonlarsson.com/d1/outputs", {
+        const res = await fetch("https://api.battlefieldstats.com/d1/outputs", {
             headers: {
                 "API-KEY": apiKey,
                 "D1-Query": `SELECT * FROM outputs WHERE user_id = ${user.user_id}`

@@ -17,21 +17,21 @@ export default () => {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchInterval: 60_000,
-    queryKey: ["baseData"], queryFn: async () => (await fetch("https://bfstats-api.leonlarsson.com/")).json()
+    queryKey: ["baseData"], queryFn: async () => (await fetch("https://api.battlefieldstats.com/")).json()
   });
 
   const { data: users, status: usersStatus } = useQuery({
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchInterval: 60_000,
-    queryKey: ["usersData"], queryFn: async () => (await fetch("https://bfstats-api.leonlarsson.com/d1/users")).json()
+    queryKey: ["usersData"], queryFn: async () => (await fetch("https://api.battlefieldstats.com/d1/users")).json()
   });
 
   const { data: outputs, status: outputsStatus } = useQuery({
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchInterval: 60_000,
-    queryKey: ["outputsData"], queryFn: async () => (await fetch("https://bfstats-api.leonlarsson.com/d1/outputs")).json()
+    queryKey: ["outputsData"], queryFn: async () => (await fetch("https://api.battlefieldstats.com/d1/outputs")).json()
   });
 
   return (

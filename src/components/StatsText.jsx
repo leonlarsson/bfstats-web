@@ -7,7 +7,7 @@ export default () => {
         refetchOnMount: false,
         refetchOnWindowFocus: false,
         refetchInterval: 60_000,
-        queryKey: ["statsData"], queryFn: async () => (await fetch("https://bfstats-api.leonlarsson.com")).json()
+        queryKey: ["statsData"], queryFn: async () => (await fetch("https://api.battlefieldstats.com")).json()
     });
 
     return <h3 className="text-center">
