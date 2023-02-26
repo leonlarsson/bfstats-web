@@ -21,12 +21,13 @@ export default () => {
         // If fetch is not okay, return and set data
         if (!res.ok) return setErrorText(res.status === 401 ? "Incorrect API key" : "Failed to fetch");
 
-        // If outputs are not found, return and set data
+        // If outputs are not found OR the data is not complete (lite data, no api key), return and set data
         const outputsArray = await res.json();
-        if (!outputsArray.length) return setErrorText("No outputs found");
+        if (!outputsArray.length || !outputsArray[0].username) return setErrorText("No outputs found");
 
         // Set data for when outputs are found
         setOutputs(outputsArray);
+        setErrorText("");
     }
 
     return (

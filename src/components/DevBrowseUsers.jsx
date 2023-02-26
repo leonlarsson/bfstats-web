@@ -10,7 +10,7 @@ export default () => {
     const apiKey = useRef();
 
     // Get users where the username or ID matches the search
-    const filteredUsers = users.filter(user => [user.username, user.user_id].some(x => x.toLowerCase().includes(query.toLowerCase())));
+    const filteredUsers = users.filter(user => [user.username, user.user_id].some(x => x?.toLowerCase().includes(query.toLowerCase())));
 
     const handleButtonDisabled = () => setButtonDisabled(!/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/.test(apiKey.current.value));
 
@@ -26,12 +26,13 @@ export default () => {
         // If fetch is not okay, return and set data
         if (!res.ok) return setErrorText(res.status === 401 ? "Incorrect API key" : "Failed to fetch");
 
-        // If users are not found, return and set data
+        // If users are not found OR the data is not complete (lite data, no api key), return and set data
         const usersArray = await res.json();
-        if (!usersArray.length) return setErrorText("No users found");
+        if (!usersArray.length || !usersArray[0].username) return setErrorText("No users found");
 
         // Set data for when users are found
         setUsers(usersArray);
+        setErrorText("");
     }
 
     return (
