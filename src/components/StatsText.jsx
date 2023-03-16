@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-export default () => {
+const StatsText = () => {
 
     // Fetch data every 60 seconds. Don't refetch when the user switches back to the Home page
     const { data } = useQuery({
@@ -13,4 +13,6 @@ export default () => {
     return <h3 className="text-center">
         In <b>{data?.totalGuilds.toLocaleString("en-US") ?? "x"}</b> servers, with <b>{data?.totalMembers.toLocaleString("en-US") ?? "y"}</b> members, and <b>{data?.totalStatsSent.total.toLocaleString("en-US") ?? "z"}</b> stats sent.
     </h3>
-}
+};
+
+export default StatsText;

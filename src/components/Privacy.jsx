@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import StatsText from "./StatsText";
 import image_statsDeleteButton from "../assets/images/StatsDeleteButton.png";
 
-export default () => {
+const Privacy = () => {
   return (
     <div className="container">
       <StatsText />
@@ -74,3 +74,5 @@ export default () => {
     </div>
   );
 };
+
+export default Privacy;

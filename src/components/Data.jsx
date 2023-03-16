@@ -8,7 +8,7 @@ import StatsText from "./StatsText";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export default () => {
+const Data = () => {
 
   const [showAllOutputs, setShowAllOutputs] = useState(false);
 
@@ -188,3 +188,5 @@ export default () => {
     </div>
   );
 };
+
+export default Data;

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import StatsText from "./StatsText";
 
-export default () => {
+const Home = () => {
 
   return (
     <div className="container">
@@ -149,3 +149,5 @@ export default () => {
     </div>
   );
 };
+
+export default Home;

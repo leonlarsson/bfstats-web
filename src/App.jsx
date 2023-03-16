@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Nav from "./components/Nav";
 
-export default () => {
+const App = () => {
     return (
         <>
             <Nav />
@@ -9,3 +9,5 @@ export default () => {
         </>
     );
 };
+
+export default App;

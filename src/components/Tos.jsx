@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-target-blank */
 import StatsText from "./StatsText";
 
-export default () => {
+const Tos = () => {
   return (
     <div className="container">
       <StatsText />
@@ -24,3 +24,5 @@ export default () => {
     </div>
   );
 };
+
+export default Tos;

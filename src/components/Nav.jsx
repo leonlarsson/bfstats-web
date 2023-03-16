@@ -3,7 +3,7 @@
 import { Link, NavLink } from "react-router-dom";
 import logo from "../assets/images/avatar.png";
 
-export default () => {
+const Nav = () => {
     return (
         <nav className="navbar navbar-expand-lg sticky-top bg-light mb-3 border-bottom">
             <div className="container-fluid">
@@ -52,4 +52,6 @@ export default () => {
             </div>
         </nav>
     );
-}
+};
+
+export default Nav;

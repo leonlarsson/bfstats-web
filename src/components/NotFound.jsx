@@ -1,6 +1,6 @@
 import StatsText from "./StatsText";
 
-export default () => {
+const NotFound = () => {
   return (
     <div className="container text-center">
       <StatsText />
@@ -12,3 +12,5 @@ export default () => {
     </div>
   );
 };
+
+export default NotFound;

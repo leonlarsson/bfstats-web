@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import StatsText from "./StatsText";
 
-export default () => {
+const DevBrowseInputs = () => {
 
     const [errorText, setErrorText] = useState("");
     const [buttonDisabled, setButtonDisabled] = useState(true);
@@ -66,4 +66,6 @@ const Output = ({ output }) => {
             </div>
         </div>
     );
-}
+};
+
+export default DevBrowseInputs;
