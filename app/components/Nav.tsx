@@ -38,10 +38,10 @@ const Nav = () => {
                             <a className={`nav-link dropdown-toggle ${devDropdownActive() && "active"}`} role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="fa-solid fa-cog"></i> Dev</a>
                             <ul className="dropdown-menu">
                                 <li>
-                                    <Link href="/dev-browse-users" className={dropdownItemClass("/dev-browse-users")}>Browse Users</Link>
+                                    <Link href="/dev-browse-users" className={dropdownItemClass("/dev-browse-users")}><i className="fa-solid fa-users" /> Browse Users</Link>
                                 </li>
                                 <li>
-                                    <Link href="/dev-browse-outputs" className={dropdownItemClass("/dev-browse-outputs")}>Browse Outputs</Link>
+                                    <Link href="/dev-browse-outputs" className={dropdownItemClass("/dev-browse-outputs")}><i className="fa-solid fa-images" /> Browse Outputs</Link>
                                 </li>
                             </ul>
                         </li>
