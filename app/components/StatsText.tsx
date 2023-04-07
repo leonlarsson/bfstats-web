@@ -1,8 +1,6 @@
 const StatsText = async () => {
 
-    const res = await fetch("https://api.battlefieldstats.com", {
-        cache: "no-store"
-    });
+    const res = await fetch("https://api.battlefieldstats.com");
 
     const data = await res.json();
 
