@@ -53,6 +53,7 @@ const Nav = () => {
                                 <a href="https://api.battlefieldstats.com/d1/outputs" target="_blank" className="dropdown-item">d1/outputs <i className="fa-solid fa-up-right-from-square"></i></a>
                             </ul>
                         </li>
+                        <a href="https://twitter.com/mozzyfx" target="_blank" className="nav-link"> <i className="fa-brands fa-twitter"></i> Twitter</a>
                         <a href="https://discord.com/oauth2/authorize?client_id=842768680252997662&scope=bot%20applications.commands" target="_blank" className="nav-link link-primary fw-bold"> <i className="fa-solid fa-right-to-bracket"></i> Invite</a>
                     </div>
                 </div>

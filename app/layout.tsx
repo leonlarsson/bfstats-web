@@ -7,6 +7,7 @@ import StatsText from "./components/StatsText";
 import "bootstrap/dist/css/bootstrap.css";
 import "../public/fontawesome/css/fontawesome.min.css";
 import "../public/fontawesome/css/solid.min.css";
+import "../public/fontawesome/css/brands.min.css";
 
 const pageTitle = "Battlefield Stats Discord Bot";
 const pageDescription = "Information about the Battlefield Stats Discord Bot.";
