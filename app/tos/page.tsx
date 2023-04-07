@@ -1,5 +1,27 @@
+const pageTitle = "Terms of Service | Battlefield Stats Discord Bot";
+const pageDescription = "Terms of Service for the Battlefield Stats Discord Bot.";
+
 export const metadata = {
-    title: "Terms of Service | Battlefield Stats Discord Bot"
+    title: pageTitle,
+    description: pageDescription,
+    openGraph: {
+        type: "website",
+        url: "https://battlefieldstats.com",
+        title: pageTitle,
+        description: pageDescription,
+        images: {
+            url: "/images/example_bf2042.png",
+            width: 1200,
+            height: 750
+        }
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: pageTitle,
+        description: pageDescription,
+        creator: "@mozzyfx",
+        images: "/images/example_bf2042.png"
+    }
 };
 
 const Tos = () => {
