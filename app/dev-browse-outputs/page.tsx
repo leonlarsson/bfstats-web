@@ -1,5 +1,6 @@
+"use client";
+
 import { useRef, useState } from "react";
-import StatsText from "./StatsText";
 
 const DevBrowseInputs = () => {
 
@@ -7,10 +8,10 @@ const DevBrowseInputs = () => {
     const [buttonDisabled, setButtonDisabled] = useState(true);
     const [outputs, setOutputs] = useState([]);
     const [query, setQuery] = useState("");
-    const apiKey = useRef();
+    const apiKey: any = useRef();
 
     // Get outputs where the username/guild name or IDs match the search
-    const filteredOutputs = outputs.filter(output => [output.username, output.user_id, output.guild_name, output.guild_id].some(x => x?.toLowerCase().includes(query.toLowerCase())));
+    const filteredOutputs: Outputs = outputs.filter((output: Output) => [output.username, output.user_id, output.guild_name, output.guild_id].some(x => x?.toLowerCase().includes(query.toLowerCase())));
 
     const handleButtonDisabled = () => setButtonDisabled(!/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/.test(apiKey.current.value));
 
@@ -31,10 +32,7 @@ const DevBrowseInputs = () => {
     }
 
     return (
-        <div className="container">
-            <StatsText />
-            <hr />
-
+        <>
             <h1 className="text-decoration-underline">Browse Outputs</h1>
             <h5>Press the button to fetch outputs.</h5>
 
@@ -45,16 +43,16 @@ const DevBrowseInputs = () => {
             <button className="btn btn-secondary" disabled={buttonDisabled} onClick={fetchOutputs}>Fetch Outputs</button>
             <hr />
             <label htmlFor="searchInput">Search:</label>
-            <input type="search" className="form-control mb-2" id="searchInput" onInput={e => setQuery(e.target.value)} placeholder="Username, Guild name or IDs" />
+            <input type="search" className="form-control mb-2" id="searchInput" onInput={e => setQuery(e.currentTarget.value)} placeholder="Username, Guild name or IDs" />
             <h3>{filteredOutputs.length} {filteredOutputs.length === 1 ? "output" : "outputs"}:</h3>
             <div className="row">
-                {filteredOutputs.map(output => <Output key={output.date} output={output} />)}
+                {filteredOutputs.map((output: Output) => <Output key={output.date} output={output} />)}
             </div>
-        </div >
+        </>
     );
 };
 
-const Output = ({ output }) => {
+const Output = ({ output }: { output: Output }) => {
     return (
         <div className="col">
             <div className="card card-body mb-3">
@@ -69,3 +67,17 @@ const Output = ({ output }) => {
 };
 
 export default DevBrowseInputs;
+
+type Output = {
+    user_id: string;
+    username: string;
+    guild_id?: string;
+    guild_name?: string;
+    language: string;
+    date: number;
+    image_url?: string;
+    game: string;
+    segment: string;
+};
+
+type Outputs = Output[];

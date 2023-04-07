@@ -1,12 +1,8 @@
-import { Link } from "react-router-dom";
-import StatsText from "./StatsText";
+import Link from "next/link";
 
 const Home = () => {
-
   return (
-    <div className="container">
-      <StatsText />
-
+    <>
       <div className="accordion mb-3" id="accordion">
         <div className="accordion-item">
           <h2 className="accordion-header" id="headingOne">
@@ -69,7 +65,7 @@ const Home = () => {
                 All images displayed in this bot and its output are properties of EA/DICE. The bot uses
                 stats from <a className="link-primary fw-bold" href="https://battlefieldtracker.com?utm_source=discord&utm_medium=full-stats&utm_campaign=mozzy-bot">Tracker Network</a> and <a className="link-primary fw-bold" href="https://gametools.network">Community Network</a>. This is not possible without these services.
                 <br />
-                Read the <Link to="/privacy" className="link-primary fw-bold">Privacy Policy</Link> and <Link to="/tos" className="link-primary fw-bold">Terms of Service</Link>.
+                Read the <Link href="/privacy" className="link-primary fw-bold">Privacy Policy</Link> and <Link href="/tos" className="link-primary fw-bold">Terms of Service</Link>.
                 <br /><br />
                 Massive thanks to all the community translators: Sephi, PierrotL'Asticot, Matteo 'Forever.exe' Besutti, Navigando, Salty Tenten, Rephii, CaptPerry, TheLetslook, Szymon Olejniczak, Rubinsk, VIP-AHMAD-007, PeterSMK2, TR-BatuhanKara, Arall, Pug, Klikard, Dragory
               </p>
@@ -106,34 +102,34 @@ const Home = () => {
 
         <div className="carousel-inner rounded">
           <div className="carousel-item active">
-            <img src="/assets/images/example_bf2042.png" className="d-block w-100" alt="..." />
+            <img src="/images/example_bf2042.png" className="d-block w-100" alt="..." />
           </div>
           <div className="carousel-item">
-            <img src="/assets/images/example_bfv.png" className="d-block w-100" alt="..." />
+            <img src="/images/example_bfv.png" className="d-block w-100" alt="..." />
           </div>
           <div className="carousel-item">
-            <img src="/assets/images/example_bf1.png" className="d-block w-100" alt="..." />
+            <img src="/images/example_bf1.png" className="d-block w-100" alt="..." />
           </div>
           <div className="carousel-item">
-            <img src="/assets/images/example_bfh.png" className="d-block w-100" alt="..." />
+            <img src="/images/example_bfh.png" className="d-block w-100" alt="..." />
           </div>
           <div className="carousel-item">
-            <img src="/assets/images/example_bf4.png" className="d-block w-100" alt="..." />
+            <img src="/images/example_bf4.png" className="d-block w-100" alt="..." />
           </div>
           <div className="carousel-item">
-            <img src="/assets/images/example_bf3.png" className="d-block w-100" alt="..." />
+            <img src="/images/example_bf3.png" className="d-block w-100" alt="..." />
           </div>
           <div className="carousel-item">
-            <img src="/assets/images/example_bfbc2.png" className="d-block w-100" alt="..." />
+            <img src="/images/example_bfbc2.png" className="d-block w-100" alt="..." />
           </div>
           <div className="carousel-item">
-            <img src="/assets/images/example_bf2.png" className="d-block w-100" alt="..." />
+            <img src="/images/example_bf2.png" className="d-block w-100" alt="..." />
           </div>
           <div className="carousel-item">
-            <img src="/assets/images/example_bf2042w.png" className="d-block w-100" alt="..." />
+            <img src="/images/example_bf2042w.png" className="d-block w-100" alt="..." />
           </div>
           <div className="carousel-item">
-            <img src="/assets/images/example_bf1v.png" className="d-block w-100" alt="..." />
+            <img src="/images/example_bf1v.png" className="d-block w-100" alt="..." />
           </div>
         </div>
         <button className="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
@@ -145,8 +141,7 @@ const Home = () => {
           <span className="visually-hidden">Next</span>
         </button>
       </div>
-
-    </div>
+    </>
   );
 };
 

@@ -1,14 +1,21 @@
-/* eslint-disable react/jsx-no-target-blank */
+"use client";
 
-import { Link, NavLink } from "react-router-dom";
-import logo from "../assets/images/avatar.png";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Nav = () => {
+
+    const pathname = usePathname();
+
+    const navLinkClass = (url: string) => pathname === url ? "nav-link active" : "nav-link";
+    const dropdownItemClass = (url: string) => pathname === url ? "dropdown-item active" : "dropdown-item";
+    const devDropdownActive = () => ["/dev-browse-users", "/dev-browse-outputs"].includes(pathname);
+
     return (
         <nav className="navbar navbar-expand-lg sticky-top bg-light mb-3 border-bottom">
             <div className="container-fluid">
-                <Link to="/" className="navbar-brand mb-0 h1">
-                    <img src={logo} width="30px" height="30px" className="d-inline-block align-text-top" alt="Battlefield Stats Logo" /> Battlefield Stats
+                <Link href="/" className="navbar-brand mb-0 h1">
+                    <img src="/images/avatar.png" width="30px" height="30px" className="d-inline-block align-text-top" alt="Battlefield Stats Logo" /> Battlefield Stats
                 </Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
@@ -16,25 +23,25 @@ const Nav = () => {
                 <div className="collapse navbar-collapse" id="nav">
                     <div className="navbar-nav">
                         <li className="nav-item">
-                            <NavLink to="/" className="nav-link"><i className="fa-solid fa-house"></i> Home</NavLink>
+                            <Link href="/" className={navLinkClass("/")}><i className="fa-solid fa-house"></i> Home</Link>
                         </li>
                         <li className="nav-item">
-                            <NavLink to="/privacy" className="nav-link"><i className="fa-solid fa-lock"></i> Privacy Policy</NavLink>
+                            <Link href="/privacy" className={navLinkClass("/privacy")}><i className="fa-solid fa-lock"></i> Privacy Policy</Link>
                         </li>
                         <li className="nav-item">
-                            <NavLink to="/tos" className="nav-link"><i className="fa-solid fa-book"></i> Terms of Service</NavLink>
+                            <Link href="/tos" className={navLinkClass("/tos")}><i className="fa-solid fa-book"></i> Terms of Service</Link>
                         </li>
                         <li className="nav-item">
-                            <NavLink to="/data" className="nav-link"><i className="fa-solid fa-chart-simple"></i> Data</NavLink>
+                            <Link href="/data" className={navLinkClass("/data")}><i className="fa-solid fa-chart-simple"></i> Data</Link>
                         </li>
                         <li className="nav-item dropdown">
-                            <a className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="fa-solid fa-cog"></i> Dev</a>
+                            <a className={`nav-link dropdown-toggle ${devDropdownActive() && "active"}`} role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="fa-solid fa-cog"></i> Dev</a>
                             <ul className="dropdown-menu">
                                 <li>
-                                    <NavLink to="/dev-browse-users" className="dropdown-item">Browse Users</NavLink>
+                                    <Link href="/dev-browse-users" className={dropdownItemClass("/dev-browse-users")}>Browse Users</Link>
                                 </li>
                                 <li>
-                                    <NavLink to="/dev-browse-outputs" className="dropdown-item">Browse Outputs</NavLink>
+                                    <Link href="/dev-browse-outputs" className={dropdownItemClass("/dev-browse-outputs")}>Browse Outputs</Link>
                                 </li>
                             </ul>
                         </li>

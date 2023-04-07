@@ -1,5 +1,6 @@
+"use client";
+
 import { useRef, useState } from "react";
-import StatsText from "./StatsText";
 
 const DevBrowseUsers = () => {
 
@@ -7,10 +8,10 @@ const DevBrowseUsers = () => {
     const [buttonDisabled, setButtonDisabled] = useState(true);
     const [users, setUsers] = useState([]);
     const [query, setQuery] = useState("");
-    const apiKey = useRef();
+    const apiKey: any = useRef();
 
     // Get users where the username or ID matches the search
-    const filteredUsers = users.filter(user => [user.username, user.user_id].some(x => x?.toLowerCase().includes(query.toLowerCase())));
+    const filteredUsers: Users = users.filter((user: User) => [user.username, user.user_id].some(x => x?.toLowerCase().includes(query.toLowerCase())));
 
     const handleButtonDisabled = () => setButtonDisabled(!/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/.test(apiKey.current.value));
 
@@ -36,9 +37,7 @@ const DevBrowseUsers = () => {
     }
 
     return (
-        <div className="container">
-            <StatsText />
-            <hr />
+        <>
 
             <h1 className="text-decoration-underline">Browse Users</h1>
             <h5>Press the button to fetch users.</h5>
@@ -50,16 +49,16 @@ const DevBrowseUsers = () => {
             <button className="btn btn-secondary" disabled={buttonDisabled} onClick={fetchUsers}>Fetch Users</button>
             <hr />
             <label htmlFor="searchInput">Search:</label>
-            <input type="search" className="form-control mb-2" id="searchInput" onInput={e => setQuery(e.target.value)} placeholder="Username or ID" />
+            <input type="search" className="form-control mb-2" id="searchInput" onInput={e => setQuery(e.currentTarget.value)} placeholder="Username or ID" />
             <h3>{filteredUsers.length} {filteredUsers.length === 1 ? "user" : "users"}:</h3>
             <div className="row">
-                {filteredUsers.filter(user => user.username).map(user => <User key={user.user_id} user={user} apiKey={apiKey.current.value} />)}
+                {filteredUsers.filter((user: User) => user.username).map((user: User) => <User key={user.user_id} user={user} apiKey={apiKey.current.value} />)}
             </div>
-        </div >
+        </ >
     );
 };
 
-const User = ({ user, apiKey }) => {
+const User = ({ user, apiKey }: { user: User, apiKey: string }) => {
 
     const showUserOutputs = async () => {
         const res = await fetch("https://api.battlefieldstats.com/d1/outputs", {
@@ -88,3 +87,13 @@ const User = ({ user, apiKey }) => {
 };
 
 export default DevBrowseUsers;
+
+type User = {
+    user_id: string;
+    username: string;
+    total_stats_sent: number;
+    last_language: string;
+    last_stats_sent: number
+};
+
+type Users = User[];
