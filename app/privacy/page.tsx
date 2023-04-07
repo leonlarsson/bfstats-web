@@ -1,8 +1,7 @@
-import { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-    title: "Battlefield Stats Discord Bot - Privacy Policy"
+export const metadata = {
+    title: "Privacy Policy | Battlefield Stats Discord Bot"
 };
 
 const Privacy = () => {

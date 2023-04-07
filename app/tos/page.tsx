@@ -1,7 +1,5 @@
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-    title: "Battlefield Stats Discord Bot - Terms of Service"
+export const metadata = {
+    title: "Terms of Service | Battlefield Stats Discord Bot"
 };
 
 const Tos = () => {

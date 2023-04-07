@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { Metadata } from "next";
 import Script from "next/script";
 import Nav from "./components/Nav";
 import StatsText from "./components/StatsText";
@@ -12,7 +11,7 @@ import "../public/fontawesome/css/brands.min.css";
 const pageTitle = "Battlefield Stats Discord Bot";
 const pageDescription = "Information about the Battlefield Stats Discord Bot.";
 
-export const metadata: Metadata = {
+export const metadata = {
   title: pageTitle,
   description: pageDescription,
   themeColor: "#7289da",
@@ -23,12 +22,17 @@ export const metadata: Metadata = {
     url: "https://battlefieldstats.com",
     title: pageTitle,
     description: pageDescription,
-    images: "/images/example_bf2042.png"
+    images: {
+      url: "/images/example_bf2042.png",
+      width: 1200,
+      height: 630
+    }
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: pageTitle,
     description: pageDescription,
+    creator: "@mozzyfx",
     images: "/images/example_bf2042.png"
   }
 };
