@@ -46,11 +46,11 @@ const Nav = () => {
                             </ul>
                         </li>
                         <li className="nav-item dropdown">
-                            <a className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="fa-solid fa-code"></i> APIs</a>
+                            <a className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="fa-solid fa-code"></i> API</a>
                             <ul className="dropdown-menu">
                                 <a href="https://api.battlefieldstats.com" target="_blank" className="dropdown-item">Base <i className="fa-solid fa-up-right-from-square"></i></a>
-                                <a href="https://api.battlefieldstats.com/d1/users" target="_blank" className="dropdown-item">d1/users <i className="fa-solid fa-up-right-from-square"></i></a>
-                                <a href="https://api.battlefieldstats.com/d1/outputs" target="_blank" className="dropdown-item">d1/outputs <i className="fa-solid fa-up-right-from-square"></i></a>
+                                <a href="https://api.battlefieldstats.com/d1/users" target="_blank" className="dropdown-item">Users <i className="fa-solid fa-up-right-from-square"></i></a>
+                                <a href="https://api.battlefieldstats.com/d1/outputs" target="_blank" className="dropdown-item">Outputs <i className="fa-solid fa-up-right-from-square"></i></a>
                             </ul>
                         </li>
                         <a href="https://twitter.com/mozzyfx" target="_blank" className="nav-link"> <i className="fa-brands fa-twitter"></i> Twitter</a>
