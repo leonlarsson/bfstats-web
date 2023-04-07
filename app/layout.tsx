@@ -25,7 +25,7 @@ export const metadata = {
     images: {
       url: "/images/example_bf2042.png",
       width: 1200,
-      height: 630
+      height: 750
     }
   },
   twitter: {
