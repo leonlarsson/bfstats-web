@@ -1,6 +1,6 @@
 const StatsText = async () => {
 
-    const res = await fetch("https://api.battlefieldstats.com");
+    const res = await fetch("https://api.battlefieldstats.com", { next: { revalidate: 60 } });
 
     const data = await res.json();
 
