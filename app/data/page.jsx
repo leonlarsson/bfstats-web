@@ -7,6 +7,29 @@ import humanizeDuration from "humanize-duration";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+const backgroundColor = [
+    "#f59b71",
+    "#60ff78",
+    "#f0e0fb",
+    "#cfe2f3",
+    "#655925",
+    "#85754e",
+    "#cd9b1d",
+    "#301e4b",
+    "#75758f",
+    "#416788",
+    "#c0c066",
+    "#6666c0",
+    "#333366",
+    "#445577",
+    "#883399",
+    "#daccad",
+    "#accec0",
+    "#3c2c7d",
+    "#ff800c",
+    "#ad9a9d"
+];
+
 const Data = () => {
     const [showAllOutputs, setShowAllOutputs] = useState(false);
     const [baseStats, setBaseStats] = useState(null);
@@ -33,12 +56,10 @@ const Data = () => {
                     <div className="mb-3">
                         <ul className="list-group">
                             <li className="list-group-item">
-                                <strong>{outputs.length.toLocaleString("en-US")}</strong> stats
-                                sent
+                                <strong>{outputs.length.toLocaleString("en-US")}</strong> stats sent
                             </li>
                             <li className="list-group-item">
-                                <strong>{users.length.toLocaleString("en-US")}</strong> unique
-                                users
+                                <strong>{users.length.toLocaleString("en-US")}</strong> unique users
                             </li>
                         </ul>
                     </div>
@@ -47,65 +68,26 @@ const Data = () => {
                         <div className="col-lg mb-3">
                             <h4>Stats sent per game</h4>
                             <ul className="list-group">
-                                {Array.from(new Set(outputs.map((output) => output.game))).map(
-                                    (game, index) => (
-                                        <li className="list-group-item" key={index}>
-                                            {game}:{" "}
-                                            <strong>
-                                                {outputs
-                                                    .filter((output) => output.game === game)
-                                                    .length.toLocaleString("en-US")}
-                                            </strong>{" "}
-                                            (
-                                            {(
-                                                (outputs.filter((output) => output.game === game)
-                                                    .length /
-                                                    outputs.length) *
-                                                100
-                                            ).toFixed(1)}
-                                            %)
-                                        </li>
-                                    )
-                                )}
+                                {Array.from(new Set(outputs.map(output => output.game))).map(game => (
+                                    <li className="list-group-item" key={game}>
+                                        {game}: <strong>{outputs.filter(output => output.game === game).length.toLocaleString("en-US")}</strong>
+                                        {" "}
+                                        ({((outputs.filter(output => output.game === game).length / outputs.length) * 100).toFixed(1)}%)
+                                    </li>
+                                ))}
+
                                 <li className="list-group-item">
                                     <Doughnut
                                         data={{
-                                            labels: Array.from(new Set(outputs.map((x) => x.game))),
+                                            labels: Array.from(new Set(outputs.map(output => output.game))),
                                             datasets: [
                                                 {
                                                     label: " # of stats sent",
-                                                    data: Array.from(
-                                                        new Set(outputs.map((output) => output.game))
-                                                    ).map(
-                                                        (game) =>
-                                                            outputs.filter((output) => output.game === game)
-                                                                .length
-                                                    ),
-                                                    backgroundColor: [
-                                                        "#f59b71",
-                                                        "#60ff78",
-                                                        "#f0e0fb",
-                                                        "#cfe2f3",
-                                                        "#655925",
-                                                        "#85754e",
-                                                        "#cd9b1d",
-                                                        "#301e4b",
-                                                        "#75758f",
-                                                        "#416788",
-                                                        "#c0c066",
-                                                        "#6666c0",
-                                                        "#333366",
-                                                        "#445577",
-                                                        "#883399",
-                                                        "#daccad",
-                                                        "#accec0",
-                                                        "#3c2c7d",
-                                                        "#ff800c",
-                                                        "#ad9a9d",
-                                                    ],
-                                                    hoverOffset: 7,
-                                                },
-                                            ],
+                                                    data: Array.from(new Set(outputs.map(output => output.game))).map(game => outputs.filter(output => output.game === game).length),
+                                                    backgroundColor,
+                                                    hoverOffset: 7
+                                                }
+                                            ]
                                         }}
                                     />
                                 </li>
@@ -115,68 +97,26 @@ const Data = () => {
                         <div className="col-lg mb-3">
                             <h4>Stats sent per segment</h4>
                             <ul className="list-group">
-                                {Array.from(
-                                    new Set(outputs.map((output) => output.segment))
-                                ).map((segment, index) => (
-                                    <li className="list-group-item" key={index}>
-                                        {segment}:{" "}
-                                        <strong>
-                                            {outputs
-                                                .filter((output) => output.segment === segment)
-                                                .length.toLocaleString("en-US")}
-                                        </strong>{" "}
-                                        (
-                                        {(
-                                            (outputs.filter((output) => output.segment === segment)
-                                                .length /
-                                                outputs.length) *
-                                            100
-                                        ).toFixed(1)}
-                                        %)
+                                {Array.from(new Set(outputs.map(output => output.segment))).map(segment => (
+                                    <li className="list-group-item" key={segment}>
+                                        {segment}: <strong>{outputs.filter(output => output.segment === segment).length.toLocaleString("en-US")}</strong>
+                                        {" "}
+                                        ({((outputs.filter(output => output.segment === segment).length / outputs.length) * 100).toFixed(1)}%)
                                     </li>
                                 ))}
+
                                 <li className="list-group-item">
                                     <Doughnut
                                         data={{
-                                            labels: Array.from(
-                                                new Set(outputs.map((output) => output.segment))
-                                            ),
+                                            labels: Array.from(new Set(outputs.map(output => output.segment))),
                                             datasets: [
                                                 {
                                                     label: " # of stats sent",
-                                                    data: Array.from(
-                                                        new Set(outputs.map((output) => output.segment))
-                                                    ).map(
-                                                        (segment) =>
-                                                            outputs.filter(
-                                                                (output) => output.segment === segment
-                                                            ).length
-                                                    ),
-                                                    backgroundColor: [
-                                                        "#f59b71",
-                                                        "#60ff78",
-                                                        "#f0e0fb",
-                                                        "#cfe2f3",
-                                                        "#655925",
-                                                        "#85754e",
-                                                        "#cd9b1d",
-                                                        "#301e4b",
-                                                        "#75758f",
-                                                        "#416788",
-                                                        "#c0c066",
-                                                        "#6666c0",
-                                                        "#333366",
-                                                        "#445577",
-                                                        "#883399",
-                                                        "#daccad",
-                                                        "#accec0",
-                                                        "#3c2c7d",
-                                                        "#ff800c",
-                                                        "#ad9a9d",
-                                                    ],
-                                                    hoverOffset: 7,
-                                                },
-                                            ],
+                                                    data: Array.from(new Set(outputs.map(output => output.segment))).map(segment => outputs.filter(output => output.segment === segment).length),
+                                                    backgroundColor,
+                                                    hoverOffset: 7
+                                                }
+                                            ]
                                         }}
                                     />
                                 </li>
@@ -186,68 +126,26 @@ const Data = () => {
                         <div className="col-lg mb-3">
                             <h4>Stats sent per language</h4>
                             <ul className="list-group">
-                                {Array.from(
-                                    new Set(outputs.map((output) => output.language))
-                                ).map((language, index) => (
-                                    <li className="list-group-item" key={index}>
-                                        {language}:{" "}
-                                        <strong>
-                                            {outputs
-                                                .filter((output) => output.language === language)
-                                                .length.toLocaleString("en-US")}
-                                        </strong>{" "}
-                                        (
-                                        {(
-                                            (outputs.filter((output) => output.language === language)
-                                                .length /
-                                                outputs.length) *
-                                            100
-                                        ).toFixed(1)}
-                                        %)
+                                {Array.from(new Set(outputs.map(output => output.language))).map(language => (
+                                    <li className="list-group-item" key={language}>
+                                        {language}: <strong>{outputs.filter(output => output.language === language).length.toLocaleString("en-US")}</strong>
+                                        {" "}
+                                        ({((outputs.filter(output => output.language === language).length / outputs.length) * 100).toFixed(1)}%)
                                     </li>
                                 ))}
+
                                 <li className="list-group-item">
                                     <Doughnut
                                         data={{
-                                            labels: Array.from(
-                                                new Set(outputs.map((output) => output.language))
-                                            ),
+                                            labels: Array.from(new Set(outputs.map(output => output.language))),
                                             datasets: [
                                                 {
                                                     label: " # of stats sent",
-                                                    data: Array.from(
-                                                        new Set(outputs.map((output) => output.language))
-                                                    ).map(
-                                                        (language) =>
-                                                            outputs.filter(
-                                                                (output) => output.language === language
-                                                            ).length
-                                                    ),
-                                                    backgroundColor: [
-                                                        "#f59b71",
-                                                        "#60ff78",
-                                                        "#f0e0fb",
-                                                        "#cfe2f3",
-                                                        "#655925",
-                                                        "#85754e",
-                                                        "#cd9b1d",
-                                                        "#301e4b",
-                                                        "#75758f",
-                                                        "#416788",
-                                                        "#c0c066",
-                                                        "#6666c0",
-                                                        "#333366",
-                                                        "#445577",
-                                                        "#883399",
-                                                        "#daccad",
-                                                        "#accec0",
-                                                        "#3c2c7d",
-                                                        "#ff800c",
-                                                        "#ad9a9d",
-                                                    ],
-                                                    hoverOffset: 7,
-                                                },
-                                            ],
+                                                    data: Array.from(new Set(outputs.map(output => output.language))).map(language => outputs.filter(output => output.language === language).length),
+                                                    backgroundColor,
+                                                    hoverOffset: 7
+                                                }
+                                            ]
                                         }}
                                     />
                                 </li>
@@ -259,11 +157,7 @@ const Data = () => {
                             <ol className="list-group list-group-numbered">
                                 {users.slice(0, 20).map((user, index) => (
                                     <li className="list-group-item" key={index}>
-                                        User was sent{" "}
-                                        <strong>
-                                            {user.total_stats_sent.toLocaleString("en-US")}
-                                        </strong>{" "}
-                                        stats
+                                        User was sent <strong>{user.total_stats_sent.toLocaleString("en-US")}</strong> stats
                                     </li>
                                 ))}
                             </ol>
@@ -276,10 +170,7 @@ const Data = () => {
                     <div className="mb-3">
                         <ul className="list-group">
                             <li className="list-group-item">
-                                <strong>
-                                    {baseStats.totalStatsSent.total.toLocaleString("en-US")}
-                                </strong>{" "}
-                                stats sent
+                                <strong>{baseStats.totalStatsSent.total.toLocaleString("en-US")}</strong> stats sent
                             </li>
                         </ul>
                     </div>
@@ -288,56 +179,24 @@ const Data = () => {
                         <div className="col-lg mb-3">
                             <h4>Stats sent per game</h4>
                             <ul className="list-group">
-                                {Object.entries(baseStats.totalStatsSent.games).map(
-                                    (game, index) => (
-                                        <li className="list-group-item" key={index}>
-                                            {game[0]}:{" "}
-                                            <strong>{game[1].toLocaleString("en-US")}</strong> (
-                                            {(
-                                                (game[1] / baseStats.totalStatsSent.total) *
-                                                100
-                                            ).toFixed(1)}
-                                            %)
-                                        </li>
-                                    )
-                                )}
+                                {Object.entries(baseStats.totalStatsSent.games).map(game => (
+                                    <li className="list-group-item" key={game}>
+                                        {game[0]}: <strong>{game[1].toLocaleString("en-US")}</strong> ({((game[1] / baseStats.totalStatsSent.total) * 100).toFixed(1)}%)
+                                    </li>
+                                ))}
+
                                 <li className="list-group-item">
                                     <Doughnut
                                         data={{
-                                            labels: Object.entries(
-                                                baseStats.totalStatsSent.games
-                                            ).map((game) => game[0]),
+                                            labels: Object.entries(baseStats.totalStatsSent.games).map(game => game[0]),
                                             datasets: [
                                                 {
                                                     label: " # of stats sent",
-                                                    data: Object.entries(
-                                                        baseStats.totalStatsSent.games
-                                                    ).map((game) => game[1]),
-                                                    backgroundColor: [
-                                                        "#f59b71",
-                                                        "#60ff78",
-                                                        "#f0e0fb",
-                                                        "#cfe2f3",
-                                                        "#655925",
-                                                        "#85754e",
-                                                        "#cd9b1d",
-                                                        "#301e4b",
-                                                        "#75758f",
-                                                        "#416788",
-                                                        "#c0c066",
-                                                        "#6666c0",
-                                                        "#333366",
-                                                        "#445577",
-                                                        "#883399",
-                                                        "#daccad",
-                                                        "#accec0",
-                                                        "#3c2c7d",
-                                                        "#ff800c",
-                                                        "#ad9a9d",
-                                                    ],
-                                                    hoverOffset: 7,
-                                                },
-                                            ],
+                                                    data: Object.entries(baseStats.totalStatsSent.games).map(game => game[1]),
+                                                    backgroundColor,
+                                                    hoverOffset: 7
+                                                }
+                                            ]
                                         }}
                                     />
                                 </li>
@@ -347,56 +206,24 @@ const Data = () => {
                         <div className="col-lg mb-3">
                             <h4>Stats sent per language</h4>
                             <ul className="list-group">
-                                {Object.entries(baseStats.totalStatsSent.languages).map(
-                                    (language, index) => (
-                                        <li className="list-group-item" key={index}>
-                                            {language[0]}:{" "}
-                                            <strong>{language[1].toLocaleString("en-US")}</strong> (
-                                            {(
-                                                (language[1] / baseStats.totalStatsSent.total) *
-                                                100
-                                            ).toFixed(1)}
-                                            %)
-                                        </li>
-                                    )
-                                )}
+                                {Object.entries(baseStats.totalStatsSent.languages).map(language => (
+                                    <li className="list-group-item" key={language}>
+                                        {language[0]}: <strong>{language[1].toLocaleString("en-US")}</strong> ({((language[1] / baseStats.totalStatsSent.total) * 100).toFixed(1)}%)
+                                    </li>
+                                ))}
+
                                 <li className="list-group-item">
                                     <Doughnut
                                         data={{
-                                            labels: Object.entries(
-                                                baseStats.totalStatsSent.languages
-                                            ).map((language) => language[0]),
+                                            labels: Object.entries(baseStats.totalStatsSent.languages).map(language => language[0]),
                                             datasets: [
                                                 {
                                                     label: " # of stats sent",
-                                                    data: Object.entries(
-                                                        baseStats.totalStatsSent.languages
-                                                    ).map((language) => language[1]),
-                                                    backgroundColor: [
-                                                        "#f59b71",
-                                                        "#60ff78",
-                                                        "#f0e0fb",
-                                                        "#cfe2f3",
-                                                        "#655925",
-                                                        "#85754e",
-                                                        "#cd9b1d",
-                                                        "#301e4b",
-                                                        "#75758f",
-                                                        "#416788",
-                                                        "#c0c066",
-                                                        "#6666c0",
-                                                        "#333366",
-                                                        "#445577",
-                                                        "#883399",
-                                                        "#daccad",
-                                                        "#accec0",
-                                                        "#3c2c7d",
-                                                        "#ff800c",
-                                                        "#ad9a9d",
-                                                    ],
-                                                    hoverOffset: 7,
-                                                },
-                                            ],
+                                                    data: Object.entries(baseStats.totalStatsSent.languages).map(language => language[1]),
+                                                    backgroundColor,
+                                                    hoverOffset: 7
+                                                }
+                                            ]
                                         }}
                                     />
                                 </li>
@@ -419,17 +246,9 @@ const Data = () => {
                             {outputs
                                 .sort((a, b) => b.date - a.date)
                                 .slice(0, showAllOutputs ? -1 : 20)
-                                .map((output, index) => (
-                                    <li key={index} className="list-group-item">
-                                        <strong>
-                                            {output.game} {output.segment}
-                                        </strong>{" "}
-                                        - <strong>{output.language}</strong> //{" "}
-                                        {new Date(output.date).toUTCString()} (
-                                        {humanizeDuration(output.date - new Date(), {
-                                            round: true,
-                                        })}{" "}
-                                        ago)
+                                .map(output => (
+                                    <li key={output.date} className="list-group-item">
+                                        <strong>{output.game} {output.segment}</strong> - <strong>{output.language}</strong> // {new Date(output.date).toUTCString()} ({humanizeDuration(output.date - new Date(), { round: true })} ago)
                                     </li>
                                 ))}
                         </ul>
