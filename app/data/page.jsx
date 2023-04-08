@@ -248,9 +248,10 @@ const Data = () => {
                                 .slice(0, showAllOutputs ? -1 : 20)
                                 .map(output => (
                                     <li key={output.date} className="list-group-item">
-                                        <strong>{output.game} {output.segment}</strong> - <strong>{output.language}</strong> // {new Date(output.date).toUTCString()} ({humanizeDuration(output.date - new Date(), { round: true })} ago)
+                                        <strong>{output.game} {output.segment}</strong> - <strong>{output.language}</strong> // <span title={new Date(output.date).toUTCString()}>{humanizeDuration(output.date - new Date(), { round: true })} ago</span>
                                     </li>
-                                ))}
+                                ))
+                            }
                         </ul>
                     </div>
                 </div>
