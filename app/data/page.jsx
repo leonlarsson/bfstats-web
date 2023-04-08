@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import humanizeDuration from "humanize-duration";
@@ -12,6 +12,7 @@ const Data = () => {
     const [baseStats, setBaseStats] = useState(null);
     const [users, setUsers] = useState(null);
     const [outputs, setOutputs] = useState(null);
+    const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
         Promise.all(["https://api.battlefieldstats.com/", "https://api.battlefieldstats.com/d1/users", "https://api.battlefieldstats.com/d1/outputs",].map(url => fetch(url).then(res => res.json())))
@@ -409,9 +410,10 @@ const Data = () => {
                     <div className="mb-3">
                         <button
                             className="btn btn-primary mb-2"
-                            onClick={() => setShowAllOutputs(!showAllOutputs)}
+                            disabled={isPending}
+                            onClick={() => startTransition(() => setShowAllOutputs(!showAllOutputs))}
                         >
-                            {showAllOutputs ? "Back to last 20" : "Show all outputs (SLOW)"}
+                            {showAllOutputs ? "Back to last 20" : "Show all outputs (SLOW)"} {isPending && <i className="fa-solid fa-spinner fa-spin" />}
                         </button>
                         <ul className="list-group list-group-numbered">
                             {outputs
