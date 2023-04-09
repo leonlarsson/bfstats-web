@@ -43,6 +43,7 @@ const Data = () => {
                 <hr className="border border-primary border-2 opacity-75 rounded" />
 
                 <h3>Since January 1, 2023</h3>
+                <h5>Data is cached every hour.</h5>
                 <Suspense fallback={<h4 className="mb-5"><i className="fa-solid fa-spinner fa-spin" /> Fetching data... This might take a while.</h4>}>
                     {/* @ts-expect-error */}
                     <SinceJanuaryAndLastSent />
