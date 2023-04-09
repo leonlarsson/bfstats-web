@@ -48,7 +48,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {/* @ts-expect-error */}
             <StatsText />
           </Suspense>
-          <hr />
           {children}
         </div>
       </body>
