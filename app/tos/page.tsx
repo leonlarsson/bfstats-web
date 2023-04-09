@@ -6,7 +6,7 @@ export const metadata = {
     description: pageDescription,
     openGraph: {
         type: "website",
-        url: "https://battlefieldstats.com",
+        url: "https://battlefieldstats.com/tos",
         title: pageTitle,
         description: pageDescription,
         images: {

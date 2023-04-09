@@ -1,6 +1,32 @@
 import { BaseStats, Outputs, StatsSentPerGameChart, StatsSentPerGameTotalChart, StatsSentPerLanguageChart, StatsSentPerLanguageTotalChart, StatsSentPerSegmentChart, Users } from "../components/Data/Charts";
 import LastSentList from "../components/Data/LastSentList";
 
+const pageTitle = "Data | Battlefield Stats Discord Bot";
+const pageDescription = "Usage data for the Battlefield Stats Discord Bot.";
+
+export const metadata = {
+    title: pageTitle,
+    description: pageDescription,
+    openGraph: {
+        type: "website",
+        url: "https://battlefieldstats.com/data",
+        title: pageTitle,
+        description: pageDescription,
+        images: {
+            url: "/images/example_bf2042.png",
+            width: 1200,
+            height: 750
+        }
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: pageTitle,
+        description: pageDescription,
+        creator: "@mozzyfx",
+        images: "/images/example_bf2042.png"
+    }
+};
+
 const Data = async () => {
     const [baseStats, users, outputs] = await Promise.all(["https://api.battlefieldstats.com/", "https://api.battlefieldstats.com/d1/users", "https://api.battlefieldstats.com/d1/outputs"].map(url => fetch(url, { next: { revalidate: 0 } }).then(res => res.json()))) as [BaseStats, Users, Outputs];
 
