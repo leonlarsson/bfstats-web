@@ -10,13 +10,13 @@ const LastSentList = ({ outputs }: { outputs: Outputs }) => {
     const [isPending, startTransition] = useTransition();
 
     return (
-        <div className="mb-3">
+        <div className="mb-5">
             <button
                 className="btn btn-primary mb-2"
                 disabled={isPending}
                 onClick={() => startTransition(() => setShowAllOutputs(!showAllOutputs))}
             >
-                {showAllOutputs ? "Back to last 20" : "Show all outputs (SLOW)"} {isPending && <i className="fa-solid fa-spinner fa-spin" />}
+                {showAllOutputs ? "Show last 20" : `Show all ${outputs.length.toLocaleString("en-US")} (might freeze your browser)`} {isPending && <i className="fa-solid fa-spinner fa-spin" />}
             </button>
             <ul className="list-group list-group-numbered">
                 {outputs
