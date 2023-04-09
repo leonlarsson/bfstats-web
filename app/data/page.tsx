@@ -2,7 +2,7 @@ import { BaseStats, Outputs, StatsSentPerGameChart, StatsSentPerGameTotalChart, 
 import LastSentList from "../components/Data/LastSentList";
 
 const Data = async () => {
-    const [baseStats, users, outputs] = await Promise.all(["https://api.battlefieldstats.com/", "https://api.battlefieldstats.com/d1/users", "https://api.battlefieldstats.com/d1/outputs"].map(url => fetch(url, { cache: "no-store" }).then(res => res.json()))) as [BaseStats, Users, Outputs];
+    const [baseStats, users, outputs] = await Promise.all(["https://api.battlefieldstats.com/", "https://api.battlefieldstats.com/d1/users", "https://api.battlefieldstats.com/d1/outputs"].map(url => fetch(url, { next: { revalidate: 0 } }).then(res => res.json()))) as [BaseStats, Users, Outputs];
 
     return (
         <>
