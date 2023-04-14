@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import humanizeDuration from "humanize-duration";
-import type { Output } from "@/types";
+import { Output } from "@/types";
 
 const LastSentList = ({ outputs }: { outputs: Output[] }) => {
 
