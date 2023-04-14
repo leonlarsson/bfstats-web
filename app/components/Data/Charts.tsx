@@ -2,6 +2,7 @@
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import type { BaseStats, Output } from "@/types";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const backgroundColor = [
@@ -27,7 +28,7 @@ const backgroundColor = [
     "#ad9a9d"
 ];
 
-export const StatsSentPerGameChart = ({ outputs }: { outputs: Outputs }) => {
+export const StatsSentPerGameChart = ({ outputs }: { outputs: Output[] }) => {
     return (
         <Doughnut
             data={{
@@ -45,7 +46,7 @@ export const StatsSentPerGameChart = ({ outputs }: { outputs: Outputs }) => {
     );
 };
 
-export const StatsSentPerSegmentChart = ({ outputs }: { outputs: Outputs }) => {
+export const StatsSentPerSegmentChart = ({ outputs }: { outputs: Output[] }) => {
     return (
         <Doughnut
             data={{
@@ -63,7 +64,7 @@ export const StatsSentPerSegmentChart = ({ outputs }: { outputs: Outputs }) => {
     );
 };
 
-export const StatsSentPerLanguageChart = ({ outputs }: { outputs: Outputs }) => {
+export const StatsSentPerLanguageChart = ({ outputs }: { outputs: Output[] }) => {
     return (
         <Doughnut
             data={{
@@ -81,7 +82,7 @@ export const StatsSentPerLanguageChart = ({ outputs }: { outputs: Outputs }) => 
     );
 };
 
-export const StatsSentPerGameTotalChart = ({ baseStats }: { baseStats: any }) => {
+export const StatsSentPerGameTotalChart = ({ baseStats }: { baseStats: BaseStats }) => {
     return (
         <Doughnut
             data={{
@@ -115,54 +116,4 @@ export const StatsSentPerLanguageTotalChart = ({ baseStats }: { baseStats: BaseS
             }}
         />
     );
-};
-
-export type Users = {
-    total_stats_sent: number;
-}[];
-
-export type Outputs = {
-    game: string;
-    segment: string;
-    language: string;
-    date: number;
-}[];
-
-export type BaseStats = {
-    totalGuilds: number;
-    totalChannels: number;
-    totalMembers: number;
-    totalStatsSent: {
-        total: number;
-        games: {
-            "Battlefield 2042": number;
-            "Battlefield V": number;
-            "Battlefield 1": number;
-            "Battlefield Hardline": number;
-            "Battlefield 4": number;
-            "Battlefield 3": number;
-            "Battlefield Bad Company 2": number;
-            "Battlefield 2": number;
-        },
-        languages: {
-            English: number;
-            French: number;
-            Italian: number;
-            German: number;
-            Spanish: number;
-            Russian: number;
-            Polish: number;
-            "Brazilian Portuguese": number;
-            Turkish: number;
-            Swedish: number;
-            Norwegian: number;
-            Finnish: number;
-            Arabic: number;
-        }
-    },
-    lastUpdated: {
-        date: string;
-        timestampMilliseconds: number;
-        timestampSeconds: number;
-    }
 };
