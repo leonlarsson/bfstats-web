@@ -1,8 +1,10 @@
+import { BaseStats } from "@/types";
+
 const StatsText = async () => {
 
     try {
         const res = await fetch("https://api.battlefieldstats.com", { next: { revalidate: 60 } });
-        const data = await res.json();
+        const data: BaseStats = await res.json();
 
         return (
             <>
