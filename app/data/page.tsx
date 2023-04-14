@@ -1,6 +1,7 @@
 import { Suspense } from "react";
-import { BaseStats, Outputs, StatsSentPerGameChart, StatsSentPerGameTotalChart, StatsSentPerLanguageChart, StatsSentPerLanguageTotalChart, StatsSentPerSegmentChart, Users } from "../components/Data/Charts";
+import { StatsSentPerGameChart, StatsSentPerGameTotalChart, StatsSentPerLanguageChart, StatsSentPerLanguageTotalChart, StatsSentPerSegmentChart } from "../components/Data/Charts";
 import LastSentList from "../components/Data/LastSentList";
+import type { BaseStats, Output, User } from "@/types";
 
 const pageTitle = "Data | Battlefield Stats Discord Bot";
 const pageDescription = "Usage data for the Battlefield Stats Discord Bot.";
@@ -103,7 +104,7 @@ const TotalStats = async () => {
 };
 
 const SinceJanuaryAndLastSent = async () => {
-    const [users, outputs] = await Promise.all(["https://api.battlefieldstats.com/d1/users", "https://api.battlefieldstats.com/d1/outputs"].map(url => fetch(url, { next: { revalidate: 0 } }).then(res => res.json()))) as [Users, Outputs];
+    const [users, outputs] = await Promise.all(["https://api.battlefieldstats.com/d1/users", "https://api.battlefieldstats.com/d1/outputs"].map(url => fetch(url, { next: { revalidate: 0 } }).then(res => res.json()))) as [User[], Output[]];
 
     return (
         <>

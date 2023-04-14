@@ -2,7 +2,7 @@
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import { Output, BaseStats } from "@/types";
+import type { Output, BaseStats } from "@/types";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const backgroundColor = [
