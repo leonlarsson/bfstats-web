@@ -51,6 +51,7 @@ const Nav = () => {
                                 <a href="https://api.battlefieldstats.com" target="_blank" className="dropdown-item">Base <i className="fa-solid fa-up-right-from-square fa-fw"></i></a>
                                 <a href="https://api.battlefieldstats.com/d1/users" target="_blank" className="dropdown-item">Users <i className="fa-solid fa-up-right-from-square fa-fw"></i></a>
                                 <a href="https://api.battlefieldstats.com/d1/outputs" target="_blank" className="dropdown-item">Outputs <i className="fa-solid fa-up-right-from-square fa-fw"></i></a>
+                                <a href="https://api.battlefieldstats.com/d1/outputs/counts" target="_blank" className="dropdown-item">Outputs (counts) <i className="fa-solid fa-up-right-from-square fa-fw"></i></a>
                             </ul>
                         </li>
                         <a href="https://twitter.com/mozzyfx" target="_blank" className="nav-link"> <i className="fa-brands fa-twitter fa-fw"></i> Twitter</a>
