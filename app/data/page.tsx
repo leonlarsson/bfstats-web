@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { StatsSentPerGameChart, StatsSentPerGameTotalChart, StatsSentPerLanguageChart, StatsSentPerLanguageTotalChart, StatsSentPerSegmentChart } from "../components/Data/Charts";
 import LastSentList from "../components/Data/LastSentList";
-import type { BaseStats, Output, User } from "@/types";
+import type { BaseStats, Output, User, CountsItem } from "@/types";
 
 const pageTitle = "Data | Battlefield Stats Discord Bot";
 const pageDescription = "Usage data for the Battlefield Stats Discord Bot.";
@@ -29,7 +29,7 @@ export const metadata = {
     }
 };
 
-const Data = () => {
+export default () => {
     return (
         <>
             <h1 className="text-decoration-underline">Data</h1>
@@ -44,10 +44,18 @@ const Data = () => {
                 <hr className="border border-primary border-2 opacity-75 rounded" />
 
                 <h3>Since January 1, 2023</h3>
+                <Suspense fallback={<h4 className="mb-5"><i className="fa-solid fa-spinner fa-spin" /> Fetching data... This might take a while.</h4>}>
+                    {/* @ts-expect-error */}
+                    <SinceJanuary />
+                </Suspense>
+
+                <hr className="border border-primary border-2 opacity-75 rounded" />
+
+                <h3>Last stats sent</h3>
                 <h5>Data is cached for an hour.</h5>
                 <Suspense fallback={<h4 className="mb-5"><i className="fa-solid fa-spinner fa-spin" /> Fetching data... This might take a while.</h4>}>
                     {/* @ts-expect-error */}
-                    <SinceJanuaryAndLastSent />
+                    <LastStatsSent />
                 </Suspense>
             </div>
         </>
@@ -103,15 +111,19 @@ const TotalStats = async () => {
     );
 };
 
-const SinceJanuaryAndLastSent = async () => {
-    const [users, outputs] = await Promise.all(["https://api.battlefieldstats.com/d1/users", "https://api.battlefieldstats.com/d1/outputs"].map(url => fetch(url, { next: { revalidate: 0 } }).then(res => res.json()))) as [User[], Output[]];
+const SinceJanuary = async () => {
+    const [users, data] = await Promise.all(["https://api.battlefieldstats.com/d1/users", "https://api.battlefieldstats.com/d1/outputs/counts"].map(url => fetch(url, { next: { revalidate: 0 } }).then(res => res.json()))) as [User[], CountsItem[]];
+    const games = data.filter(x => x.category === "game");
+    const segments = data.filter(x => x.category === "segment");
+    const languages = data.filter(x => x.category === "language");
+    const totalSent = games.reduce((a, b) => a + b.sent, 0);
 
     return (
         <>
             <div className="mb-3">
                 <ul className="list-group">
                     <li className="list-group-item">
-                        <strong>{outputs.length.toLocaleString("en-US")}</strong> stats sent
+                        <strong>{totalSent.toLocaleString("en-US")}</strong> stats sent
                     </li>
                     <li className="list-group-item">
                         <strong>{users.length.toLocaleString("en-US")}</strong> unique users
@@ -123,16 +135,16 @@ const SinceJanuaryAndLastSent = async () => {
                 <div className="col-lg mb-3">
                     <h4>Stats sent per game</h4>
                     <ul className="list-group">
-                        {Array.from(new Set(outputs.map(output => output.game))).map(game => (
-                            <li className="list-group-item" key={game}>
-                                {game}: <strong>{outputs.filter(output => output.game === game).length.toLocaleString("en-US")}</strong>
+                        {games.map(obj => (
+                            <li className="list-group-item" key={obj.item}>
+                                {obj.item}: <strong>{obj.sent.toLocaleString("en-US")}</strong>
                                 {" "}
-                                ({((outputs.filter(output => output.game === game).length / outputs.length) * 100).toFixed(1)}%)
+                                ({((obj.sent / totalSent) * 100).toFixed(1)}%)
                             </li>
                         ))}
 
                         <li className="list-group-item">
-                            <StatsSentPerGameChart outputs={outputs} />
+                            <StatsSentPerGameChart games={games} />
                         </li>
                     </ul>
                 </div>
@@ -140,16 +152,16 @@ const SinceJanuaryAndLastSent = async () => {
                 <div className="col-lg mb-3">
                     <h4>Stats sent per segment</h4>
                     <ul className="list-group">
-                        {Array.from(new Set(outputs.map(output => output.segment))).map(segment => (
-                            <li className="list-group-item" key={segment}>
-                                {segment}: <strong>{outputs.filter(output => output.segment === segment).length.toLocaleString("en-US")}</strong>
+                        {segments.map(obj => (
+                            <li className="list-group-item" key={obj.item}>
+                                {obj.item}: <strong>{obj.sent.toLocaleString("en-US")}</strong>
                                 {" "}
-                                ({((outputs.filter(output => output.segment === segment).length / outputs.length) * 100).toFixed(1)}%)
+                                ({((obj.sent / totalSent) * 100).toFixed(1)}%)
                             </li>
                         ))}
 
                         <li className="list-group-item">
-                            <StatsSentPerSegmentChart outputs={outputs} />
+                            <StatsSentPerSegmentChart segments={segments} />
                         </li>
                     </ul>
                 </div>
@@ -157,16 +169,16 @@ const SinceJanuaryAndLastSent = async () => {
                 <div className="col-lg mb-3">
                     <h4>Stats sent per language</h4>
                     <ul className="list-group">
-                        {Array.from(new Set(outputs.map(output => output.language))).map(language => (
-                            <li className="list-group-item" key={language}>
-                                {language}: <strong>{outputs.filter(output => output.language === language).length.toLocaleString("en-US")}</strong>
+                        {languages.map(obj => (
+                            <li className="list-group-item" key={obj.item}>
+                                {obj.item}: <strong>{obj.sent.toLocaleString("en-US")}</strong>
                                 {" "}
-                                ({((outputs.filter(output => output.language === language).length / outputs.length) * 100).toFixed(1)}%)
+                                ({((obj.sent / totalSent) * 100).toFixed(1)}%)
                             </li>
                         ))}
 
                         <li className="list-group-item">
-                            <StatsSentPerLanguageChart outputs={outputs} />
+                            <StatsSentPerLanguageChart languages={languages} />
                         </li>
                     </ul>
                 </div>
@@ -182,14 +194,12 @@ const SinceJanuaryAndLastSent = async () => {
                     </ol>
                 </div>
             </div>
-
-            <hr className="border border-primary border-2 opacity-75 rounded" />
-
-            <h3>Last stats sent</h3>
-            <h5>Data is cached for an hour.</h5>
-            <LastSentList outputs={outputs} />
         </>
     );
 };
 
-export default Data;
+const LastStatsSent = async () => {
+    const res = await fetch("https://api.battlefieldstats.com/d1/outputs", { next: { revalidate: 0 } });
+    const outputs: Output[] = await res.json();
+    return <LastSentList outputs={outputs} />;
+};

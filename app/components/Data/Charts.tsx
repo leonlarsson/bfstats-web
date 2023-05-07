@@ -2,7 +2,7 @@
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import type { Output, BaseStats } from "@/types";
+import type { Output, BaseStats, CountsItem } from "@/types";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const backgroundColor = [
@@ -28,15 +28,15 @@ const backgroundColor = [
     "#ad9a9d"
 ];
 
-export const StatsSentPerGameChart = ({ outputs }: { outputs: Output[] }) => {
+export const StatsSentPerGameChart = ({ games }: { games: CountsItem[] }) => {
     return (
         <Doughnut
             data={{
-                labels: Array.from(new Set(outputs.map(output => output.game))),
+                labels: games.map(obj => obj.item),
                 datasets: [
                     {
                         label: " # of stats sent",
-                        data: Array.from(new Set(outputs.map(output => output.game))).map(game => outputs.filter(output => output.game === game).length),
+                        data: games.map(x => x.sent),
                         backgroundColor,
                         hoverOffset: 7
                     }
@@ -46,15 +46,15 @@ export const StatsSentPerGameChart = ({ outputs }: { outputs: Output[] }) => {
     );
 };
 
-export const StatsSentPerSegmentChart = ({ outputs }: { outputs: Output[] }) => {
+export const StatsSentPerSegmentChart = ({ segments }: { segments: CountsItem[] }) => {
     return (
         <Doughnut
             data={{
-                labels: Array.from(new Set(outputs.map(output => output.segment))),
+                labels: segments.map(obj => obj.item),
                 datasets: [
                     {
                         label: " # of stats sent",
-                        data: Array.from(new Set(outputs.map(output => output.segment))).map(segment => outputs.filter(output => output.segment === segment).length),
+                        data: segments.map(x => x.sent),
                         backgroundColor,
                         hoverOffset: 7
                     }
@@ -64,15 +64,15 @@ export const StatsSentPerSegmentChart = ({ outputs }: { outputs: Output[] }) => 
     );
 };
 
-export const StatsSentPerLanguageChart = ({ outputs }: { outputs: Output[] }) => {
+export const StatsSentPerLanguageChart = ({ languages }: { languages: CountsItem[] }) => {
     return (
         <Doughnut
             data={{
-                labels: Array.from(new Set(outputs.map(output => output.language))),
+                labels: languages.map(obj => obj.item),
                 datasets: [
                     {
                         label: " # of stats sent",
-                        data: Array.from(new Set(outputs.map(output => output.language))).map(language => outputs.filter(output => output.language === language).length),
+                        data: languages.map(x => x.sent),
                         backgroundColor,
                         hoverOffset: 7
                     }
