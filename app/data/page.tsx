@@ -112,7 +112,8 @@ const TotalStats = async () => {
 };
 
 const SinceJanuary = async () => {
-    const [users, data] = await Promise.all(["https://api.battlefieldstats.com/d1/users", "https://api.battlefieldstats.com/d1/outputs/counts"].map(url => fetch(url, { next: { revalidate: 0 } }).then(res => res.json()))) as [User[], CountsItem[]];
+    const [users, data] = await Promise.all(["https://api.battlefieldstats.com/d1/users", "https://api.battlefieldstats.com/d1/outputs/counts"].map(url => fetch(url, { next: { revalidate: 0 } }).then(res => res.ok && res.json()))) as [User[], CountsItem[]];
+    if (!users || !data) return <h5 className="text-danger">Error fetching.</h5>;
     const games = data.filter(x => x.category === "game");
     const segments = data.filter(x => x.category === "segment");
     const languages = data.filter(x => x.category === "language");
