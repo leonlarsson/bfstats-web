@@ -2,6 +2,11 @@ export type User = {
     total_stats_sent: number;
 };
 
+export type UserSpecial = {
+    total_users: number;
+    total_stats_sent: number;
+};
+
 export type Output = {
     game: string;
     segment: string;

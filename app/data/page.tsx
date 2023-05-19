@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { StatsSentPerGameChart, StatsSentPerGameTotalChart, StatsSentPerLanguageChart, StatsSentPerLanguageTotalChart, StatsSentPerSegmentChart } from "../components/Data/Charts";
 import LastSentList from "../components/Data/LastSentList";
-import type { BaseStats, Output, User, CountsItem } from "@/types";
+import type { BaseStats, Output, CountsItem, UserSpecial } from "@/types";
 
 const pageTitle = "Data | Battlefield Stats Discord Bot";
 const pageDescription = "Usage data for the Battlefield Stats Discord Bot.";
@@ -51,8 +51,7 @@ export default () => {
 
                 <hr className="border border-primary border-2 opacity-75 rounded" />
 
-                <h3>Last stats sent</h3>
-                <h5>Data is cached for an hour.</h5>
+                <h3>Last 20 stats sent</h3>
                 <Suspense fallback={<h4 className="mb-5"><i className="fa-solid fa-spinner fa-spin" /> Fetching data... This might take a while.</h4>}>
                     {/* @ts-expect-error */}
                     <LastStatsSent />
@@ -112,7 +111,7 @@ const TotalStats = async () => {
 };
 
 const SinceJanuary = async () => {
-    const [users, data] = await Promise.all(["https://api.battlefieldstats.com/d1/users", "https://api.battlefieldstats.com/d1/outputs/counts"].map(url => fetch(url, { next: { revalidate: 0 } }).then(res => res.ok && res.json()))) as [User[], CountsItem[]];
+    const [users, data] = await Promise.all(["https://api.battlefieldstats.com/d1/users/special", "https://api.battlefieldstats.com/d1/outputs/counts"].map(url => fetch(url, { next: { revalidate: 0 } }).then(res => res.ok && res.json()))) as [UserSpecial[], CountsItem[]];
     if (!users || !data) return <h5 className="text-danger">Error fetching.</h5>;
     const games = data.filter(x => x.category === "game");
     const segments = data.filter(x => x.category === "segment");
@@ -127,7 +126,7 @@ const SinceJanuary = async () => {
                         <strong>{totalSent.toLocaleString("en-US")}</strong> stats sent
                     </li>
                     <li className="list-group-item">
-                        <strong>{users.length.toLocaleString("en-US")}</strong> unique users
+                        <strong>{users[0].total_users.toLocaleString("en-US")}</strong> unique users
                     </li>
                 </ul>
             </div>
@@ -200,7 +199,7 @@ const SinceJanuary = async () => {
 };
 
 const LastStatsSent = async () => {
-    const res = await fetch("https://api.battlefieldstats.com/d1/outputs", { next: { revalidate: 0 } });
+    const res = await fetch("https://api.battlefieldstats.com/d1/outputs/limited", { next: { revalidate: 0 } });
     const outputs: Output[] = await res.json();
     return <LastSentList outputs={outputs} />;
 };
