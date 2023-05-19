@@ -48,10 +48,14 @@ const Nav = () => {
                         <li className="nav-item dropdown">
                             <a className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="fa-solid fa-code fa-fw"></i> API</a>
                             <ul className="dropdown-menu">
-                                <a href="https://api.battlefieldstats.com" target="_blank" className="dropdown-item">Base <i className="fa-solid fa-up-right-from-square fa-fw"></i></a>
-                                <a href="https://api.battlefieldstats.com/d1/users" target="_blank" className="dropdown-item">Users <i className="fa-solid fa-up-right-from-square fa-fw"></i></a>
-                                <a href="https://api.battlefieldstats.com/d1/outputs" target="_blank" className="dropdown-item">Outputs <i className="fa-solid fa-up-right-from-square fa-fw"></i></a>
-                                <a href="https://api.battlefieldstats.com/d1/outputs/counts" target="_blank" className="dropdown-item">Outputs (counts) <i className="fa-solid fa-up-right-from-square fa-fw"></i></a>
+                                <APILink url="https://api.battlefieldstats.com" title="Base" />
+                                <APILink url="https://api.battlefieldstats.com/d1/users" title="Users" />
+                                <APILink url="https://api.battlefieldstats.com/d1/users/limited" title="Users (top 20)" />
+                                <APILink url="https://api.battlefieldstats.com/d1/users/counts" title="Users (total)" />
+                                <APILink url="https://api.battlefieldstats.com/d1/users/special" title="Users (top 20 + total)" />
+                                <APILink url="https://api.battlefieldstats.com/d1/outputs" title="Outputs" />
+                                <APILink url="https://api.battlefieldstats.com/d1/outputs/counts" title="Outputs (counts)" />
+                                <APILink url="https://api.battlefieldstats.com/d1/outputs/limited" title="Outputs (last 20)" />
                             </ul>
                         </li>
                         <a href="https://twitter.com/mozzyfx" target="_blank" className="nav-link"> <i className="fa-brands fa-twitter fa-fw"></i> Twitter</a>
@@ -64,3 +68,5 @@ const Nav = () => {
 };
 
 export default Nav;
+
+const APILink = ({ url, title }: { url: string, title: string }) => <a href={url} target="_blank" className="dropdown-item">{title} <i className="fa-solid fa-up-right-from-square fa-fw"></i></a>;
