@@ -4,12 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const Nav = () => {
-
     const pathname = usePathname();
-
     const navLinkClass = (url: string) => pathname === url ? "nav-link active" : "nav-link";
-    const dropdownItemClass = (url: string) => pathname === url ? "dropdown-item active" : "dropdown-item";
-    const devDropdownActive = () => ["/dev-browse-users", "/dev-browse-outputs"].includes(pathname);
 
     return (
         <nav className="navbar navbar-expand-lg sticky-top bg-light mb-3 border-bottom">
@@ -33,17 +29,6 @@ const Nav = () => {
                         </li>
                         <li className="nav-item">
                             <Link href="/data" className={navLinkClass("/data")}><i className="fa-solid fa-chart-simple fa-fw"></i> Data</Link>
-                        </li>
-                        <li className="nav-item dropdown">
-                            <a className={`nav-link dropdown-toggle ${devDropdownActive() && "active"}`} role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="fa-solid fa-cog fa-fw"></i> Dev</a>
-                            <ul className="dropdown-menu">
-                                <li>
-                                    <Link href="/dev-browse-users" className={dropdownItemClass("/dev-browse-users")}><i className="fa-solid fa-users fa-fw" /> Browse Users</Link>
-                                </li>
-                                <li>
-                                    <Link href="/dev-browse-outputs" className={dropdownItemClass("/dev-browse-outputs")}><i className="fa-solid fa-images fa-fw" /> Browse Outputs</Link>
-                                </li>
-                            </ul>
                         </li>
                         <li className="nav-item dropdown">
                             <a className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="fa-solid fa-code fa-fw"></i> API</a>
