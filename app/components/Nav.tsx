@@ -8,7 +8,7 @@ const Nav = () => {
     const navLinkClass = (url: string) => pathname === url ? "nav-link active" : "nav-link";
 
     return (
-        <nav className="navbar navbar-expand-lg sticky-top bg-light mb-3 border-bottom">
+        <nav className="navbar navbar-expand-xl sticky-top bg-light mb-3 border-bottom">
             <div className="container-fluid">
                 <Link href="/" className="navbar-brand mb-0 h1">
                     <img src="/images/avatar.png" width="30px" height="30px" className="d-inline-block align-text-top" alt="Battlefield Stats Logo" /> Battlefield Stats
@@ -42,7 +42,7 @@ const Nav = () => {
                             </ul>
                         </li>
                         <a href="https://twitter.com/mozzyfx" target="_blank" className="nav-link"> <i className="fa-brands fa-twitter fa-fw"></i> Twitter</a>
-                        <a href="https://discord.com/oauth2/authorize?client_id=842768680252997662&scope=bot%20applications.commands" target="_blank" className="nav-link link-primary fw-bold"> <i className="fa-solid fa-right-to-bracket fa-fw"></i> Invite</a>
+                        <a href="https://discord.com/oauth2/authorize?client_id=842768680252997662&scope=bot%20applications.commands" target="_blank" className="nav-link link-primary fw-bold"> <i className="fa-brands fa-discord fa-fw"></i> Add to Discord</a>
                     </div>
                 </div>
             </div>
