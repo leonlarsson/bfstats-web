@@ -132,7 +132,7 @@ const SinceJanuary = async () => {
             </div>
 
             <div className="row">
-                <div className="col-lg mb-3">
+                <div className="col-lg-3 mb-3">
                     <h4>Stats sent per game</h4>
                     <ul className="list-group">
                         {games.map(obj => (
@@ -149,7 +149,7 @@ const SinceJanuary = async () => {
                     </ul>
                 </div>
 
-                <div className="col-lg mb-3">
+                <div className="col-lg-3 mb-3">
                     <h4>Stats sent per segment</h4>
                     <ul className="list-group">
                         {segments.map(obj => (
@@ -166,7 +166,7 @@ const SinceJanuary = async () => {
                     </ul>
                 </div>
 
-                <div className="col-lg mb-3">
+                <div className="col-lg-3 mb-3">
                     <h4>Stats sent per language</h4>
                     <ul className="list-group">
                         {languages.map(obj => (
@@ -183,7 +183,7 @@ const SinceJanuary = async () => {
                     </ul>
                 </div>
 
-                <div className="col-lg">
+                <div className="col-lg-3">
                     <h4>Top users</h4>
                     <ol className="list-group list-group-numbered">
                         {users.slice(0, 20).map((user, index) => (
