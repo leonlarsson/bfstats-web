@@ -63,6 +63,7 @@ export default () => {
 
 const TotalStats = async () => {
     const res = await fetch("https://api.battlefieldstats.com", { next: { revalidate: 0 } });
+    if (!res.ok) return <h5 className="text-danger">Error fetching.</h5>;
     const baseStats: BaseStats = await res.json();
 
     return (
@@ -199,7 +200,8 @@ const SinceJanuary = async () => {
 };
 
 const LastStatsSent = async () => {
-    const res = await fetch("https://api.battlefieldstats.com/d1/outputs/limited", { next: { revalidate: 0 } });
+    const res = await fetch("https://api.battlefieldstats.com/d1/outputs/last", { next: { revalidate: 0 } });
+    if (!res.ok) return <h5 className="text-danger mb-5">Error fetching.</h5>;
     const outputs: Output[] = await res.json();
     return <LastSentList outputs={outputs} />;
 };

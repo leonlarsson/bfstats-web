@@ -34,11 +34,11 @@ const Nav = () => {
                             <a className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i className="fa-solid fa-code fa-fw"></i> API</a>
                             <ul className="dropdown-menu">
                                 <APILink url="https://api.battlefieldstats.com" title="Base" />
-                                <APILink url="https://api.battlefieldstats.com/d1/users/limited" title="Users (top 20)" />
+                                <APILink url="https://api.battlefieldstats.com/d1/users/top" title="Users (top 20)" />
                                 <APILink url="https://api.battlefieldstats.com/d1/users/counts" title="Users (total)" />
                                 <APILink url="https://api.battlefieldstats.com/d1/users/special" title="Users (top 20 + total)" />
                                 <APILink url="https://api.battlefieldstats.com/d1/outputs/counts" title="Outputs (counts)" />
-                                <APILink url="https://api.battlefieldstats.com/d1/outputs/limited" title="Outputs (last 20)" />
+                                <APILink url="https://api.battlefieldstats.com/d1/outputs/last" title="Outputs (last 20)" />
                             </ul>
                         </li>
                         <a href="https://twitter.com/mozzyfx" target="_blank" className="nav-link"> <i className="fa-brands fa-twitter fa-fw"></i> Twitter</a>
