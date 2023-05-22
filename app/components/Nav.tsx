@@ -39,6 +39,7 @@ const Nav = () => {
                                 <APILink url="https://api.battlefieldstats.com/d1/users/special" title="Users (top 20 + total)" />
                                 <APILink url="https://api.battlefieldstats.com/d1/outputs/counts" title="Outputs (counts)" />
                                 <APILink url="https://api.battlefieldstats.com/d1/outputs/last" title="Outputs (last 20)" />
+                                <APILink url="https://api.battlefieldstats.com/d1/events" title="Events" />
                             </ul>
                         </li>
                         <a href="https://twitter.com/mozzyfx" target="_blank" className="nav-link"> <i className="fa-brands fa-twitter fa-fw"></i> Twitter</a>
