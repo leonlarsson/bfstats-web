@@ -14,6 +14,11 @@ export type Output = {
     date: number;
 };
 
+export type Event = {
+    event: string;
+    date: number;
+};
+
 export type BaseStats = {
     totalGuilds: number;
     totalChannels: number;

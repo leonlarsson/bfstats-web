@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { StatsSentPerDayChart, StatsSentPerGameChart, StatsSentPerGameTotalChart, StatsSentPerLanguageChart, StatsSentPerLanguageTotalChart, StatsSentPerSegmentChart } from "../components/Data/Charts";
 import LastSentList from "../components/Data/LastSentList";
-import type { BaseStats, Output, CountsItem, UserSpecial, SentDailyItem } from "@/types";
+import type { BaseStats, Output, CountsItem, UserSpecial, SentDailyItem, Event } from "@/types";
 
 const pageTitle = "Data | Battlefield Stats Discord Bot";
 const pageDescription = "Usage data for the Battlefield Stats Discord Bot.";
@@ -55,6 +55,14 @@ export default () => {
                 <Suspense fallback={<h4 className="mb-5"><i className="fa-solid fa-spinner fa-spin" /> Fetching data... This might take a while.</h4>}>
                     {/* @ts-expect-error */}
                     <LastStatsSent />
+                </Suspense>
+
+                <hr className="border border-primary border-2 opacity-75 rounded" />
+
+                <h3>Event log</h3>
+                <Suspense fallback={<h4 className="mb-5"><i className="fa-solid fa-spinner fa-spin" /> Fetching data... This might take a while.</h4>}>
+                    {/* @ts-expect-error */}
+                    <EventLog />
                 </Suspense>
             </div>
         </>
@@ -209,4 +217,15 @@ const LastStatsSent = async () => {
     if (!res.ok) return <h5 className="text-danger mb-5">Error fetching.</h5>;
     const outputs: Output[] = await res.json();
     return <LastSentList outputs={outputs} />;
+};
+
+const EventLog = async () => {
+    const res = await fetch("https://api.battlefieldstats.com/d1/events", { next: { revalidate: 0 } });
+    if (!res.ok) return <h5 className="text-danger mb-5">Error fetching.</h5>;
+    const events: Event[] = await res.json();
+    return (
+        <code>
+            {events.reverse().map(eventObj => <h6 key={eventObj.date}>{new Date(eventObj.date).toUTCString()}: {eventObj.event}</h6>)}
+        </code>
+    );
 };
