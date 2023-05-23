@@ -1,7 +1,7 @@
 import { Suspense } from "react";
-import { StatsSentPerDayChart, StatsSentPerGameChart, StatsSentPerGameTotalChart, StatsSentPerLanguageChart, StatsSentPerLanguageTotalChart, StatsSentPerSegmentChart } from "../components/Data/Charts";
+import { StatsSentPerDayChartWithFilter, StatsSentPerDayChart, StatsSentPerGameChart, StatsSentPerGameTotalChart, StatsSentPerLanguageChart, StatsSentPerLanguageTotalChart, StatsSentPerSegmentChart } from "../components/Data/Charts";
 import LastSentList from "../components/Data/LastSentList";
-import type { BaseStats, Output, CountsItem, UserSpecial, SentDailyItem, Event } from "@/types";
+import type { BaseStats, Output, CountsItem, UserSpecial, SentDailyItem, Event, SentDailyItemGames } from "@/types";
 
 const pageTitle = "Data | Battlefield Stats Discord Bot";
 const pageDescription = "Usage data for the Battlefield Stats Discord Bot.";
@@ -128,7 +128,7 @@ const TotalStats = async () => {
 };
 
 const SinceJanuary = async () => {
-    const [users, data, sentDaily] = await Promise.all(["https://api.battlefieldstats.com/d1/users/special", "https://api.battlefieldstats.com/d1/outputs/counts", "https://api.battlefieldstats.com/d1/outputs/daily"].map(url => fetch(url, { next: { revalidate: 0 } }).then(res => res.ok && res.json()))) as [UserSpecial[], CountsItem[], SentDailyItem[]];
+    const [users, data, sentDaily] = await Promise.all(["https://api.battlefieldstats.com/d1/users/special", "https://api.battlefieldstats.com/d1/outputs/counts", "https://api.battlefieldstats.com/d1/outputs/daily/games"].map(url => fetch(url, { next: { revalidate: 0 } }).then(res => res.ok && res.json()))) as [UserSpecial[], CountsItem[], SentDailyItemGames[]];
     if (!users || !data || !sentDaily) return <h5 className="text-danger">Error fetching.</h5>;
     const games = data.filter(x => x.category === "game");
     const segments = data.filter(x => x.category === "segment");
@@ -213,7 +213,7 @@ const SinceJanuary = async () => {
 
                 <div>
                     <h4>Stats sent per day</h4>
-                    <StatsSentPerDayChart data={sentDaily} />
+                    <StatsSentPerDayChartWithFilter data={sentDaily} />
                 </div>
             </div>
         </>

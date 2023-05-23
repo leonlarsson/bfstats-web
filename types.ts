@@ -68,3 +68,10 @@ export type SentDailyItem = {
     day: string,
     sent: number
 };
+
+export type SentDailyItemGames = {
+    day: string;
+    game: "Battlefield 2042" | "Battlefield V" | "Battlefield 1" | "Battlefield Hardline" | "Battlefield 4" | "Battlefield 3" | "Battlefield Bad Company 2" | "Battlefield 2";
+    sent: number;
+    total_sent: number;
+};
