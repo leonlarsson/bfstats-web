@@ -31,41 +31,49 @@ export const metadata = {
 
 export default () => {
     return (
-        <>
+        <div className="pb-5">
             <h1 className="text-decoration-underline">Data</h1>
 
             <div>
-                <h3>Total (since May 25, 2021)</h3>
-                <Suspense fallback={<h4 className="mb-5"><i className="fa-solid fa-spinner fa-spin" /> Fetching data...</h4>}>
-                    {/* @ts-expect-error */}
-                    <TotalStats />
-                </Suspense>
+                <div>
+                    <h3>Total (since May 25, 2021)</h3>
+                    <Suspense fallback={<h4><i className="fa-solid fa-spinner fa-spin" /> Fetching data...</h4>}>
+                        {/* @ts-expect-error */}
+                        <TotalStats />
+                    </Suspense>
+                </div>
 
-                <hr className="border border-primary border-2 opacity-75 rounded" />
+                <hr className="my-3 border border-primary border-2 opacity-75 rounded" />
 
-                <h3>Since January 1, 2023</h3>
-                <Suspense fallback={<h4 className="mb-5"><i className="fa-solid fa-spinner fa-spin" /> Fetching data... This might take a while.</h4>}>
-                    {/* @ts-expect-error */}
-                    <SinceJanuary />
-                </Suspense>
+                <div>
+                    <h3>Since January 1, 2023</h3>
+                    <Suspense fallback={<h4><i className="fa-solid fa-spinner fa-spin" /> Fetching data... This might take a while.</h4>}>
+                        {/* @ts-expect-error */}
+                        <SinceJanuary />
+                    </Suspense>
+                </div>
 
-                <hr className="border border-primary border-2 opacity-75 rounded" />
+                <hr className="my-3 border border-primary border-2 opacity-75 rounded" />
 
-                <h3>Last 20 stats sent</h3>
-                <Suspense fallback={<h4 className="mb-5"><i className="fa-solid fa-spinner fa-spin" /> Fetching data... This might take a while.</h4>}>
-                    {/* @ts-expect-error */}
-                    <LastStatsSent />
-                </Suspense>
+                <div>
+                    <h3>Last 20 stats sent</h3>
+                    <Suspense fallback={<h4><i className="fa-solid fa-spinner fa-spin" /> Fetching data... This might take a while.</h4>}>
+                        {/* @ts-expect-error */}
+                        <LastStatsSent />
+                    </Suspense>
+                </div>
 
-                <hr className="border border-primary border-2 opacity-75 rounded" />
+                <hr className="my-3 border border-primary border-2 opacity-75 rounded" />
 
-                <h3>Event log</h3>
-                <Suspense fallback={<h4 className="mb-5"><i className="fa-solid fa-spinner fa-spin" /> Fetching data... This might take a while.</h4>}>
-                    {/* @ts-expect-error */}
-                    <EventLog />
-                </Suspense>
+                <div>
+                    <h3>Event log</h3>
+                    <Suspense fallback={<h4><i className="fa-solid fa-spinner fa-spin" /> Fetching data... This might take a while.</h4>}>
+                        {/* @ts-expect-error */}
+                        <EventLog />
+                    </Suspense>
+                </div>
             </div>
-        </>
+        </div>
     );
 };
 
@@ -100,7 +108,7 @@ const TotalStats = async () => {
                     </ul>
                 </div>
 
-                <div className="col-lg mb-3">
+                <div className="col-lg">
                     <h4>Stats sent per language</h4>
                     <ul className="list-group">
                         {Object.entries(baseStats.totalStatsSent.languages).map(language => (
@@ -192,7 +200,7 @@ const SinceJanuary = async () => {
                     </ul>
                 </div>
 
-                <div className="col-lg-3">
+                <div className="col-lg-3 mb-3">
                     <h4>Top users</h4>
                     <ol className="list-group list-group-numbered">
                         {users.slice(0, 20).map((user, index) => (
@@ -214,14 +222,14 @@ const SinceJanuary = async () => {
 
 const LastStatsSent = async () => {
     const res = await fetch("https://api.battlefieldstats.com/d1/outputs/last", { next: { revalidate: 0 } });
-    if (!res.ok) return <h5 className="text-danger mb-5">Error fetching.</h5>;
+    if (!res.ok) return <h5 className="text-danger">Error fetching.</h5>;
     const outputs: Output[] = await res.json();
     return <LastSentList outputs={outputs} />;
 };
 
 const EventLog = async () => {
     const res = await fetch("https://api.battlefieldstats.com/d1/events", { next: { revalidate: 0 } });
-    if (!res.ok) return <h5 className="text-danger mb-5">Error fetching.</h5>;
+    if (!res.ok) return <h5 className="text-danger">Error fetching.</h5>;
     const events: Event[] = await res.json();
     return (
         <code>
