@@ -37,7 +37,7 @@ export default () => {
             <div>
                 <div>
                     <h3>Total (since May 25, 2021)</h3>
-                    <Suspense fallback={<h4><i className="fa-solid fa-spinner fa-spin" /> Fetching data...</h4>}>
+                    <Suspense fallback={<LoadingText />}>
                         {/* @ts-expect-error */}
                         <TotalStats />
                     </Suspense>
@@ -47,7 +47,7 @@ export default () => {
 
                 <div>
                     <h3>Since January 1, 2023</h3>
-                    <Suspense fallback={<h4><i className="fa-solid fa-spinner fa-spin" /> Fetching data... This might take a while.</h4>}>
+                    <Suspense fallback={<LoadingText />}>
                         {/* @ts-expect-error */}
                         <SinceJanuary />
                     </Suspense>
@@ -57,7 +57,7 @@ export default () => {
 
                 <div>
                     <h3>Last 20 stats sent</h3>
-                    <Suspense fallback={<h4><i className="fa-solid fa-spinner fa-spin" /> Fetching data... This might take a while.</h4>}>
+                    <Suspense fallback={<LoadingText />}>
                         {/* @ts-expect-error */}
                         <LastStatsSent />
                     </Suspense>
@@ -67,7 +67,7 @@ export default () => {
 
                 <div>
                     <h3>Event log</h3>
-                    <Suspense fallback={<h4><i className="fa-solid fa-spinner fa-spin" /> Fetching data... This might take a while.</h4>}>
+                    <Suspense fallback={<LoadingText />}>
                         {/* @ts-expect-error */}
                         <EventLog />
                     </Suspense>
@@ -237,3 +237,5 @@ const EventLog = async () => {
         </code>
     );
 };
+
+const LoadingText = () => <h4><i className="fa-solid fa-spinner fa-spin" /> Fetching data... This might take a while.</h4>;
