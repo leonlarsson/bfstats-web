@@ -66,7 +66,7 @@ export default () => {
                 <hr className="my-3 border border-primary border-2 opacity-75 rounded" />
 
                 <div>
-                    <h3>Event log</h3>
+                    <h3>Last 20 events</h3>
                     <Suspense fallback={<LoadingText />}>
                         {/* @ts-expect-error */}
                         <EventLog />
@@ -228,7 +228,7 @@ const LastStatsSent = async () => {
 };
 
 const EventLog = async () => {
-    const res = await fetch("https://api.battlefieldstats.com/d1/events", { next: { revalidate: 0 } });
+    const res = await fetch("https://api.battlefieldstats.com/d1/events/last", { next: { revalidate: 0 } });
     if (!res.ok) return <h5 className="text-danger">Error fetching.</h5>;
     const events: Event[] = await res.json();
     return (
