@@ -1,6 +1,6 @@
 import { Suspense } from "react";
+import humanizeDuration from "humanize-duration";
 import { StatsSentPerDayChartWithFilter, StatsSentPerDayChart, StatsSentPerGameChart, StatsSentPerGameTotalChart, StatsSentPerLanguageChart, StatsSentPerLanguageTotalChart, StatsSentPerSegmentChart } from "../components/Data/Charts";
-import LastSentList from "../components/Data/LastSentList";
 import type { BaseStats, Output, CountsItem, UserSpecial, SentDailyItem, Event, SentDailyItemGames } from "@/types";
 
 const pageTitle = "Data | Battlefield Stats Discord Bot";
@@ -69,7 +69,7 @@ export default () => {
                     <h3>Last 20 events</h3>
                     <Suspense fallback={<LoadingText />}>
                         {/* @ts-expect-error */}
-                        <EventLog />
+                        <LastEvents />
                     </Suspense>
                 </div>
             </div>
@@ -224,17 +224,41 @@ const LastStatsSent = async () => {
     const res = await fetch("https://api.battlefieldstats.com/d1/outputs/last", { next: { revalidate: 0 } });
     if (!res.ok) return <h5 className="text-danger">Error fetching.</h5>;
     const outputs: Output[] = await res.json();
-    return <LastSentList outputs={outputs} />;
+    return (
+        <ul className="list-group list-group-numbered">
+            {outputs.map(output => (
+                <li key={output.date} className="list-group-item">
+                    <strong>{output.game} {output.segment}</strong> - <strong>{output.language}</strong> // <span title={new Date(output.date).toUTCString()}>{humanizeDuration(output.date - new Date().getTime(), { round: true })} ago</span>
+                </li>
+            ))}
+        </ul>
+    );
 };
 
-const EventLog = async () => {
+const LastEvents = async () => {
     const res = await fetch("https://api.battlefieldstats.com/d1/events/last", { next: { revalidate: 0 } });
     if (!res.ok) return <h5 className="text-danger">Error fetching.</h5>;
     const events: Event[] = await res.json();
+
+    const eventToIcon = (eventName: string) => {
+        switch (eventName) {
+            case "guildCreate":
+                return <i className="fa-solid fa-arrow-circle-right text-success" />;
+            case "guildDelete":
+                return <i className="fa-solid fa-arrow-circle-left text-danger" />;
+            default:
+                return null;
+        }
+    };
+
     return (
-        <code>
-            {events.map(eventObj => <h6 key={eventObj.date}>{new Date(eventObj.date).toUTCString()}: {eventObj.event}</h6>)}
-        </code>
+        <ul className="list-group list-group-numbered">
+            {events.map(eventObj => (
+                <li key={eventObj.date} className="list-group-item">
+                    <strong>{eventToIcon(eventObj.event)} Bot {eventObj.event === "guildCreate" ? "joined" : "left"} a guild</strong> // <span title={new Date(eventObj.date).toUTCString()}>{humanizeDuration(eventObj.date - new Date().getTime(), { round: true })} ago</span>
+                </li>
+            ))}
+        </ul>
     );
 };
 
