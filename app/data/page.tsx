@@ -233,7 +233,7 @@ const EventLog = async () => {
     const events: Event[] = await res.json();
     return (
         <code>
-            {events.reverse().map(eventObj => <h6 key={eventObj.date}>{new Date(eventObj.date).toUTCString()}: {eventObj.event}</h6>)}
+            {events.map(eventObj => <h6 key={eventObj.date}>{new Date(eventObj.date).toUTCString()}: {eventObj.event}</h6>)}
         </code>
     );
 };
