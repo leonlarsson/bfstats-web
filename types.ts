@@ -60,7 +60,7 @@ export type BaseStats = {
 
 export type CountsItem = {
     category: "game" | "segment" | "language";
-    item: "Battlefield 2042" | "Battlefield V" | "Battlefield 1" | "Battlefield Hardline" | "Battlefield 4" | "Battlefield 3" | "Battlefield Bad Company 2" | "Battlefield 2" | "English" | "French" | "Italian" | "German" | "Spanish" | "Russian" | "Polish" | "Brazilian Portuguese" | "Turkish" | "Swedish" | "Norwegian" | "Finnish" | "Arabic" | "Stats" | "Weapons" | "Classes" | "Vehicles" | "Gadgets" | "Maps" | "Modes" | "Progression" | "Hazard Zone" | "Firestorm";
+    item: "Battlefield 2042" | "Battlefield V" | "Battlefield 1" | "Battlefield Hardline" | "Battlefield 4" | "Battlefield 3" | "Battlefield Bad Company 2" | "Battlefield 2" | "English" | "French" | "Italian" | "German" | "Spanish" | "Russian" | "Polish" | "Brazilian Portuguese" | "Turkish" | "Swedish" | "Norwegian" | "Finnish" | "Arabic" | "Overview" | "Weapons" | "Classes" | "Vehicles" | "Gadgets" | "Maps" | "Modes" | "Progression" | "Hazard Zone" | "Firestorm";
     sent: number;
 };
 
