@@ -44,6 +44,7 @@ const Home = () => {
                 <li>/bf3</li>
                 <li>/bfbc2</li>
                 <li>/bf2</li>
+                <li>/usage</li>
                 <li>/about</li>
                 <li>/help</li>
                 <li>/feedback</li>
