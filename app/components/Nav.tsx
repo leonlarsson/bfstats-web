@@ -20,27 +20,27 @@ const Nav = () => {
           <div className="navbar-nav">
             <li className="nav-item">
               <Link href="/" className={navLinkClass("/")}>
-                <i className="fa-solid fa-house fa-fw"></i> Home
+                <i className="fa-solid fa-house fa-fw" /> Home
               </Link>
             </li>
             <li className="nav-item">
               <Link href="/privacy" className={navLinkClass("/privacy")}>
-                <i className="fa-solid fa-lock fa-fw"></i> Privacy Policy
+                <i className="fa-solid fa-lock fa-fw" /> Privacy Policy
               </Link>
             </li>
             <li className="nav-item">
               <Link href="/tos" className={navLinkClass("/tos")}>
-                <i className="fa-solid fa-book fa-fw"></i> Terms of Service
+                <i className="fa-solid fa-book fa-fw" /> Terms of Service
               </Link>
             </li>
             <li className="nav-item">
               <Link href="/data" className={navLinkClass("/data")}>
-                <i className="fa-solid fa-chart-simple fa-fw"></i> Data
+                <i className="fa-solid fa-chart-simple fa-fw" /> Data
               </Link>
             </li>
             <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i className="fa-solid fa-code fa-fw"></i> API
+                <i className="fa-solid fa-code fa-fw" /> API
               </a>
               <ul className="dropdown-menu">
                 <APILink url="https://api.battlefieldstats.com/base" title="Base" />
@@ -54,13 +54,11 @@ const Nav = () => {
                 <APILink url="https://api.battlefieldstats.com/events/last" title="Events (last 20)" />
               </ul>
             </li>
-            <a href="https://twitter.com/mozzyfx" target="_blank" className="nav-link">
-              {" "}
-              <i className="fa-brands fa-twitter fa-fw"></i> Twitter
+            <a href="https://x.com/mozzyfx" target="_blank" className="nav-link">
+              <i className="fa-brands fa-x-twitter fa-fw fa-lg" title="X / Twitter" />
             </a>
             <a href="https://discord.com/oauth2/authorize?client_id=842768680252997662&scope=bot%20applications.commands" target="_blank" className="nav-link link-primary fw-bold">
-              {" "}
-              <i className="fa-brands fa-discord fa-fw"></i> Add to Discord
+              <i className="fa-brands fa-discord fa-fw" /> Add to Discord
             </a>
           </div>
         </div>
@@ -73,6 +71,6 @@ export default Nav;
 
 const APILink = ({ url, title }: { url: string; title: string }) => (
   <a href={url} target="_blank" className="dropdown-item">
-    {title} <i className="fa-solid fa-up-right-from-square fa-fw"></i>
+    {title} <i className="fa-solid fa-up-right-from-square fa-fw" />
   </a>
 );
