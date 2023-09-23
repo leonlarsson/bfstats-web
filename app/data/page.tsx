@@ -4,7 +4,7 @@ import { StatsSentPerDayChartWithFilter, StatsSentPerDayChart, StatsSentPerGameC
 import type { BaseStats, Output, CountsItem, UserSpecial, SentDailyItem, Event, SentDailyItemGames } from "@/types";
 
 const pageTitle = "Data | Battlefield Stats Discord Bot";
-const pageDescription = "Usage data for the Battlefield Stats Discord Bot.";
+const pageDescription = "Dive into the usage data for the Battlefield Stats Discord Bot.";
 
 export const metadata = {
   title: pageTitle,

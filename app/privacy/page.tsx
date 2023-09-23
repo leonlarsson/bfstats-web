@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 const pageTitle = "Privacy Policy | Battlefield Stats Discord Bot";
-const pageDescription = "Privacy Policy for the Battlefield Stats Discord Bot.";
+const pageDescription = "Read the Privacy Policy for the Battlefield Stats Discord Bot.";
 
 export const metadata = {
   title: pageTitle,

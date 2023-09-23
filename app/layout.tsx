@@ -9,7 +9,7 @@ import "../public/fontawesome/css/solid.min.css";
 import "../public/fontawesome/css/brands.min.css";
 
 const pageTitle = "Battlefield Stats Discord Bot";
-const pageDescription = "Information about the Battlefield Stats Discord Bot.";
+const pageDescription = "Supercharge your Discord with real-time Battlefield game stats - Battlefield 2042, V, 1, and more. Invite the bot now for an elite gaming experience!";
 
 export const metadata = {
   title: pageTitle,

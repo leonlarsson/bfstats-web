@@ -1,5 +1,5 @@
 const pageTitle = "Terms of Service | Battlefield Stats Discord Bot";
-const pageDescription = "Terms of Service for the Battlefield Stats Discord Bot.";
+const pageDescription = "Read the Terms of Service for the Battlefield Stats Discord Bot.";
 
 export const metadata = {
   title: pageTitle,
