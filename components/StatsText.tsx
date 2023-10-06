@@ -6,12 +6,12 @@ const StatsText = async () => {
     const data: BaseStats = await res.json();
 
     return (
-      <>
-        <h3 className="text-center">
+      <div className="container my-4">
+        <h3 className="my-4 text-center text-2xl">
           In <b>{data.totalGuilds.toLocaleString("en-US")}</b> servers, with <b>{data.totalMembers.toLocaleString("en-US")}</b> members, and <b>{data.totalStatsSent.total.toLocaleString("en-US")}</b> stats sent.
         </h3>
         <hr />
-      </>
+      </div>
     );
   } catch (error) {
     return null;

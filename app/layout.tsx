@@ -1,12 +1,11 @@
-import { Suspense } from "react";
-import Script from "next/script";
-import Nav from "./components/Nav";
-import StatsText from "./components/StatsText";
+import "./globals.css";
+import { Inter } from "next/font/google";
+import { cn } from "@/lib/utils";
+import { ThemeProvider } from "@/components/theme-provider";
+import Header from "@/components/Header";
+import StatsText from "@/components/StatsText";
 
-import "bootstrap/dist/css/bootstrap.css";
-import "../public/fontawesome/css/fontawesome.min.css";
-import "../public/fontawesome/css/solid.min.css";
-import "../public/fontawesome/css/brands.min.css";
+const inter = Inter({ subsets: ["latin"] });
 
 const pageTitle = "Battlefield Stats Discord Bot";
 const pageDescription = "Supercharge your Discord with real-time Battlefield game stats - Battlefield 2042, V, 1, and more. Invite the bot now for an elite gaming experience!";
@@ -15,7 +14,6 @@ export const metadata = {
   title: pageTitle,
   description: pageDescription,
   themeColor: "#7289da",
-  icons: "/favicon.ico",
   metadataBase: new URL("https://battlefieldstats.com"),
   openGraph: {
     type: "website",
@@ -39,17 +37,17 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" style={{ overflowY: "scroll" }}>
-      <Script strategy="lazyOnload" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" />
-      <body>
-        <Nav />
-        <div className="container">
-          <Suspense fallback={<h3 className="text-center">Loading stats...</h3>}>
-            {/* @ts-expect-error */}
-            <StatsText />
-          </Suspense>
-          {children}
-        </div>
+    <html lang="en" suppressHydrationWarning className="overflow-y-scroll">
+      <body className={cn("min-h-screen bg-background", inter.className)}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <div className="relative flex min-h-screen flex-col">
+            <Header />
+            <div className="flex-1 pb-10">
+              <StatsText />
+              {children}
+            </div>
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

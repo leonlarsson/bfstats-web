@@ -8,12 +8,7 @@ export const metadata = {
     type: "website",
     url: "https://battlefieldstats.com/tos",
     title: pageTitle,
-    description: pageDescription,
-    images: {
-      url: "/images/example_bf2042.png",
-      width: 1200,
-      height: 750
-    }
+    description: pageDescription
   },
   twitter: {
     card: "summary_large_image",
@@ -24,24 +19,27 @@ export const metadata = {
   }
 };
 
-const Tos = () => {
+export default () => {
   return (
-    <>
-      <h1 className="text-decoration-underline">Terms of Service</h1>
+    <div className="container relative">
+      <h1 className="text-3xl font-bold">Terms of Service</h1>
       <h5>(Updated March 6, 2022)</h5>
 
-      <div className="pb-3">
-        <h3>By using this service, you agree to the below points:</h3>
-        <ul>
+      <br />
+
+      <div>
+        <b>By using this service, you agree to the below points:</b>
+        <ul className="ml-4 list-inside list-disc">
           <li>You will not abuse this bot or spam requests.</li>
           <li>You will not use this bot to harass people.</li>
           <li>You will not use this bot to violate EA's or Discord's Terms of Service or Community Guidelines.</li>
           <li>You will not use this bot for any illegal activities.</li>
         </ul>
+
+        <br />
+
+        <b>I reserve the right to block any person and/or server whenever I wish, for reasons including (but not limited to) the points above.</b>
       </div>
-      <h3>I reserve the right to block any person and/or server whenever I wish, for reasons including (but not limited to) the points above.</h3>
-    </>
+    </div>
   );
 };
-
-export default Tos;
