@@ -1,24 +1,23 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import HeaderSheet from "./HeaderSheet";
 import ThemeModeToggle from "./ThemeModeToggle";
 import { Icons } from "./icons";
-import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import HeaderSheet from "./HeaderSheet";
 
 export default () => {
   const pathname = usePathname();
-
-  // TODO: Make this mobile-friendly
 
   return (
     <header className="supports-backdrop-blur:bg-background/60 sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
       <div className="container flex h-14 items-center justify-between">
         {/* Replaced with minimal header below md */}
         <div className="hidden items-center gap-1 md:flex">
-          <Link href="/" className={cn("mr-3 flex items-center gap-2 text-lg font-semibold opacity-75 transition-all", pathname === "/" && "opacity-100")}>
-            <Icons.chart className="inline h-5 w-5" /> Battlefield Stats
+          <Link href="/" className={cn("mr-3 flex items-center gap-3 text-lg font-semibold")}>
+            <Image src="/images/avatar.png" alt="Battlefield Stats icon" className="h-10 w-10 rounded" width={100} height={100} /> <span className={cn("opacity-75 transition-opacity", pathname === "/" && "opacity-100")}>Battlefield Stats</span>
           </Link>
 
           <Link href="/privacy" className={cn("rounded p-2 opacity-75 transition-all hover:bg-neutral-200 dark:hover:bg-neutral-800", pathname === "/privacy" && "opacity-100")}>
@@ -54,8 +53,8 @@ export default () => {
 
         {/* Minimal header with Sheet. Shown at md */}
         <div className="flex w-full items-center justify-between md:hidden">
-          <Link href="/" className={cn("mr-3 flex items-center gap-2 text-lg font-semibold opacity-75 transition-all", pathname === "/" && "opacity-100")}>
-            <Icons.chart className="inline h-5 w-5" /> Battlefield Stats
+          <Link href="/" className={cn("mr-3 flex items-center gap-3 text-lg font-semibold")}>
+            <Image src="/images/avatar.png" alt="Battlefield Stats icon" className="h-10 w-10 rounded" width={100} height={100} /> <span className={cn("opacity-75 transition-opacity", pathname === "/" && "opacity-100")}>Battlefield Stats</span>
           </Link>
           <div>
             <HeaderSheet />

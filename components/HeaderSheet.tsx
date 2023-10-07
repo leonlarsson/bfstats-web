@@ -1,9 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Icons } from "./icons";
+import Image from "next/image";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import ThemeModeToggle from "./ThemeModeToggle";
+import { Icons } from "./icons";
+import { cn } from "@/lib/utils";
 
 export default () => {
   return (
@@ -15,12 +16,13 @@ export default () => {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle className="flex items-center gap-2">
-            <Icons.chart className="inline h-5 w-5" />
-            Battlefield Stats
+          <SheetTitle className="flex items-center gap-3">
+            <Image src="/images/avatar.png" alt="Battlefield Stats icon" className="h-10 w-10 rounded" width={100} height={100} />
+            <span>Battlefield Stats</span>
           </SheetTitle>
         </SheetHeader>
-        <div className="mb-3 flex flex-col">
+
+        <div className="my-3 flex flex-col">
           <SheetClose asChild>
             <Link href="/" className={cn("rounded p-2 hover:bg-neutral-200 dark:hover:bg-neutral-800")}>
               Home
