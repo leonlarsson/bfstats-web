@@ -11,7 +11,7 @@ export default async () => {
     <div className="container my-4">
       {/* Text - Only visible on smaller than sm */}
       <div className="block sm:hidden">
-        <h3 className="my-4 text-center text-2xl">
+        <h3 className="my-2 text-center text-xl">
           <Link href="/data">
             In <b>{data?.totalGuilds.toLocaleString("en-US") ?? "unknown"}</b> servers, with <b>{data?.totalMembers.toLocaleString("en-US") ?? "unknown"}</b> members, and <b>{data?.totalStatsSent.total.toLocaleString("en") ?? "unknown"}</b> stats sent.
           </Link>
@@ -34,7 +34,7 @@ export default async () => {
 export const HeaderStatsSkeleton = () => (
   <div className="container my-4">
     <div className="block sm:hidden">
-      <h3 className="my-4 text-center text-2xl">
+      <h3 className="my-2 text-center text-xl">
         In{" "}
         <b>
           <Icons.spinner className="inline animate-spin" />
