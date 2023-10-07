@@ -38,7 +38,7 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning className="overflow-y-scroll">
+    <html lang="en" suppressHydrationWarning>
       <body className={cn("min-h-screen bg-background", inter.className)}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <div className="relative flex min-h-screen flex-col">
