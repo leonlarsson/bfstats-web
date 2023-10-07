@@ -14,25 +14,20 @@ const pageDescription = "Supercharge your Discord with real-time Battlefield gam
 export const metadata = {
   title: pageTitle,
   description: pageDescription,
-  themeColor: "#7289da",
+  themeColor: "#01fedf",
   metadataBase: new URL("https://battlefieldstats.com"),
   openGraph: {
     type: "website",
     url: "https://battlefieldstats.com",
     title: pageTitle,
     description: pageDescription,
-    images: {
-      url: "/images/example_bf2042.png",
-      width: 1200,
-      height: 750
-    }
+    siteName: "Battlefield Stats Discord Bot"
   },
   twitter: {
     card: "summary_large_image",
     title: pageTitle,
     description: pageDescription,
-    creator: "@mozzyfx",
-    images: "/images/example_bf2042.png"
+    creator: "@mozzyfx"
   }
 };
 

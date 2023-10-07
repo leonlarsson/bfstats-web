@@ -1,22 +1,6 @@
-const pageTitle = "Terms of Service | Battlefield Stats Discord Bot";
-const pageDescription = "Read the Terms of Service for the Battlefield Stats Discord Bot.";
-
 export const metadata = {
-  title: pageTitle,
-  description: pageDescription,
-  openGraph: {
-    type: "website",
-    url: "https://battlefieldstats.com/tos",
-    title: pageTitle,
-    description: pageDescription
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: pageTitle,
-    description: pageDescription,
-    creator: "@mozzyfx",
-    images: "/images/example_bf2042.png"
-  }
+  title: "Terms of Service | Battlefield Stats Discord Bot",
+  description: "Read the Terms of Service for the Battlefield Stats Discord Bot."
 };
 
 export default () => {
