@@ -1,8 +1,11 @@
 import { Suspense } from "react";
+import Link from "next/link";
 import humanizeDuration from "humanize-duration";
 import { StatsSentPerDayChartWithFilter, StatsSentPerGameChart, StatsSentPerGameTotalChart, StatsSentPerLanguageChart, StatsSentPerLanguageTotalChart, StatsSentPerSegmentChart } from "@/components/Charts";
 import { Icons } from "@/components/icons";
 import type { BaseStats, Output, CountsItem, UserSpecial, Event, SentDailyItemGames } from "@/types";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
 
 const pageTitle = "Data | Battlefield Stats Discord Bot";
 const pageDescription = "Dive into the usage data for the Battlefield Stats Discord Bot.";
@@ -29,6 +32,25 @@ export default () => {
   return (
     <div className="container relative">
       <span className="text-3xl font-bold">Data</span>
+      <br />
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline">
+            <Icons.code className="mr-2 h-6 w-6" /> View APIs
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="flex flex-col">
+          <APILink url="https://api.battlefieldstats.com/base" title="Base" />
+          <APILink url="https://api.battlefieldstats.com/users/top" title="Users (top 20)" />
+          <APILink url="https://api.battlefieldstats.com/users/counts" title="Users (total)" />
+          <APILink url="https://api.battlefieldstats.com/users/special" title="Users (top 20 + total)" />
+          <APILink url="https://api.battlefieldstats.com/outputs/counts" title="Outputs (counts)" />
+          <APILink url="https://api.battlefieldstats.com/outputs/last" title="Outputs (last 20)" />
+          <APILink url="https://api.battlefieldstats.com/outputs/daily" title="Outputs (per day)" />
+          <APILink url="https://api.battlefieldstats.com/outputs/daily/games" title="Outputs (per day, per game)" />
+          <APILink url="https://api.battlefieldstats.com/events/last" title="Events (last 20)" />
+        </PopoverContent>
+      </Popover>
 
       <br />
       <br />
@@ -260,3 +282,9 @@ const LoadingText = () => (
 );
 
 const ErrorFetchingText = () => <span className="text-lg font-semibold text-red-600 dark:text-red-500">Error fetching.</span>;
+
+const APILink = ({ url, title }: { url: string; title: string }) => (
+  <Link href={url} target="_blank" className="font-semibold hover:underline">
+    {title}
+  </Link>
+);
