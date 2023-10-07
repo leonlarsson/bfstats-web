@@ -14,11 +14,13 @@ const SheetTrigger = SheetPrimitive.Trigger
 const SheetClose = SheetPrimitive.Close
 
 const SheetPortal = ({
+  // @ts-expect-error - Not my fault
   className,
   ...props
 }: SheetPrimitive.DialogPortalProps) => (
+  // @ts-expect-error -  - Not my fault
   <SheetPrimitive.Portal className={cn(className)} {...props} />
-)
+);
 SheetPortal.displayName = SheetPrimitive.Portal.displayName
 
 const SheetOverlay = React.forwardRef<
