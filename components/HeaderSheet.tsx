@@ -15,7 +15,10 @@ export default () => {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Battlefield Stats</SheetTitle>
+          <SheetTitle className="flex items-center gap-2">
+            <Icons.chart className="inline h-5 w-5" />
+            Battlefield Stats
+          </SheetTitle>
         </SheetHeader>
         <div className="mb-3 flex flex-col">
           <SheetClose asChild>

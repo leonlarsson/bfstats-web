@@ -17,8 +17,8 @@ export default () => {
       <div className="container flex h-14 items-center justify-between">
         {/* Replaced with minimal header below md */}
         <div className="hidden items-center gap-1 md:flex">
-          <Link href="/" className={cn("mr-3 text-lg font-semibold opacity-75 transition-all", pathname === "/" && "opacity-100")}>
-            Battlefield Stats
+          <Link href="/" className={cn("mr-3 flex items-center gap-2 text-lg font-semibold opacity-75 transition-all", pathname === "/" && "opacity-100")}>
+            <Icons.chart className="inline h-5 w-5" /> Battlefield Stats
           </Link>
 
           <Link href="/privacy" className={cn("rounded p-2 opacity-75 transition-all hover:bg-neutral-200 dark:hover:bg-neutral-800", pathname === "/privacy" && "opacity-100")}>
@@ -54,8 +54,8 @@ export default () => {
 
         {/* Minimal header with Sheet. Shown at md */}
         <div className="flex w-full items-center justify-between md:hidden">
-          <Link href="/" className={cn("mr-3 text-lg font-semibold opacity-75 transition-all", pathname === "/" && "opacity-100")}>
-            Battlefield Stats
+          <Link href="/" className={cn("mr-3 flex items-center gap-2 text-lg font-semibold opacity-75 transition-all", pathname === "/" && "opacity-100")}>
+            <Icons.chart className="inline h-5 w-5" /> Battlefield Stats
           </Link>
           <div>
             <HeaderSheet />
