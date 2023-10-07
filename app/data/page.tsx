@@ -1,74 +1,75 @@
 import { Suspense } from "react";
+import Link from "next/link";
 import humanizeDuration from "humanize-duration";
-import { StatsSentPerDayChartWithFilter, StatsSentPerDayChart, StatsSentPerGameChart, StatsSentPerGameTotalChart, StatsSentPerLanguageChart, StatsSentPerLanguageTotalChart, StatsSentPerSegmentChart } from "../components/Data/Charts";
-import type { BaseStats, Output, CountsItem, UserSpecial, SentDailyItem, Event, SentDailyItemGames } from "@/types";
-
-const pageTitle = "Data | Battlefield Stats Discord Bot";
-const pageDescription = "Dive into the usage data for the Battlefield Stats Discord Bot.";
+import { StatsSentPerDayChartWithFilter, StatsSentPerGameChart, StatsSentPerGameTotalChart, StatsSentPerLanguageChart, StatsSentPerLanguageTotalChart, StatsSentPerSegmentChart } from "@/components/Charts";
+import { Icons } from "@/components/icons";
+import type { BaseStats, Output, CountsItem, UserSpecial, Event, SentDailyItemGames } from "@/types";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
 
 export const metadata = {
-  title: pageTitle,
-  description: pageDescription,
-  openGraph: {
-    type: "website",
-    url: "https://battlefieldstats.com/data",
-    title: pageTitle,
-    description: pageDescription,
-    images: {
-      url: "/images/example_bf2042.png",
-      width: 1200,
-      height: 750
-    }
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: pageTitle,
-    description: pageDescription,
-    creator: "@mozzyfx",
-    images: "/images/example_bf2042.png"
-  }
+  title: "Data | Battlefield Stats Discord Bot",
+  description: "Dive into the usage data for the Battlefield Stats Discord Bot."
 };
 
 export default () => {
   return (
-    <div className="pb-5">
-      <h1 className="text-decoration-underline">Data</h1>
+    <div className="container relative">
+      <span className="text-3xl font-bold">Data</span>
+      <br />
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline">
+            <Icons.code className="mr-2 h-6 w-6" /> View APIs
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="flex flex-col">
+          <APILink url="https://api.battlefieldstats.com/base" title="Base" />
+          <APILink url="https://api.battlefieldstats.com/users/top" title="Users (top 20)" />
+          <APILink url="https://api.battlefieldstats.com/users/counts" title="Users (total)" />
+          <APILink url="https://api.battlefieldstats.com/users/special" title="Users (top 20 + total)" />
+          <APILink url="https://api.battlefieldstats.com/outputs/counts" title="Outputs (counts)" />
+          <APILink url="https://api.battlefieldstats.com/outputs/last" title="Outputs (last 20)" />
+          <APILink url="https://api.battlefieldstats.com/outputs/daily" title="Outputs (per day)" />
+          <APILink url="https://api.battlefieldstats.com/outputs/daily/games" title="Outputs (per day, per game)" />
+          <APILink url="https://api.battlefieldstats.com/events/last" title="Events (last 20)" />
+        </PopoverContent>
+      </Popover>
+
+      <br />
+      <br />
 
       <div>
         <div>
-          <h3>Total (since May 25, 2021)</h3>
+          <h2 className="text-2xl font-bold">Total (since May 25, 2021)</h2>
           <Suspense fallback={<LoadingText />}>
-            {/* @ts-expect-error */}
             <TotalStats />
           </Suspense>
         </div>
 
-        <hr className="my-3 border border-primary border-2 opacity-75 rounded" />
+        <hr className="my-6 border-2" />
 
         <div>
-          <h3>Since January 1, 2023</h3>
+          <h2 className="text-2xl font-bold">Since January 1, 2023</h2>
           <Suspense fallback={<LoadingText />}>
-            {/* @ts-expect-error */}
             <SinceJanuary />
           </Suspense>
         </div>
 
-        <hr className="my-3 border border-primary border-2 opacity-75 rounded" />
+        <hr className="my-6 border-2" />
 
         <div>
-          <h3>Last 20 stats sent</h3>
+          <h2 className="text-2xl font-bold">Last 20 stats sent</h2>
           <Suspense fallback={<LoadingText />}>
-            {/* @ts-expect-error */}
             <LastStatsSent />
           </Suspense>
         </div>
 
-        <hr className="my-3 border border-primary border-2 opacity-75 rounded" />
+        <hr className="my-6 border-2" />
 
         <div>
-          <h3>Last 20 events</h3>
+          <h2 className="text-2xl font-bold">Last 20 events</h2>
           <Suspense fallback={<LoadingText />}>
-            {/* @ts-expect-error */}
             <LastEvents />
           </Suspense>
         </div>
@@ -79,48 +80,42 @@ export default () => {
 
 const TotalStats = async () => {
   const res = await fetch("https://api.battlefieldstats.com/base", { next: { revalidate: 0 } });
-  if (!res.ok) return <h5 className="text-danger">Error fetching.</h5>;
+  if (!res.ok) return <ErrorFetchingText />;
   const baseStats: BaseStats = await res.json();
 
   return (
     <>
       <div className="mb-3">
-        <ul className="list-group">
-          <li className="list-group-item">
-            <strong>{baseStats.totalStatsSent.total.toLocaleString("en-US")}</strong> stats sent
-          </li>
-        </ul>
+        <b>{baseStats.totalStatsSent.total.toLocaleString("en")}</b> stats sent
       </div>
 
-      <div className="row">
-        <div className="col-lg mb-3">
-          <h4>Stats sent per game</h4>
-          <ul className="list-group">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="mb-3">
+          <h4 className="text-lg font-bold">Stats sent per game</h4>
+          <div className="flex flex-col gap-1 rounded border p-2">
             {Object.entries(baseStats.totalStatsSent.games).map(game => (
-              <li className="list-group-item" key={game[0]}>
-                {game[0]}: <strong>{game[1].toLocaleString("en-US")}</strong> ({((game[1] / baseStats.totalStatsSent.total) * 100).toFixed(1)}%)
-              </li>
+              <span key={game[0]}>
+                {game[0]}: <strong>{game[1].toLocaleString("en")}</strong> ({((game[1] / baseStats.totalStatsSent.total) * 100).toFixed(1)}%)
+                <hr className="my-1" />
+              </span>
             ))}
 
-            <li className="list-group-item">
-              <StatsSentPerGameTotalChart baseStats={baseStats} />
-            </li>
-          </ul>
+            <StatsSentPerGameTotalChart baseStats={baseStats} />
+          </div>
         </div>
 
-        <div className="col-lg">
-          <h4>Stats sent per language</h4>
-          <ul className="list-group">
+        <div>
+          <h4 className="text-lg font-bold">Stats sent per language</h4>
+          <div className="flex flex-col gap-1 rounded border p-2">
             {Object.entries(baseStats.totalStatsSent.languages).map(language => (
-              <li className="list-group-item" key={language[0]}>
+              <span key={language[0]}>
                 {language[0]}: <strong>{language[1].toLocaleString("en-US")}</strong> ({((language[1] / baseStats.totalStatsSent.total) * 100).toFixed(1)}%)
-              </li>
+                <hr className="my-1" />
+              </span>
             ))}
 
-            <li className="list-group-item">
-              <StatsSentPerLanguageTotalChart baseStats={baseStats} />
-            </li>
-          </ul>
+            <StatsSentPerLanguageTotalChart baseStats={baseStats} />
+          </div>
         </div>
       </div>
     </>
@@ -131,7 +126,7 @@ const SinceJanuary = async () => {
   const [users, data, sentDaily] = (await Promise.all(
     ["https://api.battlefieldstats.com/users/special", "https://api.battlefieldstats.com/outputs/counts", "https://api.battlefieldstats.com/outputs/daily/games"].map(url => fetch(url, { next: { revalidate: 0 } }).then(res => res.ok && res.json()))
   )) as [UserSpecial[], CountsItem[], SentDailyItemGames[]];
-  if (!users || !data || !sentDaily) return <h5 className="text-danger">Error fetching.</h5>;
+  if (!users || !data || !sentDaily) return <ErrorFetchingText />;
   const games = data.filter(x => x.category === "game");
   const segments = data.filter(x => x.category === "segment");
   const languages = data.filter(x => x.category === "language");
@@ -140,77 +135,75 @@ const SinceJanuary = async () => {
   return (
     <>
       <div className="mb-3">
-        <ul className="list-group">
-          <li className="list-group-item">
-            <strong>{totalSent.toLocaleString("en-US")}</strong> stats sent
+        <ul>
+          <li>
+            <b>{totalSent.toLocaleString("en")}</b> stats sent
           </li>
-          <li className="list-group-item">
-            <strong>{users[0].total_users.toLocaleString("en-US")}</strong> unique users
+          <li>
+            <b>{users[0].total_users.toLocaleString("en")}</b> unique users
           </li>
         </ul>
       </div>
 
-      <div className="row">
-        <div className="col-lg-3 mb-3">
-          <h4>Stats sent per game</h4>
-          <ul className="list-group">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mb-3">
+          <h4 className="text-lg font-bold">Stats sent per game</h4>
+          <div className="flex flex-col gap-1 rounded border p-2">
             {games.map(obj => (
-              <li className="list-group-item" key={obj.item}>
-                {obj.item}: <strong>{obj.sent.toLocaleString("en-US")}</strong> ({((obj.sent / totalSent) * 100).toFixed(1)}%)
-              </li>
+              <span key={obj.item}>
+                {obj.item}: <strong>{obj.sent.toLocaleString("en")}</strong> ({((obj.sent / totalSent) * 100).toFixed(1)}%)
+                <hr className="my-1" />
+              </span>
             ))}
 
-            <li className="list-group-item">
-              <StatsSentPerGameChart games={games} />
-            </li>
-          </ul>
+            <StatsSentPerGameChart games={games} />
+          </div>
         </div>
 
-        <div className="col-lg-3 mb-3">
-          <h4>Stats sent per segment</h4>
-          <ul className="list-group">
+        <div className="mb-3">
+          <h4 className="text-lg font-bold">Stats sent per segment</h4>
+          <div className="flex flex-col gap-1 rounded border p-2">
             {segments.map(obj => (
-              <li className="list-group-item" key={obj.item}>
+              <span key={obj.item}>
                 {obj.item}: <strong>{obj.sent.toLocaleString("en-US")}</strong> ({((obj.sent / totalSent) * 100).toFixed(1)}%)
-              </li>
+                <hr className="my-1" />
+              </span>
             ))}
 
-            <li className="list-group-item">
-              <StatsSentPerSegmentChart segments={segments} />
-            </li>
-          </ul>
+            <StatsSentPerSegmentChart segments={segments} />
+          </div>
         </div>
 
-        <div className="col-lg-3 mb-3">
-          <h4>Stats sent per language</h4>
-          <ul className="list-group">
+        <div className="mb-3">
+          <h4 className="text-lg font-bold">Stats sent per language</h4>
+          <div className="flex flex-col gap-1 rounded border p-2">
             {languages.map(obj => (
-              <li className="list-group-item" key={obj.item}>
+              <span key={obj.item}>
                 {obj.item}: <strong>{obj.sent.toLocaleString("en-US")}</strong> ({((obj.sent / totalSent) * 100).toFixed(1)}%)
-              </li>
+                <hr className="my-1" />
+              </span>
             ))}
 
-            <li className="list-group-item">
-              <StatsSentPerLanguageChart languages={languages} />
-            </li>
-          </ul>
+            <StatsSentPerLanguageChart languages={languages} />
+          </div>
         </div>
 
-        <div className="col-lg-3 mb-3">
-          <h4>Top users</h4>
-          <ol className="list-group list-group-numbered">
+        <div className="mb-3">
+          <h4 className="text-lg font-bold">Top users</h4>
+          <div className="flex flex-col gap-1 rounded border p-2">
             {users.slice(0, 20).map((user, index) => (
-              <li className="list-group-item" key={index}>
+              <span key={index}>
                 User was sent <strong>{user.total_stats_sent.toLocaleString("en-US")}</strong> stats
-              </li>
+                <hr className="my-1" />
+              </span>
             ))}
-          </ol>
+          </div>
         </div>
+      </div>
 
-        <div>
-          <h4>Stats sent per day</h4>
-          <StatsSentPerDayChartWithFilter data={sentDaily} />
-        </div>
+      <div>
+        <h4 className="text-lg font-bold">Stats sent per day</h4>
+        <StatsSentPerDayChartWithFilter data={sentDaily} />
       </div>
     </>
   );
@@ -218,54 +211,64 @@ const SinceJanuary = async () => {
 
 const LastStatsSent = async () => {
   const res = await fetch("https://api.battlefieldstats.com/outputs/last", { next: { revalidate: 0 } });
-  if (!res.ok) return <h5 className="text-danger">Error fetching.</h5>;
+  if (!res.ok) return <ErrorFetchingText />;
   const outputs: Output[] = await res.json();
   return (
-    <ul className="list-group list-group-numbered">
+    <div className="flex flex-col gap-1 rounded border p-2">
       {outputs.map(output => (
-        <li key={output.date} className="list-group-item">
-          <strong>
+        <span key={output.date}>
+          <b>
             {output.game} {output.segment}
-          </strong>{" "}
-          - <strong>{output.language}</strong> // <span title={new Date(output.date).toUTCString()}>{humanizeDuration(output.date - new Date().getTime(), { round: true })} ago</span>
-        </li>
+          </b>{" "}
+          - <b>{output.language}</b> // <span title={new Date(output.date).toUTCString()}>{humanizeDuration(output.date - new Date().getTime(), { round: true })} ago</span>
+          <hr className="my-1" />
+        </span>
       ))}
-    </ul>
+    </div>
   );
 };
 
 const LastEvents = async () => {
   const res = await fetch("https://api.battlefieldstats.com/events/last", { next: { revalidate: 0 } });
-  if (!res.ok) return <h5 className="text-danger">Error fetching.</h5>;
+  if (!res.ok) return <ErrorFetchingText />;
   const events: Event[] = await res.json();
 
   const eventToIcon = (eventName: string) => {
     switch (eventName) {
       case "guildCreate":
-        return <i className="fa-solid fa-arrow-circle-right text-success" />;
+        return <Icons.arrowRight className="mb-1 inline h-5 w-5" />;
       case "guildDelete":
-        return <i className="fa-solid fa-arrow-circle-left text-danger" />;
+        return <Icons.arrowRight className="mb-1 inline h-5 w-5 rotate-180" />;
       default:
         return null;
     }
   };
 
   return (
-    <ul className="list-group list-group-numbered">
+    <div className="flex flex-col gap-1 rounded border p-2">
       {events.map(eventObj => (
-        <li key={eventObj.date} className="list-group-item">
-          <strong>
+        <span key={eventObj.date}>
+          <b>
             {eventToIcon(eventObj.event)} Bot {eventObj.event === "guildCreate" ? "joined" : "left"} a guild
-          </strong>{" "}
+          </b>{" "}
           // <span title={new Date(eventObj.date).toUTCString()}>{humanizeDuration(eventObj.date - new Date().getTime(), { round: true })} ago</span>
-        </li>
+          <hr className="my-1" />
+        </span>
       ))}
-    </ul>
+    </div>
   );
 };
 
 const LoadingText = () => (
-  <h4>
-    <i className="fa-solid fa-spinner fa-spin" /> Fetching data... This might take a while.
-  </h4>
+  <span className="text-xl font-semibold">
+    <Icons.spinner className="inline animate-spin" /> Fetching data... This might take a while.
+  </span>
+);
+
+const ErrorFetchingText = () => <span className="text-lg font-semibold text-red-600 dark:text-red-500">Error fetching.</span>;
+
+const APILink = ({ url, title }: { url: string; title: string }) => (
+  <Link href={url} target="_blank" className="font-semibold hover:underline">
+    {title}
+  </Link>
 );

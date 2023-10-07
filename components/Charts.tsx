@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from "chart.js";
 import { Bar, Doughnut } from "react-chartjs-2";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { Label } from "./ui/label";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import type { BaseStats, CountsItem, SentDailyItem, SentDailyItemGames } from "@/types";
+
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
 
 const backgroundColor = ["#f59b71", "#60ff78", "#f0e0fb", "#cfe2f3", "#655925", "#85754e", "#cd9b1d", "#301e4b", "#75758f", "#416788", "#c0c066", "#6666c0", "#333366", "#445577", "#883399", "#daccad", "#accec0", "#3c2c7d", "#ff800c", "#ad9a9d"];
@@ -86,29 +90,37 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
     <>
       {selectedGame === "All games" && (
         <>
-          <div className="form-check">
-            <input className="form-check-input" type="radio" name="flexRadioDefault" id="radio1" value="yes" defaultChecked onChange={e => setShowAll(e.target.value === "yes")} />
-            <label className="form-check-label user-select-none" htmlFor="radio1">
-              Since Jan 1st, 2023
-            </label>
-          </div>
-          <div className="form-check">
-            <input className="form-check-input" type="radio" name="flexRadioDefault" id="radio2" value="no" onChange={e => setShowAll(e.target.value === "yes")} />
-            <label className="form-check-label user-select-none" htmlFor="radio2">
-              Last 30 days
-            </label>
-          </div>
+          <RadioGroup className="mb-2" defaultValue="yes">
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem id="r1" value="yes" defaultChecked onClick={() => setShowAll(true)} />
+              <Label htmlFor="r1">Since Jan 1st, 2023</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem id="r2" value="no" onClick={() => setShowAll(false)} />
+              <Label htmlFor="r2">Last 30 days</Label>
+            </div>
+          </RadioGroup>
         </>
       )}
-      Select game:
-      <select className="form-select" onChange={e => handleGameChange(e.target.value)}>
-        <option value="All games">All games</option>
-        {["Battlefield 2042", "Battlefield V", "Battlefield 1", "Battlefield Hardline", "Battlefield 4", "Battlefield 3", "Battlefield Bad Company 2", "Battlefield 2"].map(game => (
-          <option key={game} value={game}>
-            {game}
-          </option>
-        ))}
-      </select>
+
+      <Select defaultValue="All games" onValueChange={e => handleGameChange(e)}>
+        <SelectTrigger className="w-[250px]">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem defaultChecked value="All games">
+              All games
+            </SelectItem>
+            {["Battlefield 2042", "Battlefield V", "Battlefield 1", "Battlefield Hardline", "Battlefield 4", "Battlefield 3", "Battlefield Bad Company 2", "Battlefield 2"].map(game => (
+              <SelectItem key={game} value={game}>
+                {game}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+
       <Bar
         redraw={false}
         key={selectedGame}
