@@ -1,9 +1,10 @@
+import { Suspense } from "react";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/Header";
-import StatsText from "@/components/StatsText";
+import HeaderStats, { HeaderStatsSkeleton } from "@/components/HeaderStats";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -42,8 +43,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <div className="relative flex min-h-screen flex-col">
             <Header />
+
             <div className="flex-1 pb-10">
-              <StatsText />
+              <Suspense fallback={<HeaderStatsSkeleton />}>
+                <HeaderStats />
+              </Suspense>
+
               {children}
             </div>
           </div>
