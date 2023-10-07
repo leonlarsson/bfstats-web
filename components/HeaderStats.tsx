@@ -63,8 +63,11 @@ export const HeaderStatsSkeleton = () => (
 );
 
 const StatsBox = ({ title, value }: { title: string; value: string | React.ReactNode }) => (
-  <Link href="/data" className={cn("flex flex-col gap-2 rounded border p-4 transition-colors hover:border-black dark:hover:border-white")}>
-    <span className="text-sm opacity-80">{title}</span>
+  <Link href="/data" className={cn("group flex flex-col gap-2 rounded border p-4 transition-colors hover:border-black dark:hover:border-white")}>
+    <div className="flex justify-between">
+      <span className="text-sm opacity-80">{title}</span>
+      <Icons.arrowRight className="h-4 w-4 opacity-50 transition-opacity group-hover:opacity-80" />
+    </div>
     <span className="text-2xl font-bold">{value}</span>
   </Link>
 );
