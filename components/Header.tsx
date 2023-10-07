@@ -15,7 +15,7 @@ export default () => {
     <header className="supports-backdrop-blur:bg-background/60 sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
       <div className="container flex h-14 items-center justify-between">
         <div className="flex items-center gap-1">
-          <Link href="/" className={cn("mr-3 text-xl font-semibold opacity-75 transition-all", pathname === "/" && "opacity-100")}>
+          <Link href="/" className={cn("mr-3 text-lg font-semibold opacity-75 transition-all", pathname === "/" && "opacity-100")}>
             Battlefield Stats
           </Link>
 
