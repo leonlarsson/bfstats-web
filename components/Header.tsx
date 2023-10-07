@@ -54,7 +54,7 @@ export default () => {
         {/* Minimal header with Sheet. Shown at md */}
         <div className="flex w-full items-center justify-between md:hidden">
           <Link href="/" className={cn("mr-3 flex items-center gap-3 text-lg font-semibold")}>
-            <Image src="/images/avatar.png" alt="Battlefield Stats icon" className="h-10 w-10 rounded" width={100} height={100} /> <span className={cn("opacity-75 transition-opacity", pathname === "/" && "opacity-100")}>Battlefield Stats</span>
+            <Image src="/images/avatar.png" alt="Battlefield Stats icon" className="hidden h-10 w-10 rounded min-[330px]:inline" width={100} height={100} /> <span className={cn("opacity-75 transition-opacity", pathname === "/" && "opacity-100")}>Battlefield Stats</span>
           </Link>
           <div>
             <HeaderSheet />
