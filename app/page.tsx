@@ -32,17 +32,28 @@ export default () => {
         <AccordionItem value="item-1">
           <AccordionTrigger className="text-lg">Supported Games</AccordionTrigger>
           <AccordionContent>
-            <b>Battlefield Stats supports all major games:</b>
-            <ul className="ml-4 list-inside list-disc">
-              <li>Battlefield 2042</li>
-              <li>Battlefield V + Firestorm</li>
-              <li>Battlefield 1</li>
-              <li>Battlefield Hardline</li>
-              <li>Battlefield 4</li>
-              <li>Battlefield 3</li>
-              <li>Battlefield Bad Company 2</li>
-              <li>Battlefield 2</li>
-            </ul>
+            <div className="mb-2 font-semibold">Battlefield Stats supports all major games. Click on a game to see supported areas.</div>
+            <div className="ml-4">
+              {[
+                { game: "Battlefield 2042", segments: ["Stats", "Leaderboard", "Servers", "Experience", "Playercard"] },
+                { game: "Battlefield V", segments: ["Stats", "Leaderboard"] },
+                { game: "Battlefield 1", segments: ["Stats", "Morse"] },
+                { game: "Battlefield Hardline", segments: ["Stats"] },
+                { game: "Battlefield 4", segments: ["Stats"] },
+                { game: "Battlefield 3", segments: ["Stats"] },
+                { game: "Battlefield Bad Company 2", segments: ["Stats"] },
+                { game: "Battlefield 2", segments: ["Stats"] }
+              ].map(game => (
+                <details className="group">
+                  <summary className="cursor-pointer select-none transition-all hover:underline group-open:font-semibold">{game.game}</summary>
+                  {game.segments.map(segment => (
+                    <div className="ml-4" key={segment}>
+                      - {segment}
+                    </div>
+                  ))}
+                </details>
+              ))}
+            </div>
           </AccordionContent>
         </AccordionItem>
 
@@ -77,7 +88,7 @@ export default () => {
           <AccordionContent>
             <div className="flex flex-col gap-2">
               <p>
-                This bot is not endorsed by, supported by, or affiliated with EA, DICE or any EA entity. All images displayed in this bot and its output are properties of EA/DICE. The bot uses stats from{" "}
+                This bot is not endorsed by, supported by, or affiliated with EA, DICE, or any EA entity. Any Battlefield imagery displayed in this bot and its output are properties of EA/DICE. The bot uses stats from{" "}
                 <Link href="https://battlefieldtracker.com/?utm_source=discord&utm_medium=full-stats&utm_campaign=mozzy-bot" target="_blank" className="font-bold hover:underline">
                   Tracker Network
                 </Link>{" "}
