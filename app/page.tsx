@@ -118,7 +118,7 @@ export default () => {
       </Accordion>
 
       <h2 className="text-2xl font-semibold">Image Gallery</h2>
-      <Image src="/images/example_bf2042.png" alt="Product image" className="min-w-full" width={1200} height={750} />
+      <Image src="/images/example_bf2042.png" alt="An image of the bot's image output." className="w-full max-w-2xl" width={1200} height={750} />
     </div>
   );
 };
