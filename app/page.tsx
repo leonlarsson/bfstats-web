@@ -11,7 +11,7 @@ export default () => {
           <Link href="https://discord.com/application-directory/842768680252997662" target="_blank" className="font-semibold hover:underline">
             Battlefield Stats
           </Link>{" "}
-          is the biggest Battlefield bot on Discord, delivering stats to thousands of users in thousands of servers. It was launched in 2021 and has since sent stats ~180,000 times.
+          is the biggest Battlefield bot on Discord, delivering stats to thousands of users in thousands of servers. It was launched in 2021 and has since sent stats to users over 180,000 times.
         </p>
 
         <p>
@@ -19,12 +19,12 @@ export default () => {
           <Link href="https://discord.com/oauth2/authorize?client_id=842768680252997662&scope=bot%20applications.commands" target="_blank" className="font-semibold hover:underline">
             <Icons.discord className="inline h-5 w-5" /> invite it to your Discord
           </Link>{" "}
-          and run one of the commands. You can also run <b>/help</b> to get a full list of commands. Battlefield Stats supports all recent Battlefield games, including Battlefield 2042.
+          and run one of the commands. You can also run /help to get a full list of commands. Battlefield Stats supports all recent Battlefield games, including Battlefield 2042.
         </p>
 
         <p>
-          In addition to displaying stats and leaderboards, some games also have extra commands such as <b className="whitespace-nowrap">/bf2042 experience</b> to see information about a Portal Experience or <b className="whitespace-nowrap">/bf2042 servers</b> to search and view information on
-          Portal servers.
+          In addition to displaying stats and leaderboards, some games also have extra commands such as <span className="whitespace-nowrap">/bf2042 experience</span> to see information about a Portal Experience or <span className="whitespace-nowrap">/bf2042 servers</span> to search and view
+          information on servers.
         </p>
       </div>
 
