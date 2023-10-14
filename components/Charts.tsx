@@ -67,10 +67,11 @@ export const StatsSentPerLanguageChart = ({ languages }: { languages: CountsItem
 };
 
 // Uses /outputs/daily/games
+// TODO: Pad data to include data for all days even if that day has no records
 export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGames[] }) => {
   const totalData = data.filter((v, i, a) => a.findIndex(v2 => v2.day === v.day) === i);
 
-  const [showAll, setShowAll] = useState(true);
+  const [showAll, setShowAll] = useState<boolean>(false);
   const [selectedGame, setSelectedGame] = useState("All games");
   const [selectedData, setSelectedData] = useState(totalData);
 
@@ -87,21 +88,17 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
   };
 
   return (
-    <>
-      {selectedGame === "All games" && (
-        <>
-          <RadioGroup className="mb-2" defaultValue="yes">
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem id="r1" value="yes" defaultChecked onClick={() => setShowAll(true)} />
-              <Label htmlFor="r1">Since Jan 1st, 2023</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem id="r2" value="no" onClick={() => setShowAll(false)} />
-              <Label htmlFor="r2">Last 30 days</Label>
-            </div>
-          </RadioGroup>
-        </>
-      )}
+    <div>
+      <RadioGroup className="mb-2 disabled:[&>*]:cursor-not-allowed" defaultValue={showAll ? "all" : "30d"} value={showAll ? "all" : "30d"} disabled={selectedGame !== "All games"}>
+        <div className="flex items-center space-x-2">
+          <RadioGroupItem id="r1" value="all" defaultChecked onClick={() => setShowAll(true)} />
+          <Label htmlFor="r1">Since Jan 1st, 2023</Label>
+        </div>
+        <div className="flex items-center space-x-2">
+          <RadioGroupItem id="r2" value="30d" onClick={() => setShowAll(false)} />
+          <Label htmlFor="r2">Last 30 days</Label>
+        </div>
+      </RadioGroup>
 
       <Select defaultValue="All games" onValueChange={e => handleGameChange(e)}>
         <SelectTrigger className="w-[250px]">
@@ -135,7 +132,7 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
           ]
         }}
       />
-    </>
+    </div>
   );
 };
 
