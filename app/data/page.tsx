@@ -191,10 +191,10 @@ const SinceJanuary = async () => {
         <div className="mb-3">
           <h4 className="text-lg font-bold">Top users</h4>
           <div className="flex flex-col gap-1 rounded border p-2">
-            {users.slice(0, 20).map((user, index) => (
-              <span key={index}>
+            {users.slice(0, 20).map((user, i) => (
+              <span key={i}>
                 User was sent <strong>{user.total_stats_sent.toLocaleString("en-US")}</strong> stats
-                <hr className="my-1" />
+                {i !== users.length - 1 && <hr className="my-1" />}
               </span>
             ))}
           </div>
@@ -215,13 +215,13 @@ const LastStatsSent = async () => {
   const outputs: Output[] = await res.json();
   return (
     <div className="flex flex-col gap-1 rounded border p-2">
-      {outputs.map(output => (
+      {outputs.map((output, i) => (
         <span key={output.date}>
           <b>
             {output.game} {output.segment}
           </b>{" "}
           - <b>{output.language}</b> // <span title={new Date(output.date).toUTCString()}>{humanizeDuration(output.date - new Date().getTime(), { round: true })} ago</span>
-          <hr className="my-1" />
+          {i !== outputs.length - 1 && <hr className="my-1" />}
         </span>
       ))}
     </div>
@@ -246,13 +246,13 @@ const LastEvents = async () => {
 
   return (
     <div className="flex flex-col gap-1 rounded border p-2">
-      {events.map(eventObj => (
+      {events.map((eventObj, i) => (
         <span key={eventObj.date}>
           <b>
             {eventToIcon(eventObj.event)} Bot {eventObj.event === "guildCreate" ? "joined" : "left"} a guild
           </b>{" "}
           // <span title={new Date(eventObj.date).toUTCString()}>{humanizeDuration(eventObj.date - new Date().getTime(), { round: true })} ago</span>
-          <hr className="my-1" />
+          {i !== events.length - 1 && <hr className="my-1" />}
         </span>
       ))}
     </div>
