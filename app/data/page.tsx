@@ -17,24 +17,27 @@ export default () => {
     <div className="container relative">
       <span className="text-3xl font-bold">Data</span>
       <br />
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline">
-            <Icons.code className="mr-2 h-6 w-6" /> View APIs
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="flex flex-col">
-          <APILink url="https://api.battlefieldstats.com/base" title="Base" />
-          <APILink url="https://api.battlefieldstats.com/users/top" title="Users (top 20)" />
-          <APILink url="https://api.battlefieldstats.com/users/counts" title="Users (total)" />
-          <APILink url="https://api.battlefieldstats.com/users/special" title="Users (top 20 + total)" />
-          <APILink url="https://api.battlefieldstats.com/outputs/counts" title="Outputs (counts)" />
-          <APILink url="https://api.battlefieldstats.com/outputs/last" title="Outputs (last 20)" />
-          <APILink url="https://api.battlefieldstats.com/outputs/daily" title="Outputs (per day)" />
-          <APILink url="https://api.battlefieldstats.com/outputs/daily/games" title="Outputs (per day, per game)" />
-          <APILink url="https://api.battlefieldstats.com/events/last" title="Events (last 20)" />
-        </PopoverContent>
-      </Popover>
+
+      <span>
+        All data displayed here consumes my public APIs. All APIs can be seen{" "}
+        <Popover>
+          <PopoverTrigger asChild>
+            <span className="cursor-pointer font-semibold hover:underline">here</span>
+          </PopoverTrigger>
+          <PopoverContent className="flex flex-col">
+            <APILink url="https://api.battlefieldstats.com/base" title="Base" />
+            <APILink url="https://api.battlefieldstats.com/users/top" title="Users (top 20)" />
+            <APILink url="https://api.battlefieldstats.com/users/counts" title="Users (total)" />
+            <APILink url="https://api.battlefieldstats.com/users/special" title="Users (top 20 + total)" />
+            <APILink url="https://api.battlefieldstats.com/outputs/counts" title="Outputs (counts)" />
+            <APILink url="https://api.battlefieldstats.com/outputs/last" title="Outputs (last 20)" />
+            <APILink url="https://api.battlefieldstats.com/outputs/daily" title="Outputs (per day)" />
+            <APILink url="https://api.battlefieldstats.com/outputs/daily/games" title="Outputs (per day, per game)" />
+            <APILink url="https://api.battlefieldstats.com/events/last" title="Events (last 20)" />
+          </PopoverContent>
+        </Popover>
+        .
+      </span>
 
       <br />
       <br />
