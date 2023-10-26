@@ -35,17 +35,17 @@ export default () => {
             <div className="mb-2 font-semibold">Battlefield Stats supports all major games. Click on a game to see supported areas.</div>
             <div className="ml-4">
               {[
-                { game: "Battlefield 2042", segments: ["Stats", "Leaderboard", "Servers", "Experience", "Playercard"] },
-                { game: "Battlefield V", segments: ["Stats", "Leaderboard"] },
-                { game: "Battlefield 1", segments: ["Stats", "Morse"] },
-                { game: "Battlefield Hardline", segments: ["Stats"] },
-                { game: "Battlefield 4", segments: ["Stats"] },
-                { game: "Battlefield 3", segments: ["Stats"] },
-                { game: "Battlefield Bad Company 2", segments: ["Stats"] },
-                { game: "Battlefield 2", segments: ["Stats"] }
+                { gameName: "Battlefield 2042", segments: ["Stats", "Leaderboard", "Servers", "Experience", "Playercard"] },
+                { gameName: "Battlefield V", segments: ["Stats", "Leaderboard"] },
+                { gameName: "Battlefield 1", segments: ["Stats", "Morse"] },
+                { gameName: "Battlefield Hardline", segments: ["Stats"] },
+                { gameName: "Battlefield 4", segments: ["Stats"] },
+                { gameName: "Battlefield 3", segments: ["Stats"] },
+                { gameName: "Battlefield Bad Company 2", segments: ["Stats"] },
+                { gameName: "Battlefield 2", segments: ["Stats"] }
               ].map(game => (
-                <details className="group">
-                  <summary className="cursor-pointer select-none transition-all hover:underline group-open:font-semibold">{game.game}</summary>
+                <details key={game.gameName} className="group">
+                  <summary className="cursor-pointer select-none transition-all hover:underline group-open:font-semibold">{game.gameName}</summary>
                   {game.segments.map(segment => (
                     <div className="ml-4" key={segment}>
                       - {segment}

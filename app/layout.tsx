@@ -14,7 +14,6 @@ const pageDescription = "Supercharge your Discord with real-time Battlefield gam
 export const metadata = {
   title: pageTitle,
   description: pageDescription,
-  themeColor: "#01fedf",
   metadataBase: new URL("https://battlefieldstats.com"),
   openGraph: {
     type: "website",
