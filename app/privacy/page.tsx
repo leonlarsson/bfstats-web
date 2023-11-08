@@ -83,6 +83,11 @@ export default () => {
 
       <br />
 
+      <h3 className="text-2xl font-semibold">Viewing your usage statistics</h3>
+      <p>To view your usage statistics, you can use the /usage command. This will show you the number of times you've used the bot, grouped by game. This is only visible to you unless specified otherwise.</p>
+
+      <br />
+
       <h3 className="text-2xl font-semibold">Requesting data redaction</h3>
       <p>
         If you want your data (user ID and username) to be redacted in the private database, you need to reach out to me on Discord. My username is <u className="select-all">mozzy</u>. Since I don't store any emails, emailing me does not work as verification. If you have your data redacted and then

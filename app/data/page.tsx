@@ -17,7 +17,6 @@ export default () => {
     <div className="container relative">
       <span className="text-3xl font-bold">Data</span>
       <br />
-
       <span>
         All data displayed here consumes my public APIs. All APIs can be seen{" "}
         <Popover>
@@ -40,8 +39,11 @@ export default () => {
       </span>
 
       <br />
-      <br />
 
+      <span>To view your usage statistics, you can use the /usage command. This will show you the number of times you've used the bot, grouped by game.</span>
+
+      <br />
+      <br />
       <div>
         <div>
           <h2 className="text-2xl font-bold">Total (since May 25, 2021)</h2>
