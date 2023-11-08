@@ -83,6 +83,14 @@ export default () => {
 
       <br />
 
+      <h3 className="text-2xl font-semibold">Requesting data redaction</h3>
+      <p>
+        If you want your data (user ID and username) to be redacted in the private database, you need to reach out to me on Discord. My username is <u className="select-all">mozzy</u>. Since I don't store any emails, emailing me does not work as verification. If you have your data redacted and then
+        continue to use the bot, your data will once again be stored. Do not use the bot in this case.
+      </p>
+
+      <br />
+
       <h3 className="text-2xl font-semibold">Disclaimers</h3>
       <p>
         <i>
