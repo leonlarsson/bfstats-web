@@ -90,26 +90,31 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
 
   return (
     <div>
-      <RadioGroup className="mb-2 disabled:[&>*]:cursor-not-allowed" defaultValue={showAll ? "all" : "30d"} value={showAll ? "all" : "30d"} disabled={selectedGame !== "All games"}>
+      <RadioGroup className="mb-2" defaultValue={showAll ? "all" : "30d"} value={showAll ? "all" : "30d"}>
         <div className="flex items-center space-x-2">
-          <RadioGroupItem id="r1" value="all" defaultChecked onClick={() => setShowAll(true)} />
+          <RadioGroupItem id="r1" value="all" onClick={() => setShowAll(true)} />
           <Label htmlFor="r1">Since Jan 1st, 2023</Label>
         </div>
         <div className="flex items-center space-x-2">
-          <RadioGroupItem id="r2" value="30d" onClick={() => setShowAll(false)} />
+          <RadioGroupItem
+            id="r2"
+            value="30d"
+            onClick={() => {
+              setShowAll(false);
+              setSelectedGame("All games");
+            }}
+          />
           <Label htmlFor="r2">Last 30 days</Label>
         </div>
       </RadioGroup>
 
-      <Select defaultValue="All games" onValueChange={e => handleGameChange(e)}>
+      <Select value={selectedGame} onValueChange={e => handleGameChange(e)}>
         <SelectTrigger className="w-[250px]">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectItem defaultChecked value="All games">
-              All games
-            </SelectItem>
+            <SelectItem value="All games">All games</SelectItem>
             {["Battlefield 2042", "Battlefield V", "Battlefield 1", "Battlefield Hardline", "Battlefield 4", "Battlefield 3", "Battlefield Bad Company 2", "Battlefield 2"].map(game => (
               <SelectItem key={game} value={game}>
                 {game}
@@ -159,6 +164,7 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
   );
 };
 
+// UNUSED
 // Uses /outputs/daily
 export const StatsSentPerDayChart = ({ data }: { data: SentDailyItem[] }) => {
   const [showAll, setShowAll] = useState(true);
