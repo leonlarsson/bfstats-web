@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from "chart.js";
 import { Bar, Doughnut } from "react-chartjs-2";
+// import { BarChart, Bar as Bar2, Rectangle, XAxis, YAxis, CartesianGrid, Tooltip as Tooltip2, Legend as Legend2, ResponsiveContainer, Brush } from "recharts";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Label } from "./ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
@@ -117,6 +118,28 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
           </SelectGroup>
         </SelectContent>
       </Select>
+
+      {/* <div className="h-[500px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            // width={500}
+            // height={300}
+            data={selectedData.slice(showAll ? 0 : -30)}
+            margin={{
+              top: 5,
+              bottom: 5
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="day" />
+            <YAxis />
+            <Tooltip2 />
+            <Legend2 />
+            <Brush dataKey="day" height={30} stroke="#8884d8" />
+            <Bar2 dataKey={selectedGame === "All games" ? "total_sent" : "sent"} name={"Sent"} label="Sent" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div> */}
 
       <Bar
         redraw={false}
