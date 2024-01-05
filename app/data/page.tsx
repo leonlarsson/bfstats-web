@@ -94,7 +94,7 @@ const TotalStats = async () => {
         <b>{baseStats.totalStatsSent.total.toLocaleString("en")}</b> stats sent
       </div>
 
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="w-full rounded-lg border p-2">
           <Title>Per game</Title>
           <BarList
@@ -140,7 +140,7 @@ const SinceJanuary = async () => {
   const totalSent = games.reduce((a, b) => a + b.sent, 0);
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-6">
       <div className="mb-3 flex flex-col">
         <span>
           <b>{totalSent.toLocaleString("en")}</b> stats sent
@@ -151,58 +151,65 @@ const SinceJanuary = async () => {
         </span>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-        <div className="w-full rounded-lg border p-2">
-          <Title>Per game</Title>
-          <BarList
-            className="mt-2 h-[350px] px-2"
-            data={games.map(x => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
-            valueFormatter={(v: number) => (
-              <span>
-                {v.toLocaleString("en")} ({new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 }).format(v / totalSent)})
-              </span>
-            )}
-          />
+      {/* Bar lists */}
+      <div className="space-y-4">
+        {/* First 2 bar lists */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="w-full rounded-lg border p-2">
+            <Title>Per game</Title>
+            <BarList
+              className="mt-2 h-[350px] px-2"
+              data={games.map(x => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
+              valueFormatter={(v: number) => (
+                <span>
+                  {v.toLocaleString("en")} ({new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 }).format(v / totalSent)})
+                </span>
+              )}
+            />
+          </div>
+
+          <div className="w-full rounded-lg border p-2">
+            <Title>Per segment</Title>
+            <BarList
+              className="mt-2 h-[350px] overflow-y-scroll px-2"
+              data={segments.map(x => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
+              valueFormatter={(v: number) => (
+                <span>
+                  {v.toLocaleString("en")} ({new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 }).format(v / totalSent)})
+                </span>
+              )}
+            />
+          </div>
         </div>
 
-        <div className="w-full rounded-lg border p-2">
-          <Title>Per segment</Title>
-          <BarList
-            className="mt-2 h-[350px] overflow-y-scroll px-2"
-            data={segments.map(x => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
-            valueFormatter={(v: number) => (
-              <span>
-                {v.toLocaleString("en")} ({new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 }).format(v / totalSent)})
-              </span>
-            )}
-          />
-        </div>
+        {/* Last 2 bar lists */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="w-full rounded-lg border p-2">
+            <Title>Per language</Title>
+            <BarList
+              className="mt-2 h-[350px] overflow-y-scroll px-2"
+              data={languages.map(x => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
+              valueFormatter={(v: number) => (
+                <span>
+                  {v.toLocaleString("en")} ({new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 }).format(v / totalSent)})
+                </span>
+              )}
+            />
+          </div>
 
-        <div className="w-full rounded-lg border p-2">
-          <Title>Per language</Title>
-          <BarList
-            className="mt-2 h-[350px] overflow-y-scroll px-2"
-            data={languages.map(x => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
-            valueFormatter={(v: number) => (
-              <span>
-                {v.toLocaleString("en")} ({new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 }).format(v / totalSent)})
-              </span>
-            )}
-          />
+          <div className="w-full rounded-lg border p-2">
+            <Title>Top users</Title>
+            <BarList
+              className="mt-2 h-[350px] overflow-y-scroll px-2"
+              data={users.map((sent, i) => ({ name: `User #${i + 1}`, value: sent.total_stats_sent }))}
+              valueFormatter={(v: number) => (
+                <span>
+                  {v.toLocaleString("en")} ({new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 }).format(v / totalSent)})
+                </span>
+              )}
+            />
+          </div>
         </div>
-      </div>
-
-      <div className="w-full rounded-lg border p-2">
-        <Title>Top users</Title>
-        <BarList
-          className="mt-2 h-[350px] overflow-y-scroll px-2"
-          data={users.map((sent, i) => ({ name: `User #${i + 1}`, value: sent.total_stats_sent }))}
-          valueFormatter={(v: number) => (
-            <span>
-              {v.toLocaleString("en")} ({new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 }).format(v / totalSent)})
-            </span>
-          )}
-        />
       </div>
 
       <div>
