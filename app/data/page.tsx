@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import humanizeDuration from "humanize-duration";
+import { Loader2Icon, MinusCircleIcon, PlusCircleIcon, SendIcon } from "lucide-react";
 import { Title, BarList } from "@tremor/react";
 import { StatsSentPerDayChartWithFilter } from "@/components/Charts";
-import { Icons } from "@/components/icons";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { BaseStats, Output, CountsItem, UserSpecial, Event, SentDailyItemGames } from "@/types";
@@ -232,16 +232,17 @@ const LastStatsSent = async () => {
   if (!res.ok) return <ErrorFetchingText />;
   const outputs: Output[] = await res.json();
   return (
-    <div className="flex flex-col gap-1 rounded border p-2">
-      {outputs.map((output, i) => (
-        <span key={output.date}>
-          <b>
-            {output.game} {output.segment}
-          </b>{" "}
-          - <b>{output.language}</b> // <span title={new Date(output.date).toUTCString()}>{humanizeDuration(output.date - new Date().getTime(), { round: true })} ago</span>
-          {i !== outputs.length - 1 && <hr className="my-1" />}
-        </span>
-      ))}
+    <div className="flex flex-col">
+      <ScrollArea className="h-[370px] rounded pr-3">
+        {outputs.map((output, i) => (
+          <div key={i} className="flex flex-wrap justify-between rounded p-1 even:bg-neutral-200 dark:even:bg-neutral-900">
+            <span className="flex items-center gap-2">
+              <SendIcon className="size-4 inline" /> {output.game} {output.segment} - {output.language}
+            </span>
+            <span title={new Date(output.date).toUTCString()}>{humanizeDuration(output.date - new Date().getTime(), { round: true, units: ["d", "h", "m"] })} ago</span>
+          </div>
+        ))}
+      </ScrollArea>
     </div>
   );
 };
@@ -254,32 +255,33 @@ const LastEvents = async () => {
   const eventToIcon = (eventName: string) => {
     switch (eventName) {
       case "guildCreate":
-        return <Icons.arrowRight className="mb-1 inline h-5 w-5" />;
+        return <PlusCircleIcon className="size-4 inline" />;
       case "guildDelete":
-        return <Icons.arrowRight className="mb-1 inline h-5 w-5 rotate-180" />;
+        return <MinusCircleIcon className="size-4 inline" />;
       default:
         return null;
     }
   };
 
   return (
-    <div className="flex flex-col gap-1 rounded border p-2">
-      {events.map((eventObj, i) => (
-        <span key={eventObj.date}>
-          <b>
-            {eventToIcon(eventObj.event)} Bot {eventObj.event === "guildCreate" ? "joined" : "left"} a guild
-          </b>{" "}
-          // <span title={new Date(eventObj.date).toUTCString()}>{humanizeDuration(eventObj.date - new Date().getTime(), { round: true })} ago</span>
-          {i !== events.length - 1 && <hr className="my-1" />}
-        </span>
-      ))}
+    <div className="flex flex-col">
+      <ScrollArea className="h-[370px] rounded pr-3">
+        {events.map((event, i) => (
+          <div key={i} className="flex flex-wrap justify-between rounded p-1 even:bg-neutral-200 dark:even:bg-neutral-900">
+            <span className="flex items-center gap-2">
+              {eventToIcon(event.event)} Bot {event.event === "guildCreate" ? "joined" : "left"} a guild
+            </span>
+            <span title={new Date(event.date).toUTCString()}>{humanizeDuration(event.date - new Date().getTime(), { round: true, units: ["d", "h", "m"] })} ago</span>
+          </div>
+        ))}
+      </ScrollArea>
     </div>
   );
 };
 
 const LoadingText = () => (
-  <span className="text-xl font-semibold">
-    <Icons.spinner className="inline animate-spin" /> Fetching data... This might take a while.
+  <span className="flex items-center gap-2 text-xl font-semibold">
+    <Loader2Icon className="inline animate-spin" /> Fetching data... This might take a while.
   </span>
 );
 
