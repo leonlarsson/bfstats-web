@@ -14,7 +14,7 @@ export const metadata = {
 
 export default () => {
   return (
-    <div className="container relative">
+    <div>
       <span className="text-3xl font-bold">Data</span>
       <br />
       <span>

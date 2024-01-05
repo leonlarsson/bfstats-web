@@ -1,11 +1,11 @@
 export const metadata = {
   title: "Terms of Service | Battlefield Stats Discord Bot",
-  description: "Read the Terms of Service for the Battlefield Stats Discord Bot."
+  description: "Read the Terms of Service for the Battlefield Stats Discord Bot.",
 };
 
 export default () => {
   return (
-    <div className="container relative">
+    <div>
       <h1 className="text-3xl font-bold">Terms of Service</h1>
       <h5>(Updated March 6, 2022)</h5>
 

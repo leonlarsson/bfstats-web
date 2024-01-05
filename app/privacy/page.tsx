@@ -3,12 +3,12 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Privacy Policy | Battlefield Stats Discord Bot",
-  description: "Read the Privacy Policy for the Battlefield Stats Discord Bot."
+  description: "Read the Privacy Policy for the Battlefield Stats Discord Bot.",
 };
 
 export default () => {
   return (
-    <div className="container relative">
+    <div>
       <h1 className="text-3xl font-bold">Privacy Policy</h1>
       <h5>(Updated January 29, 2023)</h5>
 

@@ -13,7 +13,7 @@ export default () => {
 
   return (
     <header className="supports-backdrop-blur:bg-background/60 sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
-      <div className="container flex h-14 items-center justify-between">
+      <div className="flex h-14 items-center justify-between">
         {/* Replaced with minimal header below md */}
         <div className="hidden items-center gap-1 md:flex">
           <Link href="/" className={cn("mr-3 flex items-center gap-3 text-lg font-semibold")}>

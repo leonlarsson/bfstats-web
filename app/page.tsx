@@ -5,7 +5,7 @@ import { Icons } from "@/components/icons";
 
 export default () => {
   return (
-    <div className="container relative">
+    <>
       <div className="my-4 space-y-4">
         <p>
           <Link href="https://discord.com/application-directory/842768680252997662" target="_blank" className="font-semibold hover:underline">
@@ -42,7 +42,7 @@ export default () => {
                 { gameName: "Battlefield 4", segments: ["Stats"] },
                 { gameName: "Battlefield 3", segments: ["Stats"] },
                 { gameName: "Battlefield Bad Company 2", segments: ["Stats"] },
-                { gameName: "Battlefield 2", segments: ["Stats"] }
+                { gameName: "Battlefield 2", segments: ["Stats"] },
               ].map(game => (
                 <details key={game.gameName} className="group">
                   <summary className="cursor-pointer select-none transition-all hover:underline group-open:font-semibold">{game.gameName}</summary>
@@ -119,6 +119,6 @@ export default () => {
 
       <h2 className="text-2xl font-semibold">Image Gallery</h2>
       <Image src="/images/example_bf2042.png" alt="An image of the bot's image output." className="w-full max-w-2xl" width={1200} height={750} />
-    </div>
+    </>
   );
 };

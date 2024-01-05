@@ -8,7 +8,7 @@ export default async () => {
   const data: BaseStats | null = await res.json().catch(() => null);
 
   return (
-    <div className="container my-4">
+    <div className="my-4">
       {/* Text - Only visible on smaller than sm */}
       <div className="block sm:hidden">
         <h3 className="my-2 text-center text-xl">

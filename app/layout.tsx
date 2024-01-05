@@ -20,14 +20,14 @@ export const metadata = {
     url: "https://battlefieldstats.com",
     title: pageTitle,
     description: pageDescription,
-    siteName: "Battlefield Stats Discord Bot"
+    siteName: "Battlefield Stats Discord Bot",
   },
   twitter: {
     card: "summary_large_image",
     title: pageTitle,
     description: pageDescription,
-    creator: "@mozzyfx"
-  }
+    creator: "@mozzyfx",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -35,7 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className={cn("min-h-screen bg-background", inter.className)}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <div className="relative flex min-h-screen flex-col">
+          <div className="container relative flex min-h-screen flex-col px-4 lg:px-8">
             <Header />
 
             <div className="flex-1 pb-10">
