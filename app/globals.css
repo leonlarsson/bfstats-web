@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .link {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 500;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

@@ -22,7 +22,7 @@ export default () => {
         All data displayed here consumes my public APIs. All APIs can be seen{" "}
         <Popover>
           <PopoverTrigger asChild>
-            <span className="cursor-pointer font-semibold hover:underline">here</span>
+            <span className="link cursor-pointer">here</span>
           </PopoverTrigger>
           <PopoverContent className="flex flex-col">
             <APILink url="https://api.battlefieldstats.com/base" title="Base" />
@@ -288,7 +288,7 @@ const LoadingText = () => (
 const ErrorFetchingText = () => <span className="text-lg font-semibold text-red-600 dark:text-red-500">Error fetching.</span>;
 
 const APILink = ({ url, title }: { url: string; title: string }) => (
-  <Link href={url} target="_blank" className="font-semibold hover:underline">
+  <Link href={url} target="_blank" className="link w-fit">
     {title}
   </Link>
 );
