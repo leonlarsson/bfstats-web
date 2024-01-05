@@ -1,71 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from "chart.js";
-import { Bar, Doughnut } from "react-chartjs-2";
-// import { BarChart, Bar as Bar2, Rectangle, XAxis, YAxis, CartesianGrid, Tooltip as Tooltip2, Legend as Legend2, ResponsiveContainer, Brush } from "recharts";
+import { BarChart } from "@tremor/react";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Label } from "./ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import type { BaseStats, CountsItem, SentDailyItem, SentDailyItemGames } from "@/types";
-
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
-
-const backgroundColor = ["#f59b71", "#60ff78", "#f0e0fb", "#cfe2f3", "#655925", "#85754e", "#cd9b1d", "#301e4b", "#75758f", "#416788", "#c0c066", "#6666c0", "#333366", "#445577", "#883399", "#daccad", "#accec0", "#3c2c7d", "#ff800c", "#ad9a9d"];
-
-export const StatsSentPerGameChart = ({ games }: { games: CountsItem[] }) => {
-  return (
-    <Doughnut
-      data={{
-        labels: games.map(obj => obj.item),
-        datasets: [
-          {
-            label: " # of stats sent",
-            data: games.map(x => x.sent),
-            backgroundColor,
-            hoverOffset: 7
-          }
-        ]
-      }}
-    />
-  );
-};
-
-export const StatsSentPerSegmentChart = ({ segments }: { segments: CountsItem[] }) => {
-  return (
-    <Doughnut
-      data={{
-        labels: segments.map(obj => obj.item),
-        datasets: [
-          {
-            label: " # of stats sent",
-            data: segments.map(x => x.sent),
-            backgroundColor,
-            hoverOffset: 7
-          }
-        ]
-      }}
-    />
-  );
-};
-
-export const StatsSentPerLanguageChart = ({ languages }: { languages: CountsItem[] }) => {
-  return (
-    <Doughnut
-      data={{
-        labels: languages.map(obj => obj.item),
-        datasets: [
-          {
-            label: " # of stats sent",
-            data: languages.map(x => x.sent),
-            backgroundColor,
-            hoverOffset: 7
-          }
-        ]
-      }}
-    />
-  );
-};
+import type { SentDailyItemGames } from "@/types";
 
 // Uses /outputs/daily/games
 // TODO: Pad data to include data for all days even if that day has no records
@@ -124,113 +64,22 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
         </SelectContent>
       </Select>
 
-      {/* <div className="h-[500px]">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            // width={500}
-            // height={300}
-            data={selectedData.slice(showAll ? 0 : -30)}
-            margin={{
-              top: 5,
-              bottom: 5
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="day" />
-            <YAxis />
-            <Tooltip2 />
-            <Legend2 />
-            <Brush dataKey="day" height={30} stroke="#8884d8" />
-            <Bar2 dataKey={selectedGame === "All games" ? "total_sent" : "sent"} name={"Sent"} label="Sent" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div> */}
-
-      <Bar
-        redraw={false}
+      <BarChart
         key={selectedGame}
-        data={{
-          labels: selectedData.slice(showAll ? 0 : -30).map(x => x.day),
-          datasets: [
-            {
-              label: " # of stats sent",
-              data: selectedData.slice(showAll ? 0 : -30).map(x => (selectedGame === "All games" ? x.total_sent : x.sent)),
-              backgroundColor
-            }
-          ]
-        }}
+        data={selectedData.slice(showAll ? 0 : -30).map(x => ({ date: new Date(x.day).toLocaleDateString(), Sent: selectedGame === "All games" ? x.total_sent : x.sent }))}
+        index="date"
+        allowDecimals={false}
+        categories={["Sent"]}
+        valueFormatter={v => v.toLocaleString("en")}
+        customTooltip={({ label, payload }) => (
+          <div className="flex flex-col gap-1 rounded-lg border bg-white p-2 text-sm dark:bg-black">
+            <span>{selectedGame}</span>
+            <span className="font-medium">{label}</span>
+            <hr />
+            <span>{payload?.[0]?.value ?? 0} stats sent</span>
+          </div>
+        )}
       />
     </div>
-  );
-};
-
-// UNUSED
-// Uses /outputs/daily
-export const StatsSentPerDayChart = ({ data }: { data: SentDailyItem[] }) => {
-  const [showAll, setShowAll] = useState(true);
-
-  return (
-    <>
-      <div className="form-check">
-        <input className="form-check-input" type="radio" name="flexRadioDefault" id="radio1" value="yes" defaultChecked onChange={e => setShowAll(e.target.value === "yes")} />
-        <label className="form-check-label user-select-none" htmlFor="radio1">
-          Since Jan 1st, 2023
-        </label>
-      </div>
-      <div className="form-check">
-        <input className="form-check-input" type="radio" name="flexRadioDefault" id="radio2" value="no" onChange={e => setShowAll(e.target.value === "yes")} />
-        <label className="form-check-label user-select-none" htmlFor="radio2">
-          Last 30 days
-        </label>
-      </div>
-      <Bar
-        data={{
-          labels: data.slice(showAll ? 0 : -30).map(x => x.day),
-          datasets: [
-            {
-              label: " # of stats sent",
-              data: data.slice(showAll ? 0 : -30).map(x => x.sent),
-              backgroundColor
-            }
-          ]
-        }}
-      />
-    </>
-  );
-};
-
-export const StatsSentPerGameTotalChart = ({ baseStats }: { baseStats: BaseStats }) => {
-  return (
-    <Doughnut
-      data={{
-        labels: Object.entries(baseStats.totalStatsSent.games).map(game => game[0]),
-        datasets: [
-          {
-            label: " # of stats sent",
-            data: Object.entries(baseStats.totalStatsSent.games).map(game => game[1]),
-            backgroundColor,
-            hoverOffset: 7
-          }
-        ]
-      }}
-    />
-  );
-};
-
-export const StatsSentPerLanguageTotalChart = ({ baseStats }: { baseStats: BaseStats }) => {
-  return (
-    <Doughnut
-      data={{
-        labels: Object.entries(baseStats.totalStatsSent.languages).map(language => language[0]),
-        datasets: [
-          {
-            label: " # of stats sent",
-            data: Object.entries(baseStats.totalStatsSent.languages).map(language => language[1]),
-            backgroundColor,
-            hoverOffset: 7
-          }
-        ]
-      }}
-    />
   );
 };

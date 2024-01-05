@@ -1,15 +1,15 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import humanizeDuration from "humanize-duration";
-import { StatsSentPerDayChartWithFilter, StatsSentPerGameChart, StatsSentPerGameTotalChart, StatsSentPerLanguageChart, StatsSentPerLanguageTotalChart, StatsSentPerSegmentChart } from "@/components/Charts";
+import { Title, BarList } from "@tremor/react";
+import { StatsSentPerDayChartWithFilter } from "@/components/Charts";
 import { Icons } from "@/components/icons";
 import type { BaseStats, Output, CountsItem, UserSpecial, Event, SentDailyItemGames } from "@/types";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
 
 export const metadata = {
   title: "Data | Battlefield Stats Discord Bot",
-  description: "Dive into the usage data for the Battlefield Stats Discord Bot."
+  description: "Dive into the usage data for the Battlefield Stats Discord Bot.",
 };
 
 export default () => {
@@ -46,7 +46,7 @@ export default () => {
       <br />
       <div>
         <div>
-          <h2 className="text-2xl font-bold">Total (since May 25, 2021)</h2>
+          <h2 className="mb-1 text-2xl font-bold">Total (since May 25, 2021)</h2>
           <Suspense fallback={<LoadingText />}>
             <TotalStats />
           </Suspense>
@@ -55,7 +55,7 @@ export default () => {
         <hr className="my-6 border-2" />
 
         <div>
-          <h2 className="text-2xl font-bold">Since January 1, 2023</h2>
+          <h2 className="mb-1 text-2xl font-bold">Since January 1, 2023</h2>
           <Suspense fallback={<LoadingText />}>
             <SinceJanuary />
           </Suspense>
@@ -64,7 +64,7 @@ export default () => {
         <hr className="my-6 border-2" />
 
         <div>
-          <h2 className="text-2xl font-bold">Last 20 stats sent</h2>
+          <h2 className="mb-1 text-2xl font-bold">Last 20 stats sent</h2>
           <Suspense fallback={<LoadingText />}>
             <LastStatsSent />
           </Suspense>
@@ -73,7 +73,7 @@ export default () => {
         <hr className="my-6 border-2" />
 
         <div>
-          <h2 className="text-2xl font-bold">Last 20 events</h2>
+          <h2 className="mb-1 text-2xl font-bold">Last 20 events</h2>
           <Suspense fallback={<LoadingText />}>
             <LastEvents />
           </Suspense>
@@ -94,33 +94,35 @@ const TotalStats = async () => {
         <b>{baseStats.totalStatsSent.total.toLocaleString("en")}</b> stats sent
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div className="mb-3">
-          <h4 className="text-lg font-bold">Stats sent per game</h4>
-          <div className="flex flex-col gap-1 rounded border p-2">
-            {Object.entries(baseStats.totalStatsSent.games).map(game => (
-              <span key={game[0]}>
-                {game[0]}: <strong>{game[1].toLocaleString("en")}</strong> ({((game[1] / baseStats.totalStatsSent.total) * 100).toFixed(1)}%)
-                <hr className="my-1" />
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <div className="w-full rounded-lg border p-2">
+          <Title>Per game</Title>
+          <BarList
+            className="mt-2 h-[350px] px-2"
+            data={Object.entries(baseStats.totalStatsSent.games)
+              .map(x => ({ name: x[0], value: x[1] }))
+              .sort((a, b) => b.value - a.value)}
+            valueFormatter={(v: number) => (
+              <span>
+                {v.toLocaleString("en")} ({new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 }).format(v / baseStats.totalStatsSent.total)})
               </span>
-            ))}
-
-            <StatsSentPerGameTotalChart baseStats={baseStats} />
-          </div>
+            )}
+          />
         </div>
 
-        <div>
-          <h4 className="text-lg font-bold">Stats sent per language</h4>
-          <div className="flex flex-col gap-1 rounded border p-2">
-            {Object.entries(baseStats.totalStatsSent.languages).map(language => (
-              <span key={language[0]}>
-                {language[0]}: <strong>{language[1].toLocaleString("en-US")}</strong> ({((language[1] / baseStats.totalStatsSent.total) * 100).toFixed(1)}%)
-                <hr className="my-1" />
+        <div className="w-full rounded-lg border p-2">
+          <Title>Per language</Title>
+          <BarList
+            className="mt-2 h-[350px] overflow-y-scroll px-2"
+            data={Object.entries(baseStats.totalStatsSent.languages)
+              .map(x => ({ name: x[0], value: x[1] }))
+              .sort((a, b) => b.value - a.value)}
+            valueFormatter={(v: number) => (
+              <span>
+                {v.toLocaleString("en")} ({new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 }).format(v / baseStats.totalStatsSent.total)})
               </span>
-            ))}
-
-            <StatsSentPerLanguageTotalChart baseStats={baseStats} />
-          </div>
+            )}
+          />
         </div>
       </div>
     </>
@@ -129,7 +131,7 @@ const TotalStats = async () => {
 
 const SinceJanuary = async () => {
   const [users, data, sentDaily] = (await Promise.all(
-    ["https://api.battlefieldstats.com/users/special", "https://api.battlefieldstats.com/outputs/counts", "https://api.battlefieldstats.com/outputs/daily/games"].map(url => fetch(url, { next: { revalidate: 0 } }).then(res => res.ok && res.json()))
+    ["https://api.battlefieldstats.com/users/special", "https://api.battlefieldstats.com/outputs/counts", "https://api.battlefieldstats.com/outputs/daily/games"].map(url => fetch(url, { next: { revalidate: 0 } }).then(res => res.ok && res.json())),
   )) as [UserSpecial[], CountsItem[], SentDailyItemGames[]];
   if (!users || !data || !sentDaily) return <ErrorFetchingText />;
   const games = data.filter(x => x.category === "game");
@@ -138,79 +140,76 @@ const SinceJanuary = async () => {
   const totalSent = games.reduce((a, b) => a + b.sent, 0);
 
   return (
-    <>
-      <div className="mb-3">
-        <ul>
-          <li>
-            <b>{totalSent.toLocaleString("en")}</b> stats sent
-          </li>
-          <li>
-            <b>{users[0].total_users.toLocaleString("en")}</b> unique users
-          </li>
-        </ul>
+    <div className="space-y-3">
+      <div className="mb-3 flex flex-col">
+        <span>
+          <b>{totalSent.toLocaleString("en")}</b> stats sent
+        </span>
+
+        <span>
+          <b>{users[0].total_users.toLocaleString("en")}</b> unique users
+        </span>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <div className="mb-3">
-          <h4 className="text-lg font-bold">Stats sent per game</h4>
-          <div className="flex flex-col gap-1 rounded border p-2">
-            {games.map(obj => (
-              <span key={obj.item}>
-                {obj.item}: <strong>{obj.sent.toLocaleString("en")}</strong> ({((obj.sent / totalSent) * 100).toFixed(1)}%)
-                <hr className="my-1" />
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="w-full rounded-lg border p-2">
+          <Title>Per game</Title>
+          <BarList
+            className="mt-2 h-[350px] px-2"
+            data={games.map(x => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
+            valueFormatter={(v: number) => (
+              <span>
+                {v.toLocaleString("en")} ({new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 }).format(v / totalSent)})
               </span>
-            ))}
-
-            <StatsSentPerGameChart games={games} />
-          </div>
+            )}
+          />
         </div>
 
-        <div className="mb-3">
-          <h4 className="text-lg font-bold">Stats sent per segment</h4>
-          <div className="flex flex-col gap-1 rounded border p-2">
-            {segments.map(obj => (
-              <span key={obj.item}>
-                {obj.item}: <strong>{obj.sent.toLocaleString("en-US")}</strong> ({((obj.sent / totalSent) * 100).toFixed(1)}%)
-                <hr className="my-1" />
+        <div className="w-full rounded-lg border p-2">
+          <Title>Per segment</Title>
+          <BarList
+            className="mt-2 h-[350px] overflow-y-scroll px-2"
+            data={segments.map(x => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
+            valueFormatter={(v: number) => (
+              <span>
+                {v.toLocaleString("en")} ({new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 }).format(v / totalSent)})
               </span>
-            ))}
-
-            <StatsSentPerSegmentChart segments={segments} />
-          </div>
+            )}
+          />
         </div>
 
-        <div className="mb-3">
-          <h4 className="text-lg font-bold">Stats sent per language</h4>
-          <div className="flex flex-col gap-1 rounded border p-2">
-            {languages.map(obj => (
-              <span key={obj.item}>
-                {obj.item}: <strong>{obj.sent.toLocaleString("en-US")}</strong> ({((obj.sent / totalSent) * 100).toFixed(1)}%)
-                <hr className="my-1" />
+        <div className="w-full rounded-lg border p-2">
+          <Title>Per language</Title>
+          <BarList
+            className="mt-2 h-[350px] overflow-y-scroll px-2"
+            data={languages.map(x => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
+            valueFormatter={(v: number) => (
+              <span>
+                {v.toLocaleString("en")} ({new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 }).format(v / totalSent)})
               </span>
-            ))}
-
-            <StatsSentPerLanguageChart languages={languages} />
-          </div>
+            )}
+          />
         </div>
+      </div>
 
-        <div className="mb-3">
-          <h4 className="text-lg font-bold">Top users</h4>
-          <div className="flex flex-col gap-1 rounded border p-2">
-            {users.slice(0, 20).map((user, i) => (
-              <span key={i}>
-                User was sent <strong>{user.total_stats_sent.toLocaleString("en-US")}</strong> stats
-                {i !== users.length - 1 && <hr className="my-1" />}
-              </span>
-            ))}
-          </div>
-        </div>
+      <div className="w-full rounded-lg border p-2">
+        <Title>Top users</Title>
+        <BarList
+          className="mt-2 h-[350px] overflow-y-scroll px-2"
+          data={users.map((sent, i) => ({ name: `User #${i + 1}`, value: sent.total_stats_sent }))}
+          valueFormatter={(v: number) => (
+            <span>
+              {v.toLocaleString("en")} ({new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 }).format(v / totalSent)})
+            </span>
+          )}
+        />
       </div>
 
       <div>
-        <h4 className="text-lg font-bold">Stats sent per day</h4>
+        <h4 className="mb-1 text-lg font-bold">Stats sent per day</h4>
         <StatsSentPerDayChartWithFilter data={sentDaily} />
       </div>
-    </>
+    </div>
   );
 };
 
