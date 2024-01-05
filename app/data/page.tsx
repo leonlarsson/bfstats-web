@@ -98,7 +98,7 @@ const TotalStats = async () => {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="w-full rounded-lg border p-2">
           <Title>Per game</Title>
-          <ScrollArea className="mt-2 h-[370px] rounded pr-3">
+          <ScrollArea type="always" className="mt-2 h-[370px] rounded pr-4">
             <BarList
               data={Object.entries(baseStats.totalStatsSent.games)
                 .map(x => ({ name: x[0], value: x[1] }))
@@ -114,7 +114,7 @@ const TotalStats = async () => {
 
         <div className="w-full rounded-lg border p-2">
           <Title>Per language</Title>
-          <ScrollArea className="mt-2 h-[370px] rounded pr-3">
+          <ScrollArea type="always" className="mt-2 h-[370px] rounded pr-4">
             <BarList
               data={Object.entries(baseStats.totalStatsSent.languages)
                 .map(x => ({ name: x[0], value: x[1] }))
@@ -160,7 +160,7 @@ const SinceJanuary = async () => {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="w-full rounded-lg border p-2">
             <Title>Per game</Title>
-            <ScrollArea className="mt-2 h-[370px] rounded pr-3">
+            <ScrollArea type="always" className="mt-2 h-[370px] rounded pr-4">
               <BarList
                 data={games.map(x => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
                 valueFormatter={(v: number) => (
@@ -174,7 +174,7 @@ const SinceJanuary = async () => {
 
           <div className="w-full rounded-lg border p-2">
             <Title>Per segment</Title>
-            <ScrollArea className="mt-2 h-[370px] rounded pr-3">
+            <ScrollArea type="always" className="mt-2 h-[370px] rounded pr-4">
               <BarList
                 data={segments.map(x => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
                 valueFormatter={(v: number) => (
@@ -191,7 +191,7 @@ const SinceJanuary = async () => {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="w-full rounded-lg border p-2">
             <Title>Per language</Title>
-            <ScrollArea className="mt-2 h-[370px] rounded pr-3">
+            <ScrollArea type="always" className="mt-2 h-[370px] rounded pr-4">
               <BarList
                 data={languages.map(x => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
                 valueFormatter={(v: number) => (
@@ -205,7 +205,7 @@ const SinceJanuary = async () => {
 
           <div className="w-full rounded-lg border p-2">
             <Title>Top users</Title>
-            <ScrollArea className="mt-2 h-[370px] rounded pr-3">
+            <ScrollArea type="always" className="mt-2 h-[370px] rounded pr-4">
               <BarList
                 data={users.map((sent, i) => ({ name: `User #${i + 1}`, value: sent.total_stats_sent }))}
                 valueFormatter={(v: number) => (
@@ -233,7 +233,7 @@ const LastStatsSent = async () => {
   const outputs: Output[] = await res.json();
   return (
     <div className="flex flex-col">
-      <ScrollArea className="h-[370px] rounded pr-3">
+      <ScrollArea type="always" className="h-[370px] rounded pr-4">
         {outputs.map((output, i) => (
           <div key={i} className="flex flex-wrap justify-between rounded p-1 even:bg-neutral-200 dark:even:bg-neutral-900">
             <span className="flex items-center gap-2">
@@ -265,7 +265,7 @@ const LastEvents = async () => {
 
   return (
     <div className="flex flex-col">
-      <ScrollArea className="h-[370px] rounded pr-3">
+      <ScrollArea type="always" className="h-[370px] rounded pr-4">
         {events.map((event, i) => (
           <div key={i} className="flex flex-wrap justify-between rounded p-1 even:bg-neutral-200 dark:even:bg-neutral-900">
             <span className="flex items-center gap-2">
