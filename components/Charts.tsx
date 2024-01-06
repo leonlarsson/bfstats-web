@@ -30,7 +30,7 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
 
   return (
     <div>
-      <RadioGroup className="mb-2" defaultValue={showAll ? "all" : "30d"} value={showAll ? "all" : "30d"}>
+      <RadioGroup className="mb-2" defaultValue={showAll ? "all" : "30points"} value={showAll ? "all" : "30points"}>
         <div className="flex items-center space-x-2">
           <RadioGroupItem id="r1" value="all" onClick={() => setShowAll(true)} />
           <Label htmlFor="r1">Since Jan 1st, 2023</Label>
@@ -38,13 +38,13 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
         <div className="flex items-center space-x-2">
           <RadioGroupItem
             id="r2"
-            value="30d"
+            value="30points"
             onClick={() => {
               setShowAll(false);
               setSelectedGame("All games");
             }}
           />
-          <Label htmlFor="r2">Last 30 days</Label>
+          <Label htmlFor="r2">Last 30 points</Label>
         </div>
       </RadioGroup>
 
