@@ -41,7 +41,7 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
             value="30points"
             onClick={() => {
               setShowAll(false);
-              setSelectedGame("All games");
+              handleGameChange("All games");
             }}
           />
           <Label htmlFor="r2">Last 30 points</Label>
