@@ -41,7 +41,6 @@ export default () => {
                 { gameName: "Battlefield Hardline", segments: ["Stats"] },
                 { gameName: "Battlefield 4", segments: ["Stats"] },
                 { gameName: "Battlefield 3", segments: ["Stats"] },
-                { gameName: "Battlefield Bad Company 2", segments: ["Stats"] },
                 { gameName: "Battlefield 2", segments: ["Stats"] },
               ].map(game => (
                 <details key={game.gameName} className="group">
@@ -68,7 +67,6 @@ export default () => {
               <li>/bfh</li>
               <li>/bf4</li>
               <li>/bf3</li>
-              <li>/bfbc2</li>
               <li>/bf2</li>
               <li>/usage</li>
               <li>/about</li>
