@@ -9,7 +9,7 @@ import HeaderStats, { HeaderStatsSkeleton } from "@/components/HeaderStats";
 const inter = Inter({ subsets: ["latin"] });
 
 const pageTitle = "Battlefield Stats Discord Bot";
-const pageDescription = "Supercharge your Discord with real-time Battlefield game stats - Battlefield 2042, V, 1, and more. Invite the bot now for an elite gaming experience!";
+const pageDescription = "Supercharge your Discord with real-time Battlefield game stats - Battlefield 2042, V, 1, and more. Add the bot now for an elite gaming experience!";
 
 export const metadata = {
   title: pageTitle,

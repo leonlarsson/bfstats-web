@@ -47,8 +47,8 @@ export default () => {
             </Link>
           </SheetClose>
 
-          <Link href="https://discord.com/oauth2/authorize?client_id=842768680252997662&scope=bot%20applications.commands" target="_blank" className={cn("flex items-center gap-1 rounded p-2 transition-colors hover:bg-neutral-200 dark:hover:bg-neutral-800")}>
-            <Icons.discord className="size-6" /> Invite to Discord
+          <Link href="https://discord.com/oauth2/authorize?client_id=842768680252997662" target="_blank" className={cn("flex items-center gap-1 rounded p-2 transition-colors hover:bg-neutral-200 dark:hover:bg-neutral-800")}>
+            <Icons.discord className="size-6" /> Add to Discord
           </Link>
         </div>
 

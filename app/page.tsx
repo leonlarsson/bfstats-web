@@ -15,9 +15,9 @@ export default () => {
         </p>
 
         <p>
-          To use the bot yourself, simply{" "}
-          <Link href="https://discord.com/oauth2/authorize?client_id=842768680252997662&scope=bot%20applications.commands" target="_blank">
-            <Icons.discord className="inline h-5 w-5" /> <span className="link">invite it to your Discord</span>
+          To use the bot, you can{" "}
+          <Link href="https://discord.com/oauth2/authorize?client_id=842768680252997662" target="_blank">
+            <Icons.discord className="inline h-5 w-5" /> <span className="link">add it to your Discord server or account</span>
           </Link>{" "}
           and run one of the commands. You can also run /help to get a full list of commands. Battlefield Stats supports all recent Battlefield games, including Battlefield 2042.
         </p>
