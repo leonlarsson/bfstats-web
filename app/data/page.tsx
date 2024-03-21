@@ -6,6 +6,7 @@ import { Title, BarList } from "@tremor/react";
 import { StatsSentPerDayChartWithFilter } from "@/components/Charts";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Icons } from "@/components/icons";
 import type { BaseStats, Output, CountsItem, UserSpecial, Event, SentDailyItemGames } from "@/types";
 
 export const metadata = {
@@ -33,6 +34,7 @@ export default () => {
             <APILink url="https://api.battlefieldstats.com/outputs/last" title="Outputs (last 20)" />
             <APILink url="https://api.battlefieldstats.com/outputs/daily" title="Outputs (per day)" />
             <APILink url="https://api.battlefieldstats.com/outputs/daily/games" title="Outputs (per day, per game)" />
+            <APILink url="https://api.battlefieldstats.com/outputs/FECbLioP" title="Output by identifier" />
             <APILink url="https://api.battlefieldstats.com/events/last" title="Events (last 20)" />
           </PopoverContent>
         </Popover>
@@ -237,7 +239,7 @@ const LastStatsSent = async () => {
         {outputs.map((output, i) => (
           <div key={i} className="flex flex-wrap justify-between rounded p-1 even:bg-neutral-200 dark:even:bg-neutral-900">
             <span className="flex items-center gap-2">
-              <SendIcon className="size-4 inline" /> {output.game} {output.segment} - {output.language}
+              <SendIcon className="inline size-4" /> {output.game} {output.segment} - {output.language}
             </span>
             <span title={new Date(output.date).toUTCString()}>{humanizeDuration(output.date - new Date().getTime(), { round: true, units: ["d", "h", "m"] })} ago</span>
           </div>
@@ -255,9 +257,9 @@ const LastEvents = async () => {
   const eventToIcon = (eventName: string) => {
     switch (eventName) {
       case "guildCreate":
-        return <PlusCircleIcon className="size-4 inline" />;
+        return <PlusCircleIcon className="inline size-4" />;
       case "guildDelete":
-        return <MinusCircleIcon className="size-4 inline" />;
+        return <MinusCircleIcon className="inline size-4" />;
       default:
         return null;
     }
@@ -288,7 +290,9 @@ const LoadingText = () => (
 const ErrorFetchingText = () => <span className="text-lg font-semibold text-red-600 dark:text-red-500">Error fetching.</span>;
 
 const APILink = ({ url, title }: { url: string; title: string }) => (
-  <Link href={url} target="_blank" className="link w-fit">
-    {title}
+  <Link href={url} target="_blank" className="group flex items-center gap-1 underline-offset-4 hover:underline">
+    <Icons.arrowRight className="inline size-4 transition-transform group-hover:translate-x-1" />
+    <span className="hidden font-mono group-hover:inline">{url.split("stats.com")[1]}</span>
+    <span className="inline group-hover:hidden">{title}</span>
   </Link>
 );
