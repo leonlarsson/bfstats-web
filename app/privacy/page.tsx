@@ -10,7 +10,7 @@ export default () => {
   return (
     <div>
       <h1 className="text-3xl font-bold">Privacy Policy</h1>
-      <h5>(Updated January 29, 2023)</h5>
+      <h5>(Updated March 21, 2024)</h5>
 
       <br />
 
@@ -96,10 +96,24 @@ export default () => {
 
       <br />
 
+      <h3 className="text-2xl font-semibold">Output identifiers</h3>
+      <p>
+        Each successful stats output this bot sends (after March 21, 2024) has a unique identifier. For images, in the top right corner. For embeds, in the footer. These identifers are randomly generated Nano IDs and can be used to look up non-identifiable metadata for that specific output in the
+        API. You can perform a partial search in the API and it will return the first match.
+        <br />
+        <Link href="https://api.battlefieldstats.com/outputs/FECbLioP" target="_blank" className="link">
+          This
+        </Link>{" "}
+        is an example using the identifier in the image below.
+        <Image src="/images/OutputIdentifierExample.png" width={319} height={125} quality={100} alt="Output identifer example" className="mt-1" />
+      </p>
+
+      <br />
+
       <h3 className="text-2xl font-semibold">Disclaimers</h3>
       <p>
         <i>
-          *Some non-identifiable information such as game, segment, language, and stats sent is public. Visible in the APIs tab and{" "}
+          *Some non-identifiable information such as game, segment, language, output identifier, and # of stats sent is public. Visible in the APIs tab and{" "}
           <Link href="/data" className="link">
             here
           </Link>
