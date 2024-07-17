@@ -100,7 +100,7 @@ const TotalStats = async () => {
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Per game</CardTitle>
+            <CardTitle className="text-xl">Per game</CardTitle>
             <CardDescription>since May 25, 2021</CardDescription>
           </CardHeader>
           <CardContent>
@@ -117,7 +117,7 @@ const TotalStats = async () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Per language</CardTitle>
+            <CardTitle className="text-xl">Per language</CardTitle>
             <CardDescription>since May 25, 2021</CardDescription>
           </CardHeader>
           <CardContent>
@@ -161,7 +161,7 @@ const SinceJanuary = async () => {
       <div className="grid grid-cols-2 gap-10">
         <Card>
           <CardHeader>
-            <CardTitle className="text-md">Per game</CardTitle>
+            <CardTitle className="text-xl">Per game</CardTitle>
             <CardDescription>since Jan 1, 2023</CardDescription>
           </CardHeader>
           <CardContent>
@@ -173,7 +173,7 @@ const SinceJanuary = async () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Per segment</CardTitle>
+            <CardTitle className="text-xl">Per segment</CardTitle>
             <CardDescription>since Jan 1, 2023</CardDescription>
           </CardHeader>
           <CardContent>
@@ -185,7 +185,7 @@ const SinceJanuary = async () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Per language</CardTitle>
+            <CardTitle className="text-xl">Per language</CardTitle>
             <CardDescription>since Jan 1, 2023</CardDescription>
           </CardHeader>
           <CardContent>
@@ -197,7 +197,7 @@ const SinceJanuary = async () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Top users</CardTitle>
+            <CardTitle className="text-xl">Top users</CardTitle>
             <CardDescription>since Jan 1, 2023</CardDescription>
           </CardHeader>
           <CardContent>
@@ -210,7 +210,7 @@ const SinceJanuary = async () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Stats sent per day</CardTitle>
+          <CardTitle className="text-xl">Stats sent per day</CardTitle>
         </CardHeader>
         <CardContent>
           <StatsSentPerDayChartWithFilter data={sentDaily} />
