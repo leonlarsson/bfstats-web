@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { BarChart } from "@tremor/react";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Label } from "./ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import type { SentDailyItemGames } from "@/types";
+import { Bar, BarChart as BarChartRaw, CartesianGrid, Rectangle, Tooltip, XAxis, YAxis } from "recharts";
+import { CategoricalChartProps } from "recharts/types/chart/generateCategoricalChart";
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "./ui/chart";
 
 // Uses /outputs/daily/games
 // TODO: Pad data to include data for all days even if that day has no records
@@ -49,7 +51,7 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
       </RadioGroup>
 
       <Select value={selectedGame} onValueChange={e => handleGameChange(e)}>
-        <SelectTrigger className="w-[250px]">
+        <SelectTrigger className="mb-5 w-[250px]">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -64,22 +66,87 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
         </SelectContent>
       </Select>
 
-      <BarChart
-        key={selectedGame}
-        data={selectedData.slice(showAll ? 0 : -30).map(x => ({ date: new Date(x.day).toLocaleDateString(), Sent: selectedGame === "All games" ? x.total_sent : x.sent }))}
-        index="date"
-        allowDecimals={false}
-        categories={["Sent"]}
-        valueFormatter={v => v.toLocaleString("en")}
-        customTooltip={({ label, payload }) => (
-          <div className="flex flex-col gap-1 rounded-lg border bg-white p-2 text-sm dark:bg-black">
-            <span>{selectedGame}</span>
-            <span className="font-medium">{label}</span>
-            <hr />
-            <span>{payload?.[0]?.value ?? 0} stats sent</span>
-          </div>
-        )}
-      />
+      <ChartContainer
+        className="h-[400px] w-full"
+        config={{
+          value: {
+            label: "Sent",
+            color: "hsl(var(--chart-1))",
+          },
+        }}
+      >
+        <BarChartRaw data={selectedData.slice(showAll ? 0 : -30).map(x => ({ date: new Date(x.day).toLocaleDateString(), value: selectedGame === "All games" ? x.total_sent : x.sent }))}>
+          <XAxis type="category" dataKey="date" />
+          <YAxis type="number" tickFormatter={v => v.toLocaleString("en")} />
+          <CartesianGrid vertical={false} />
+          <Tooltip
+            content={
+              <ChartTooltipContent
+                indicator="line"
+                labelFormatter={(label, i) => {
+                  return (
+                    <div className="flex flex-col gap-1">
+                      <span>{selectedGame}</span>
+                      <span className="font-medium">{label}</span>
+                    </div>
+                  );
+                }}
+              />
+            }
+          />
+          <Bar isAnimationActive={false} dataKey="value" fill="var(--color-value)" radius={[4, 4, 0, 0]} />
+        </BarChartRaw>
+      </ChartContainer>
     </div>
+  );
+};
+
+type BarChartProps = CategoricalChartProps & { chartConfig?: ChartConfig; total: number };
+export const BarChart = (props: BarChartProps) => {
+  const barHeight = 32;
+
+  return (
+    <ChartContainer
+      config={
+        props.chartConfig ?? {
+          value: {
+            label: "Sent",
+            color: "hsl(var(--chart-1))",
+          },
+        }
+      }
+      style={{
+        height: props.data!.length * (barHeight + 8),
+        aspectRatio: "auto",
+      }}
+    >
+      <BarChartRaw accessibilityLayer layout="vertical" barSize={barHeight} margin={{ left: 0, right: 0 }} {...props}>
+        <XAxis dataKey="value" type="number" hide />
+        <YAxis dataKey="name" type="category" hide />
+        <Bar
+          dataKey="value"
+          layout="vertical"
+          fill="var(--color-value)"
+          background={{ radius: 0, fill: "hsl(var(--muted))" }}
+          radius={[0, 2, 2, 0]}
+          // Thanks shadcn: https://x.com/shadcn/status/1813643935254041045
+          shape={(shapeProps: any) => (
+            <>
+              {/* Bar */}
+              <Rectangle {...shapeProps} />
+              {/* Name */}
+              <text x={shapeProps.x + 10} y={shapeProps.y + 20} fill="hsl(var(--foreground))">
+                {shapeProps.name}
+              </text>
+              {/* Value */}
+              <text x={shapeProps.background.width - 10} y={shapeProps.y + 20} textAnchor="end" fill="hsl(var(--foreground))">
+                {shapeProps.value.toLocaleString("en")} ({((shapeProps.value / props.total) * 100).toFixed(1)}%)
+              </text>
+            </>
+          )}
+        />
+        <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
+      </BarChartRaw>
+    </ChartContainer>
   );
 };

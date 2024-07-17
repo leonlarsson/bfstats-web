@@ -2,12 +2,12 @@ import { Suspense } from "react";
 import Link from "next/link";
 import humanizeDuration from "humanize-duration";
 import { Loader2Icon, MinusCircleIcon, PlusCircleIcon, SendIcon } from "lucide-react";
-import { Title, BarList } from "@tremor/react";
-import { StatsSentPerDayChartWithFilter } from "@/components/Charts";
+import { BarChart, StatsSentPerDayChartWithFilter } from "@/components/Charts";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Icons } from "@/components/icons";
 import type { BaseStats, Output, CountsItem, UserSpecial, Event, SentDailyItemGames } from "@/types";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const metadata = {
   title: "Data | Battlefield Stats Discord Bot",
@@ -97,38 +97,40 @@ const TotalStats = async () => {
         <b>{baseStats.totalStatsSent.total.toLocaleString("en")}</b> stats sent
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div className="w-full rounded-lg border p-2">
-          <Title>Per game</Title>
-          <ScrollArea type="always" className="mt-2 h-[370px] rounded pr-4">
-            <BarList
-              data={Object.entries(baseStats.totalStatsSent.games)
-                .map(x => ({ name: x[0], value: x[1] }))
-                .sort((a, b) => b.value - a.value)}
-              valueFormatter={(v: number) => (
-                <span>
-                  {v.toLocaleString("en")} ({new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 }).format(v / baseStats.totalStatsSent.total)})
-                </span>
-              )}
-            />
-          </ScrollArea>
-        </div>
+      <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Per game</CardTitle>
+            <CardDescription>since May 25, 2021</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea type="always" className="h-[330px] pr-4">
+              <BarChart
+                data={Object.entries(baseStats.totalStatsSent.games)
+                  .map(x => ({ name: x[0], value: x[1] }))
+                  .sort((a, b) => b.value - a.value)}
+                total={baseStats.totalStatsSent.total}
+              />
+            </ScrollArea>
+          </CardContent>
+        </Card>
 
-        <div className="w-full rounded-lg border p-2">
-          <Title>Per language</Title>
-          <ScrollArea type="always" className="mt-2 h-[370px] rounded pr-4">
-            <BarList
-              data={Object.entries(baseStats.totalStatsSent.languages)
-                .map(x => ({ name: x[0], value: x[1] }))
-                .sort((a, b) => b.value - a.value)}
-              valueFormatter={(v: number) => (
-                <span>
-                  {v.toLocaleString("en")} ({new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 }).format(v / baseStats.totalStatsSent.total)})
-                </span>
-              )}
-            />
-          </ScrollArea>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Per language</CardTitle>
+            <CardDescription>since May 25, 2021</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea type="always" className="h-[330px] pr-4">
+              <BarChart
+                data={Object.entries(baseStats.totalStatsSent.languages)
+                  .map(x => ({ name: x[0], value: x[1] }))
+                  .sort((a, b) => b.value - a.value)}
+                total={baseStats.totalStatsSent.total}
+              />
+            </ScrollArea>
+          </CardContent>
+        </Card>
       </div>
     </>
   );
@@ -156,75 +158,64 @@ const SinceJanuary = async () => {
         </span>
       </div>
 
-      {/* Bar lists */}
-      <div className="space-y-4">
-        {/* First 2 bar lists */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="w-full rounded-lg border p-2">
-            <Title>Per game</Title>
-            <ScrollArea type="always" className="mt-2 h-[370px] rounded pr-4">
-              <BarList
-                data={games.map(x => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
-                valueFormatter={(v: number) => (
-                  <span>
-                    {v.toLocaleString("en")} ({new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 }).format(v / totalSent)})
-                  </span>
-                )}
-              />
+      <div className="grid grid-cols-2 gap-10">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-md">Per game</CardTitle>
+            <CardDescription>since Jan 1, 2023</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea type="always" className="h-[330px] pr-4">
+              <BarChart data={games.map(x => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)} total={totalSent} />
             </ScrollArea>
-          </div>
+          </CardContent>
+        </Card>
 
-          <div className="w-full rounded-lg border p-2">
-            <Title>Per segment</Title>
-            <ScrollArea type="always" className="mt-2 h-[370px] rounded pr-4">
-              <BarList
-                data={segments.map(x => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
-                valueFormatter={(v: number) => (
-                  <span>
-                    {v.toLocaleString("en")} ({new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 }).format(v / totalSent)})
-                  </span>
-                )}
-              />
+        <Card>
+          <CardHeader>
+            <CardTitle>Per segment</CardTitle>
+            <CardDescription>since Jan 1, 2023</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea type="always" className="h-[330px] pr-4">
+              <BarChart data={segments.map(x => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)} total={totalSent} />
             </ScrollArea>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        {/* Last 2 bar lists */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="w-full rounded-lg border p-2">
-            <Title>Per language</Title>
-            <ScrollArea type="always" className="mt-2 h-[370px] rounded pr-4">
-              <BarList
-                data={languages.map(x => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
-                valueFormatter={(v: number) => (
-                  <span>
-                    {v.toLocaleString("en")} ({new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 }).format(v / totalSent)})
-                  </span>
-                )}
-              />
+        <Card>
+          <CardHeader>
+            <CardTitle>Per language</CardTitle>
+            <CardDescription>since Jan 1, 2023</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea type="always" className="h-[330px] pr-4">
+              <BarChart data={languages.map(x => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)} total={totalSent} />
             </ScrollArea>
-          </div>
+          </CardContent>
+        </Card>
 
-          <div className="w-full rounded-lg border p-2">
-            <Title>Top users</Title>
-            <ScrollArea type="always" className="mt-2 h-[370px] rounded pr-4">
-              <BarList
-                data={users.map((sent, i) => ({ name: `User #${i + 1}`, value: sent.total_stats_sent }))}
-                valueFormatter={(v: number) => (
-                  <span>
-                    {v.toLocaleString("en")} ({new Intl.NumberFormat("en", { style: "percent", maximumFractionDigits: 1 }).format(v / totalSent)})
-                  </span>
-                )}
-              />
+        <Card>
+          <CardHeader>
+            <CardTitle>Top users</CardTitle>
+            <CardDescription>since Jan 1, 2023</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea type="always" className="h-[330px] pr-4">
+              <BarChart data={users.map((sent, i) => ({ name: `User #${i + 1}`, value: sent.total_stats_sent }))} total={totalSent} />
             </ScrollArea>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
-      <div>
-        <h4 className="mb-1 text-lg font-bold">Stats sent per day</h4>
-        <StatsSentPerDayChartWithFilter data={sentDaily} />
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Stats sent per day</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <StatsSentPerDayChartWithFilter data={sentDaily} />
+        </CardContent>
+      </Card>
     </div>
   );
 };
