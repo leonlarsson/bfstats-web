@@ -158,7 +158,7 @@ const SinceJanuary = async () => {
         </span>
       </div>
 
-      <div className="grid grid-cols-2 gap-10">
+      <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle className="text-xl">Per game</CardTitle>
