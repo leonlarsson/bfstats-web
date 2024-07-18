@@ -104,6 +104,7 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
 type BarChartProps = CategoricalChartProps & { chartConfig?: ChartConfig; total: number };
 export const BarChart = (props: BarChartProps) => {
   const barHeight = 32;
+  const barGap = 8;
 
   return (
     <ChartContainer
@@ -116,7 +117,9 @@ export const BarChart = (props: BarChartProps) => {
         }
       }
       style={{
-        height: props.data!.length * (barHeight + 8),
+        // 8 acts as the gap between each bar.
+        // Defaulting to prevent 0 (which looks bad?)
+        height: props.data!.length * (barHeight + (barGap || 1)),
         aspectRatio: "auto",
       }}
     >
