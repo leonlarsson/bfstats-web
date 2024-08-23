@@ -3,6 +3,8 @@
 const inviteRedicts = ["/invite", "/add", "/install"];
 
 const nextConfig = {
+  // For when deployed with Docker (on Railway, etc.)
+  // output: "standalone",
   redirects: async () =>
     inviteRedicts.map(source => ({
       source,
