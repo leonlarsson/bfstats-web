@@ -11,7 +11,7 @@ export default () => {
           <Link href="https://discord.com/application-directory/842768680252997662" target="_blank" className="link">
             Battlefield Stats
           </Link>{" "}
-          is the biggest Battlefield bot on Discord, delivering stats to thousands of users in thousands of servers. It was launched in 2021 and has since sent stats to users over 180,000 times.
+          is the biggest Battlefield bot on Discord, delivering stats to thousands of users in thousands of servers. It was launched in 2021 and has since sent stats to users over 230,000 times.
         </p>
 
         <p>
@@ -109,7 +109,9 @@ export default () => {
                 .
               </p>
 
-              <p>Massive thanks to all the community translators: Sephi, PierrotL'Asticot, Matteo 'Forever.exe' Besutti, Navigando, Salty Tenten, Rephii, CaptPerry, TheLetslook, Szymon Olejniczak, Rubinsk, VIP-AHMAD-007, PeterSMK2, TR-BatuhanKara, Arall, Pug, Klikard, Dragory.</p>
+              <p>
+                Massive thanks to all the community translators: VIP-AHMAD-007, PeterSMK2, Salty Tenten, Rephii, Mozzy, CaptPerry, Dragory, Sephi, PierrotL'Asticot, Matteo 'Forever.exe' Besutti, Navigando, Pug, Klikard, Szymon Olejniczak, Rubinsk, EIGuimaraes, TheLetslook, TR-BatuhanKara, Arall.
+              </p>
             </div>
           </AccordionContent>
         </AccordionItem>
