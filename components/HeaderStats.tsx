@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { HomeIcon, SendIcon, StarIcon, User2Icon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { BaseStats } from "@/types";
+import { BaseStats, CountsItem } from "@/types";
 import { Icons } from "./icons";
 
 export default async () => {
-  const res = await fetch("https://api.battlefieldstats.com/base", { next: { revalidate: 60 } });
-  const data: BaseStats | null = await res.json().catch(() => null);
+  const [baseData, last7Days] = await Promise.all([fetch("https://api.battlefieldstats.com/base").then(res => res.json() as unknown as BaseStats), fetch("https://api.battlefieldstats.com/outputs/counts/last-7-days").then(res => res.json() as unknown as CountsItem[])]);
 
   return (
     <div className="my-4">
@@ -14,17 +13,17 @@ export default async () => {
       <div className="block sm:hidden">
         <h3 className="my-2 text-center text-xl">
           <Link href="/data">
-            In <b>{data?.totalGuilds.toLocaleString("en-US") ?? "unknown"}</b> servers, with <b>{data?.totalMembers.toLocaleString("en-US") ?? "unknown"}</b> members, and <b>{data?.totalStatsSent.total.toLocaleString("en") ?? "unknown"}</b> stats sent.
+            In <b>{baseData?.totalGuilds.toLocaleString("en-US") ?? "unknown"}</b> servers, with <b>{baseData?.totalMembers.toLocaleString("en-US") ?? "unknown"}</b> members, and <b>{baseData?.totalStatsSent.total.toLocaleString("en") ?? "unknown"}</b> stats sent.
           </Link>
         </h3>
       </div>
 
       {/* Boxes - Only visible on small or larger */}
       <div className="my-4 hidden gap-2 sm:grid sm:grid-cols-2 lg:grid-cols-4">
-        <StatsBox title="Servers" value={data?.totalGuilds.toLocaleString("en") ?? "Unknown"} icon={<HomeIcon className="size-4 opacity-50" />} />
-        <StatsBox title="Members" value={data?.totalMembers.toLocaleString("en") ?? "Unknown"} icon={<User2Icon className="size-4 opacity-50" />} />
-        <StatsBox title="Stats Sent" value={data?.totalStatsSent.total.toLocaleString("en") ?? "Unknown"} icon={<SendIcon className="size-4 opacity-50" />} />
-        <StatsBox title="Most Popular Game" value={data ? Object.entries(data.totalStatsSent.games).sort((a, b) => b[1] - a[1])[0][0] : "Unknown"} icon={<StarIcon className="size-4 opacity-50 hover:text-yellow-300 hover:opacity-100" />} />
+        <StatsBox title="Servers" value={baseData?.totalGuilds.toLocaleString("en") ?? "Unknown"} icon={<HomeIcon className="size-4 opacity-50" />} />
+        <StatsBox title="Members" value={baseData?.totalMembers.toLocaleString("en") ?? "Unknown"} icon={<User2Icon className="size-4 opacity-50" />} />
+        <StatsBox title="Stats Sent" value={baseData?.totalStatsSent.total.toLocaleString("en") ?? "Unknown"} icon={<SendIcon className="size-4 opacity-50" />} />
+        <StatsBox title="Most Popular Game (7d)" value={last7Days.filter(x => x.category === "game")[0]?.item ?? "Unknown"} icon={<StarIcon className="size-4 opacity-50 hover:text-yellow-300 hover:opacity-100" />} />
       </div>
 
       <hr />
