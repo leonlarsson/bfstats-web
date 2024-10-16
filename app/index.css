@@ -4,7 +4,17 @@
 
 @font-face {
   font-family: "Geist";
-  src: url("/fonts/Geist[wght].ttf"),;
+  src: url("/fonts/Geist[wght].woff2") format("woff2 supports variations"), url("/fonts/Geist[wght].woff2")
+    format("woff2-variations");
+  font-weight: 1 999;
+}
+
+@layer components {
+  .link {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 500;
+  }
 }
 
 @layer base {

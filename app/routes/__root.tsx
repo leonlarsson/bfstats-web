@@ -9,6 +9,12 @@ import { cn } from "@/lib/utils";
 
 export const Route = createRootRoute({
   component: RootComponent,
+  meta: () => [
+    {
+      title: "Battlefield Stats",
+    },
+  ],
+  notFoundComponent: () => <div>Not found</div>,
 });
 
 function RootComponent() {
@@ -31,8 +37,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 
           <div className="flex-1 pb-10">
             {/* <Suspense fallback={<HeaderStatsSkeleton />}>
-                <HeaderStats />
-                </Suspense> */}
+              <HeaderStats />
+            </Suspense> */}
 
             {children}
           </div>
