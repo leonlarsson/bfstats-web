@@ -155,7 +155,7 @@ const SinceJanuary = () => {
       {
         queryKey: ["outputs-daily-games"],
         queryFn: () =>
-          fetch("https://api.battlefieldstats.com/outputs/daily/games").then(
+          fetch("https://api.battlefieldstats.com/outputs/daily/games-no-gaps").then(
             (res) => res.json() as unknown as SentDailyItemGames[],
           ),
         staleTime: Number.POSITIVE_INFINITY,

@@ -7,8 +7,7 @@ import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
-// Uses /outputs/daily/games
-// TODO: Pad data to include data for all days even if that day has no records
+// Uses /outputs/daily/games-no-gaps
 export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGames[] }) => {
   const totalData = data.filter((v, i, a) => a.findIndex((v2) => v2.day === v.day) === i);
 
@@ -17,20 +16,21 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
   const [selectedData, setSelectedData] = useState(totalData);
 
   // On select change:
-  // If the selection is All games, show all
+  // NOT ANYMORE: If the selection is All games, show all
   // Set selected game
   // Set selected data:
   // If All games, get each day.
   // If not All games, get selected data from that game
   const handleGameChange = (selectValue: string) => {
-    if (selectValue !== "All games") setShowAll(true);
+    // Removed due to the new endpoint that fills in the gaps
+    // if (selectValue !== "All games") setShowAll(true);
     setSelectedGame(selectValue);
     setSelectedData(selectValue === "All games" ? totalData : data.filter((x) => x.game === selectValue));
   };
 
   return (
     <div>
-      <RadioGroup className="mb-2" defaultValue={showAll ? "all" : "30points"} value={showAll ? "all" : "30points"}>
+      <RadioGroup className="mb-2" defaultValue={showAll ? "all" : "30days"} value={showAll ? "all" : "30days"}>
         <div className="flex items-center space-x-2">
           <RadioGroupItem id="r1" value="all" onClick={() => setShowAll(true)} />
           <Label htmlFor="r1">Since Jan 1st, 2023</Label>
@@ -38,13 +38,14 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
         <div className="flex items-center space-x-2">
           <RadioGroupItem
             id="r2"
-            value="30points"
+            value="30days"
             onClick={() => {
               setShowAll(false);
-              handleGameChange("All games");
+              // Removed due to the new endpoint that fills in the gaps
+              // handleGameChange("All games");
             }}
           />
-          <Label htmlFor="r2">Last 30 points</Label>
+          <Label htmlFor="r2">Last 30 days</Label>
         </div>
       </RadioGroup>
 
