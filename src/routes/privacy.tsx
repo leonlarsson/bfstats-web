@@ -26,11 +26,11 @@ function PrivacyComponent() {
         <br />
         The way I use this data is for statistical, analytical, and quality purposes, as well as monitoring for any bad
         content that breaks the{" "}
-        <Link className="link" href="/tos">
+        <Link className="link" to="/tos">
           Terms of Service
         </Link>
         , such as harmful usernames or server names. It is also used in the{" "}
-        <Link className="link" href="/data">
+        <Link className="link" to="/data">
           data reporting page
         </Link>
         . I store basic user and server data for the purposes of being able to block users and servers from using the

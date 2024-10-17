@@ -58,30 +58,32 @@ export const Header = () => {
 
         {/* Replaced with minimal header below md */}
         <div className="hidden items-center gap-1 md:flex">
-          <Link
+          <a
             className="rounded p-2 opacity-80 transition-[background-color] hover:bg-neutral-200 dark:hover:bg-neutral-800"
             href="https://x.com/MozzyFX"
             target="_blank"
+            rel="noreferrer"
             title="X / Twitter"
           >
             <Icons.twitterX className="size-6" />
-          </Link>
+          </a>
 
-          <Link
+          <a
             className="rounded p-2 opacity-80 transition-[background-color] hover:bg-neutral-200 dark:hover:bg-neutral-800"
             href="https://github.com/leonlarsson/bfstats-web"
             target="_blank"
+            rel="noreferrer"
             title="GitHub"
           >
             <Icons.gitHub className="size-6" />
-          </Link>
+          </a>
 
           <ThemeToggle />
         </div>
 
         {/* Minimal header with Sheet. Shown at md */}
         <div className="flex w-full items-center justify-between md:hidden">
-          <Link className={cn("mr-3 flex items-center gap-3 text-lg font-semibold")} href="/">
+          <Link className={cn("mr-3 flex items-center gap-3 text-lg font-semibold")} to="/">
             <img
               alt="Battlefield Stats icon"
               className="hidden size-10 rounded min-[330px]:inline"
