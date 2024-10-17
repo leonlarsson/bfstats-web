@@ -46,7 +46,7 @@ export const HeaderSheet = () => {
               to: "/data",
             },
           ].map((navLink) => (
-            <SheetClose key={navLink.to} asChild>
+            <SheetClose asChild key={navLink.to}>
               <Link className={cn("p-2 hover:bg-neutral-200 dark:hover:bg-neutral-800")} to={navLink.to}>
                 {navLink.name}
               </Link>

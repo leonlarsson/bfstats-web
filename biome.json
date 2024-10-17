@@ -14,13 +14,6 @@
     "indentStyle": "space",
     "lineWidth": 120
   },
-  "assists": {
-    "actions": {
-      "source": {
-        "sortJsxProps": "on"
-      }
-    }
-  },
   "organizeImports": {
     "enabled": true
   },

@@ -31,11 +31,11 @@ export const Header = () => {
             { name: "Data", to: "/data" },
           ].map((navLink) => (
             <Link
-              key={navLink.to}
               activeProps={{ className: "!opacity-100 font-medium" }}
               className={cn(
                 "rounded p-2 opacity-75 transition-[background-color,opacity,font-weight] hover:bg-neutral-200 dark:hover:bg-neutral-800",
               )}
+              key={navLink.to}
               to={navLink.to}
             >
               {navLink.name}
