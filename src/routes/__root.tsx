@@ -2,7 +2,17 @@ import { Header } from "@/components/Header";
 import { HeaderStats } from "@/components/HeaderStats";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Outlet, createRootRoute } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import { lazy } from "react";
+
+const TanStackRouterDevtools =
+  process.env.NODE_ENV === "production"
+    ? () => null // Render nothing in production
+    : lazy(() =>
+        // Lazy load in development
+        import("@tanstack/router-devtools").then((res) => ({
+          default: res.TanStackRouterDevtools,
+        })),
+      );
 
 export const Route = createRootRoute({
   component: RootComponent,
