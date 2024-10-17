@@ -13,6 +13,4 @@ dist/
 .wrangler
 
 # IDE
-.vscode/*
-!.vscode/extensions.json
 .idea
