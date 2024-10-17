@@ -9,7 +9,7 @@ export const HeaderStats = () => {
   const [baseDataQuery, last7DaysQuery] = useQueries({
     queries: [
       {
-        queryKey: ["header-stats", "base-data"],
+        queryKey: ["base-data"],
         queryFn: () => fetch("https://api.battlefieldstats.com/base").then((res) => res.json() as unknown as BaseStats),
         refetchInterval: 15_000,
       },
