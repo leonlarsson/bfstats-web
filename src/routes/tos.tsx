@@ -1,9 +1,10 @@
-export const metadata = {
-  title: "Terms of Service | Battlefield Stats Discord Bot",
-  description: "Read the Terms of Service for the Battlefield Stats Discord Bot.",
-};
+import { createFileRoute } from "@tanstack/react-router";
 
-export default () => {
+export const Route = createFileRoute("/tos")({
+  component: TosComponent,
+});
+
+function TosComponent() {
   return (
     <div>
       <h1 className="text-3xl font-bold">Terms of Service</h1>
@@ -22,8 +23,11 @@ export default () => {
 
         <br />
 
-        <b>I reserve the right to block any person and/or server whenever I wish, for reasons including (but not limited to) the points above.</b>
+        <b>
+          I reserve the right to block any person and/or server whenever I wish, for reasons including (but not limited
+          to) the points above.
+        </b>
       </div>
     </div>
   );
-};
+}
