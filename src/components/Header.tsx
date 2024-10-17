@@ -21,7 +21,7 @@ export const Header = () => {
               height={100}
               src="/images/avatar.png"
               width={100}
-            />{" "}
+            />
             <span className={cn("opacity-75 transition-opacity")}>Battlefield Stats</span>
           </Link>
 
@@ -45,13 +45,14 @@ export const Header = () => {
           {/* First shown at lg */}
           <a
             className={cn(
-              "hidden items-center gap-1 rounded p-2 transition-[background-color] hover:bg-neutral-200 lg:flex dark:hover:bg-neutral-800",
+              "group hidden items-center gap-1 font-semibold rounded p-2 transition-[background-color] hover:bg-neutral-200 lg:flex dark:hover:bg-neutral-800",
             )}
             href="https://discord.com/oauth2/authorize?client_id=842768680252997662"
             rel="noreferrer"
             target="_blank"
           >
-            <Icons.discord className="size-6 font-bold" /> Add to Discord
+            <Icons.discord className="size-6 transition-[color] group-hover:text-[#5865F2]" />
+            Add to Discord
           </a>
         </div>
 
@@ -87,7 +88,7 @@ export const Header = () => {
               height={100}
               src="/images/avatar.png"
               width={100}
-            />{" "}
+            />
             <span>Battlefield Stats</span>
           </Link>
 

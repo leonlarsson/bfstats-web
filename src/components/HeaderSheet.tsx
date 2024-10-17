@@ -54,12 +54,12 @@ export const HeaderSheet = () => {
           ))}
 
           <a
-            className={cn("flex items-center gap-1 p-2 hover:bg-neutral-200 dark:hover:bg-neutral-800")}
+            className={cn("group flex items-center gap-1 p-2 hover:bg-neutral-200 dark:hover:bg-neutral-800")}
             href="https://discord.com/oauth2/authorize?client_id=842768680252997662"
             rel="noreferrer"
             target="_blank"
           >
-            <Icons.discord className="size-6" /> Add to Discord
+            <Icons.discord className="size-6 group-hover:text-[#5865F2]" /> Add to Discord
           </a>
         </div>
 
