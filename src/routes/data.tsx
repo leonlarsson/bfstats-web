@@ -290,8 +290,8 @@ const RecentOutputs = () => {
             <span className="flex items-center gap-2">
               <SendIcon className="inline size-4" /> {output.game} {output.segment} - {output.language}
             </span>
-            <span title={new Date(output.date).toUTCString()}>
-              {humanizeDuration(new Date(output.date).getTime() - new Date().getTime(), {
+            <span title={new Date(`${output.date} UTC`).toLocaleString()}>
+              {humanizeDuration(new Date(`${output.date} UTC`).getTime() - new Date().getTime(), {
                 round: true,
                 units: ["d", "h", "m"],
               })}{" "}
@@ -339,8 +339,8 @@ const RecentEvents = () => {
             <span className="flex items-center gap-2">
               {eventToIcon(event.event)} Bot {event.event === "guildCreate" ? "joined" : "left"} a guild
             </span>
-            <span title={new Date(event.date).toUTCString()}>
-              {humanizeDuration(new Date(event.date).getTime() - new Date().getTime(), {
+            <span title={new Date(`${event.date} UTC`).toLocaleString()}>
+              {humanizeDuration(new Date(`${event.date} UTC`).getTime() - new Date().getTime(), {
                 round: true,
                 units: ["d", "h", "m"],
               })}{" "}
