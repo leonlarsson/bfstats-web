@@ -16,7 +16,7 @@ export const HeaderStats = () => {
       {
         queryKey: ["header-stats", "last-7-days"],
         queryFn: async () =>
-          fetch("https://api.battlefieldstats.com/outputs/counts/last-7-days").then(
+          fetch("https://api.battlefieldstats.com/outputs/counts-last-7-days").then(
             (res) => res.json() as unknown as CountsItem[],
           ),
       },

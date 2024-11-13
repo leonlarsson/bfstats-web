@@ -147,25 +147,29 @@ export const BarChart = (props: BarChartProps) => {
           radius={[0, 2, 2, 0]}
           // Thanks shadcn: https://x.com/shadcn/status/1813643935254041045
           // biome-ignore lint/suspicious/noExplicitAny: Jank
-          shape={(shapeProps: any) => (
-            <>
-              {/* Bar */}
-              <Rectangle {...shapeProps} />
-              {/* Name */}
-              <text x={shapeProps.x + 10} y={shapeProps.y + 20} fill="hsl(var(--foreground))">
-                {shapeProps.name}
-              </text>
-              {/* Value */}
-              <text
-                x={shapeProps.background.width - 10}
-                y={shapeProps.y + 20}
-                textAnchor="end"
-                fill="hsl(var(--foreground))"
-              >
-                {shapeProps.value.toLocaleString("en")} ({((shapeProps.value / props.total) * 100).toFixed(1)}%)
-              </text>
-            </>
-          )}
+          shape={(shapeProps: any) => {
+            console.log(shapeProps);
+
+            return (
+              <>
+                {/* Bar */}
+                <Rectangle {...shapeProps} />
+                {/* Name */}
+                <text x={shapeProps.x + 10} y={shapeProps.y + 20} fill="hsl(var(--foreground))">
+                  {shapeProps.name}
+                </text>
+                {/* Value */}
+                <text
+                  x={shapeProps.background.width - 10}
+                  y={shapeProps.y + 20}
+                  textAnchor="end"
+                  fill="hsl(var(--foreground))"
+                >
+                  {shapeProps.value?.toLocaleString("en")} ({((shapeProps.value / props.total) * 100).toFixed(1)}%)
+                </text>
+              </>
+            );
+          }}
         />
         <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
       </BarChartRaw>

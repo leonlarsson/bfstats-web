@@ -7,7 +7,7 @@ import { useQueries, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import humanizeDuration from "humanize-duration";
 import { Loader2Icon, MinusCircleIcon, PlusCircleIcon, SendIcon } from "lucide-react";
-import type { BaseStats, CountsItem, Event, Output, SentDailyItemGames, UserSpecial } from "types";
+import type { BaseStats, CountsItem, Event, Output, SentDailyItemGames, User } from "types";
 
 export const Route = createFileRoute("/data")({
   component: DataComponent,
@@ -19,24 +19,10 @@ function DataComponent() {
       <span className="text-3xl font-bold">Data</span>
       <br />
       <span>
-        All data displayed here consumes my public APIs. All APIs can be seen{" "}
-        <Popover>
-          <PopoverTrigger asChild>
-            <span className="link cursor-pointer">here</span>
-          </PopoverTrigger>
-          <PopoverContent className="flex flex-col">
-            <APILink url="https://api.battlefieldstats.com/base" title="Base" />
-            <APILink url="https://api.battlefieldstats.com/users/top" title="Users (top 20)" />
-            <APILink url="https://api.battlefieldstats.com/users/counts" title="Users (total)" />
-            <APILink url="https://api.battlefieldstats.com/users/special" title="Users (top 20 + total)" />
-            <APILink url="https://api.battlefieldstats.com/outputs/counts" title="Outputs (counts)" />
-            <APILink url="https://api.battlefieldstats.com/outputs/last" title="Outputs (last 20)" />
-            <APILink url="https://api.battlefieldstats.com/outputs/daily" title="Outputs (per day)" />
-            <APILink url="https://api.battlefieldstats.com/outputs/daily/games" title="Outputs (per day, per game)" />
-            <APILink url="https://api.battlefieldstats.com/outputs/FECbLioP" title="Output by identifier" />
-            <APILink url="https://api.battlefieldstats.com/events/last" title="Events (last 20)" />
-          </PopoverContent>
-        </Popover>
+        All data displayed here consumes my public API, which can be browsed{" "}
+        <a className="link" href="https://api.battlefieldstats.com/" target="_blank" rel="noreferrer">
+          here
+        </a>
         .
       </span>
 
@@ -66,14 +52,14 @@ function DataComponent() {
 
         <div>
           <h2 className="mb-1 text-2xl font-bold">Last 20 stats sent</h2>
-          <LastStatsSent />
+          <RecentOutputs />
         </div>
 
         <hr className="my-6 border-2" />
 
         <div>
           <h2 className="mb-1 text-2xl font-bold">Last 20 events</h2>
-          <LastEvents />
+          <RecentEvents />
         </div>
       </div>
     </div>
@@ -138,12 +124,20 @@ const TotalStats = () => {
 };
 
 const SinceJanuary = () => {
-  const [usersQuery, outputCountsQuery, sentDailyQuery] = useQueries({
+  const [countUsersQuery, topUsersQuery, outputCountsQuery, sentDailyQuery] = useQueries({
     queries: [
       {
-        queryKey: ["users-special"],
+        queryKey: ["users-total"],
         queryFn: () =>
-          fetch("https://api.battlefieldstats.com/users/special").then((res) => res.json() as unknown as UserSpecial[]),
+          fetch("https://api.battlefieldstats.com/users/count").then(
+            (res) => res.json() as unknown as { totalUsers: number },
+          ),
+        staleTime: Number.POSITIVE_INFINITY,
+      },
+      {
+        queryKey: ["users-top"],
+        queryFn: () =>
+          fetch("https://api.battlefieldstats.com/users/top").then((res) => res.json() as unknown as User[]),
         staleTime: Number.POSITIVE_INFINITY,
       },
       {
@@ -155,7 +149,7 @@ const SinceJanuary = () => {
       {
         queryKey: ["outputs-daily-games"],
         queryFn: () =>
-          fetch("https://api.battlefieldstats.com/outputs/daily/games-no-gaps").then(
+          fetch("https://api.battlefieldstats.com/outputs/daily-games-no-gaps").then(
             (res) => res.json() as unknown as SentDailyItemGames[],
           ),
         staleTime: Number.POSITIVE_INFINITY,
@@ -163,10 +157,22 @@ const SinceJanuary = () => {
     ],
   });
 
-  if (usersQuery.isLoading || outputCountsQuery.isLoading || sentDailyQuery.isLoading) return <LoadingText />;
-  if (!usersQuery.isSuccess || !outputCountsQuery.isSuccess || !sentDailyQuery.isSuccess) return <ErrorFetchingText />;
+  if (countUsersQuery.isLoading || topUsersQuery.isLoading || outputCountsQuery.isLoading || sentDailyQuery.isLoading)
+    return <LoadingText />;
+  if (
+    !countUsersQuery.isSuccess ||
+    !topUsersQuery.isSuccess ||
+    !outputCountsQuery.isSuccess ||
+    !sentDailyQuery.isSuccess
+  )
+    return <ErrorFetchingText />;
 
-  const [users, outputsCounts, outputDailyGames] = [usersQuery.data, outputCountsQuery.data, sentDailyQuery.data];
+  const [totalUsers, topUsers, outputsCounts, outputDailyGames] = [
+    countUsersQuery.data,
+    topUsersQuery.data,
+    outputCountsQuery.data,
+    sentDailyQuery.data,
+  ];
 
   const games = outputsCounts.filter((x) => x.category === "game");
   const segments = outputsCounts.filter((x) => x.category === "segment");
@@ -181,7 +187,7 @@ const SinceJanuary = () => {
         </span>
 
         <span>
-          <b>{users[0].total_users.toLocaleString("en")}</b> unique users
+          <b>{totalUsers.totalUsers.toLocaleString("en")}</b> unique users
         </span>
       </div>
 
@@ -239,7 +245,7 @@ const SinceJanuary = () => {
           <CardContent>
             <ScrollArea type="always" className="h-[330px] pr-4">
               <BarChart
-                data={users.map((sent, i) => ({ name: `User #${i + 1}`, value: sent.total_stats_sent }))}
+                data={topUsers.map((sent, i) => ({ name: `User #${i + 1}`, value: sent.totalStatsSent }))}
                 total={totalSent}
               />
             </ScrollArea>
@@ -259,19 +265,19 @@ const SinceJanuary = () => {
   );
 };
 
-const LastStatsSent = () => {
-  const outputsLastQuery = useQuery({
-    queryKey: ["outputs-last"],
+const RecentOutputs = () => {
+  const recentOutputsQuery = useQuery({
+    queryKey: ["outputs-recent"],
     queryFn: () =>
-      fetch("https://api.battlefieldstats.com/outputs/last").then((res) => res.json() as unknown as Output[]),
+      fetch("https://api.battlefieldstats.com/outputs/recent").then((res) => res.json() as unknown as Output[]),
     refetchInterval: 30_000,
     staleTime: Number.POSITIVE_INFINITY,
   });
 
-  if (outputsLastQuery.isLoading) return <LoadingText />;
-  if (!outputsLastQuery.isSuccess) return <ErrorFetchingText />;
+  if (recentOutputsQuery.isLoading) return <LoadingText />;
+  if (!recentOutputsQuery.isSuccess) return <ErrorFetchingText />;
 
-  const outputs = outputsLastQuery.data;
+  const outputs = recentOutputsQuery.data;
 
   return (
     <div className="flex flex-col">
@@ -285,7 +291,11 @@ const LastStatsSent = () => {
               <SendIcon className="inline size-4" /> {output.game} {output.segment} - {output.language}
             </span>
             <span title={new Date(output.date).toUTCString()}>
-              {humanizeDuration(output.date - new Date().getTime(), { round: true, units: ["d", "h", "m"] })} ago
+              {humanizeDuration(new Date(output.date).getTime() - new Date().getTime(), {
+                round: true,
+                units: ["d", "h", "m"],
+              })}{" "}
+              ago
             </span>
           </div>
         ))}
@@ -294,18 +304,18 @@ const LastStatsSent = () => {
   );
 };
 
-const LastEvents = () => {
-  const eventsLastQuery = useQuery({
-    queryKey: ["events-last"],
+const RecentEvents = () => {
+  const recentEventsQuery = useQuery({
+    queryKey: ["events-recent"],
     queryFn: () =>
-      fetch("https://api.battlefieldstats.com/events/last").then((res) => res.json() as unknown as Event[]),
+      fetch("https://api.battlefieldstats.com/events/recent").then((res) => res.json() as unknown as Event[]),
     staleTime: Number.POSITIVE_INFINITY,
   });
 
-  if (eventsLastQuery.isLoading) return <LoadingText />;
-  if (!eventsLastQuery.isSuccess) return <ErrorFetchingText />;
+  if (recentEventsQuery.isLoading) return <LoadingText />;
+  if (!recentEventsQuery.isSuccess) return <ErrorFetchingText />;
 
-  const events = eventsLastQuery.data;
+  const events = recentEventsQuery.data;
 
   const eventToIcon = (eventName: string) => {
     switch (eventName) {
@@ -330,7 +340,11 @@ const LastEvents = () => {
               {eventToIcon(event.event)} Bot {event.event === "guildCreate" ? "joined" : "left"} a guild
             </span>
             <span title={new Date(event.date).toUTCString()}>
-              {humanizeDuration(event.date - new Date().getTime(), { round: true, units: ["d", "h", "m"] })} ago
+              {humanizeDuration(new Date(event.date).getTime() - new Date().getTime(), {
+                round: true,
+                units: ["d", "h", "m"],
+              })}{" "}
+              ago
             </span>
           </div>
         ))}
