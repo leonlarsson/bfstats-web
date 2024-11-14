@@ -124,7 +124,12 @@ function PrivacyComponent() {
         look up non-identifiable metadata for that specific output in the API. You can perform a partial search in the
         API and it will return the first match.
         <br />
-        <a className="link" href="https://api.battlefieldstats.com/outputs/FECbLioP" rel="noreferrer" target="_blank">
+        <a
+          className="link"
+          href="https://api.battlefieldstats.com/outputs/by-identifier?identifier=FECbLioP"
+          rel="noreferrer"
+          target="_blank"
+        >
           This
         </a>{" "}
         is an example using the identifier in the image below.
