@@ -107,5 +107,5 @@ export type SentDailyItemGames = {
     | "Battlefield Bad Company 2"
     | "Battlefield 2";
   sent: number;
-  total_sent: number;
+  totalSent: number;
 };

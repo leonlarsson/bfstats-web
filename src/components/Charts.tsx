@@ -86,7 +86,7 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
         <BarChartRaw
           data={selectedData.slice(showAll ? 0 : -30).map((x) => ({
             date: new Date(x.day).toLocaleDateString(),
-            value: selectedGame === "All games" ? x.total_sent : x.sent,
+            value: selectedGame === "All games" ? x.totalSent : x.sent,
           }))}
         >
           <XAxis type="category" dataKey="date" />
