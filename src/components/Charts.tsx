@@ -148,8 +148,6 @@ export const BarChart = (props: BarChartProps) => {
           // Thanks shadcn: https://x.com/shadcn/status/1813643935254041045
           // biome-ignore lint/suspicious/noExplicitAny: Jank
           shape={(shapeProps: any) => {
-            console.log(shapeProps);
-
             return (
               <>
                 {/* Bar */}
