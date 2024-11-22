@@ -67,6 +67,16 @@ export const HeaderSheet = () => {
           <div className="flex gap-1">
             <a
               className="rounded p-2 opacity-80 hover:bg-neutral-200 dark:hover:bg-neutral-800"
+              href="https://bsky.app/profile/leon.ms"
+              rel="noreferrer"
+              target="_blank"
+              title="Bluesky"
+            >
+              <Icons.bluesky className="size-6" />
+            </a>
+
+            <a
+              className="rounded p-2 opacity-80 hover:bg-neutral-200 dark:hover:bg-neutral-800"
               href="https://x.com/MozzyFX"
               rel="noreferrer"
               target="_blank"

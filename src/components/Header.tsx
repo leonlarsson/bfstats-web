@@ -60,12 +60,12 @@ export const Header = () => {
         <div className="hidden items-center gap-1 md:flex">
           <a
             className="rounded p-2 opacity-80 transition-[background-color] hover:bg-neutral-200 dark:hover:bg-neutral-800"
-            href="https://x.com/MozzyFX"
+            href="https://bsky.app/profile/leon.ms"
             target="_blank"
             rel="noreferrer"
-            title="X / Twitter"
+            title="Bluesky"
           >
-            <Icons.twitterX className="size-6" />
+            <Icons.bluesky className="size-6" />
           </a>
 
           <a
