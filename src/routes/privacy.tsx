@@ -8,14 +8,16 @@ function PrivacyComponent() {
   return (
     <div>
       <h1 className="text-3xl font-bold">Privacy Policy</h1>
-      <h5>(Updated March 21, 2024)</h5>
+      <h5>(Updated February 12, 2025)</h5>
 
       <br />
 
       <h3 className="text-2xl font-semibold">User Data handling and usage</h3>
       <p>
         For each direct interaction with the bot, I collect and store a number of properties for the user and the
-        output. This includes user and server IDs and names, language used, game and segment, etc. The full code for the
+        output. This includes user and server IDs and names, language used, game and segment, etc. As of February 12,
+        2025, I save your stats search options, including game, platform, and username. This data is used to show your
+        recent username searches in the command options to make searching faster and easier. The full code for the
         database can be viewed{" "}
         <a className="link" href="https://github.com/leonlarsson/bfstats-api" rel="noreferrer" target="_blank">
           here
@@ -55,7 +57,7 @@ function PrivacyComponent() {
         After every stats output, you have 15 seconds to delete it by clicking the red "Delete" button. Since these
         images are ONLY hosted on Discord, this will remove the image completely****.
         <br />
-        <img alt="Delete Button" height={362} src="/images/StatsDeleteButton.png" width={480} />
+        <img alt="Delete Button" src="/images/StatsDeleteButton.png" width={620} />
       </p>
 
       <br />
