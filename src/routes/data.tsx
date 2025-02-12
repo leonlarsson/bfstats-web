@@ -1,13 +1,20 @@
 import { BarChart, StatsSentPerDayChartWithFilter } from "@/components/Charts";
 import { Icons } from "@/components/icons";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  baseStatsQueryOptions,
+  eventsRecentQueryOptions,
+  outputsCountsQueryOptions,
+  outputsDailyGamesNoGapsQueryOptions,
+  outputsRecentQueryOptions,
+  usersCountQueryOptions,
+  usersTopQueryOptions,
+} from "@/queries";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import humanizeDuration from "humanize-duration";
 import { Loader2Icon, MinusCircleIcon, PlusCircleIcon, SendIcon } from "lucide-react";
-import type { BaseStats, CountsItem, Event, Output, SentDailyItemGames, User } from "types";
 
 export const Route = createFileRoute("/data")({
   component: DataComponent,
@@ -68,8 +75,7 @@ function DataComponent() {
 
 const TotalStats = () => {
   const totalStatsQuery = useQuery({
-    queryKey: ["base-data"],
-    queryFn: () => fetch("https://api.battlefieldstats.com/base").then((res) => res.json() as unknown as BaseStats),
+    ...baseStatsQueryOptions,
     staleTime: Number.POSITIVE_INFINITY,
   });
 
@@ -127,31 +133,19 @@ const SinceJanuary = () => {
   const [countUsersQuery, topUsersQuery, outputCountsQuery, sentDailyQuery] = useQueries({
     queries: [
       {
-        queryKey: ["users-total"],
-        queryFn: () =>
-          fetch("https://api.battlefieldstats.com/users/count").then(
-            (res) => res.json() as unknown as { totalUsers: number },
-          ),
+        ...usersCountQueryOptions,
         staleTime: Number.POSITIVE_INFINITY,
       },
       {
-        queryKey: ["users-top"],
-        queryFn: () =>
-          fetch("https://api.battlefieldstats.com/users/top").then((res) => res.json() as unknown as User[]),
+        ...usersTopQueryOptions,
         staleTime: Number.POSITIVE_INFINITY,
       },
       {
-        queryKey: ["outputs-counts"],
-        queryFn: () =>
-          fetch("https://api.battlefieldstats.com/outputs/counts").then((res) => res.json() as unknown as CountsItem[]),
+        ...outputsCountsQueryOptions,
         staleTime: Number.POSITIVE_INFINITY,
       },
       {
-        queryKey: ["outputs-daily-games"],
-        queryFn: () =>
-          fetch("https://api.battlefieldstats.com/outputs/daily-games-no-gaps").then(
-            (res) => res.json() as unknown as SentDailyItemGames[],
-          ),
+        ...outputsDailyGamesNoGapsQueryOptions,
         staleTime: Number.POSITIVE_INFINITY,
       },
     ],
@@ -267,10 +261,7 @@ const SinceJanuary = () => {
 
 const RecentOutputs = () => {
   const recentOutputsQuery = useQuery({
-    queryKey: ["outputs-recent"],
-    queryFn: () =>
-      fetch("https://api.battlefieldstats.com/outputs/recent").then((res) => res.json() as unknown as Output[]),
-    refetchInterval: 30_000,
+    ...outputsRecentQueryOptions,
     staleTime: Number.POSITIVE_INFINITY,
   });
 
@@ -306,9 +297,7 @@ const RecentOutputs = () => {
 
 const RecentEvents = () => {
   const recentEventsQuery = useQuery({
-    queryKey: ["events-recent"],
-    queryFn: () =>
-      fetch("https://api.battlefieldstats.com/events/recent").then((res) => res.json() as unknown as Event[]),
+    ...eventsRecentQueryOptions,
     staleTime: Number.POSITIVE_INFINITY,
   });
 

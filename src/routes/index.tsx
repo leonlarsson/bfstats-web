@@ -1,5 +1,7 @@
 import { Icons } from "@/components/icons";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { baseStatsQueryOptions } from "@/queries";
+import { useQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
@@ -7,6 +9,8 @@ export const Route = createFileRoute("/")({
 });
 
 function HomeComponent() {
+  const query = useQuery(baseStatsQueryOptions);
+
   return (
     <>
       <div className="space-y-4">
@@ -20,7 +24,9 @@ function HomeComponent() {
             Battlefield Stats
           </a>{" "}
           is the biggest Battlefield bot on Discord, delivering stats to thousands of users in thousands of servers. It
-          was launched in 2021 and has since sent stats to users over 230,000 times.
+          was launched in 2021 and has since sent stats to users over{" "}
+          <span className="tabular-nums">{(query.data?.totalStatsSent.total || 230_000).toLocaleString("en")}</span>{" "}
+          times.
         </p>
 
         <p>

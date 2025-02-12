@@ -1,25 +1,18 @@
 import { cn } from "@/lib/utils";
+import { baseStatsQueryOptions, last7DaysQueryOptions } from "@/queries";
 import { useQueries } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { HomeIcon, SendIcon, StarIcon, User2Icon } from "lucide-react";
-import type { BaseStats, CountsItem } from "types";
 import { Icons } from "./icons";
 
 export const HeaderStats = () => {
   const [baseDataQuery, last7DaysQuery] = useQueries({
     queries: [
       {
-        queryKey: ["base-data"],
-        queryFn: () => fetch("https://api.battlefieldstats.com/base").then((res) => res.json() as unknown as BaseStats),
+        ...baseStatsQueryOptions,
         refetchInterval: 15_000,
       },
-      {
-        queryKey: ["header-stats", "last-7-days"],
-        queryFn: async () =>
-          fetch("https://api.battlefieldstats.com/outputs/counts-last-7-days").then(
-            (res) => res.json() as unknown as CountsItem[],
-          ),
-      },
+      last7DaysQueryOptions,
     ],
   });
 
