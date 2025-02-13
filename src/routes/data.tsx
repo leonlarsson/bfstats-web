@@ -1,10 +1,10 @@
 import { BarChart, StatsSentPerDayChartWithFilter } from "@/components/Charts";
-import { Icons } from "@/components/icons";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   baseStatsQueryOptions,
   eventsRecentQueryOptions,
+  outputsCountsLast7DaysQueryOptions,
   outputsCountsQueryOptions,
   outputsDailyGamesNoGapsQueryOptions,
   outputsRecentQueryOptions,
@@ -53,6 +53,13 @@ function DataComponent() {
         <div>
           <h2 className="mb-1 text-2xl font-bold">Since January 1, 2023</h2>
           <SinceJanuary />
+        </div>
+
+        <hr className="my-6 border-2" />
+
+        <div>
+          <h2 className="mb-1 text-2xl font-bold">Last 7 days</h2>
+          <Last7Days />
         </div>
 
         <hr className="my-6 border-2" />
@@ -259,6 +266,78 @@ const SinceJanuary = () => {
   );
 };
 
+const Last7Days = () => {
+  const query = useQuery({
+    ...outputsCountsLast7DaysQueryOptions,
+    staleTime: Number.POSITIVE_INFINITY,
+  });
+
+  if (query.isLoading) return <LoadingText />;
+  if (!query.isSuccess) return <ErrorFetchingText />;
+
+  const games = query.data.filter((x) => x.category === "game");
+  const segments = query.data.filter((x) => x.category === "segment");
+  const languages = query.data.filter((x) => x.category === "language");
+  const totalSent = games.reduce((a, b) => a + b.sent, 0);
+
+  return (
+    <div className="space-y-6">
+      <div className="mb-3 flex flex-col">
+        <span>
+          <b>{totalSent.toLocaleString("en")}</b> stats sent
+        </span>
+      </div>
+
+      <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-xl">Per game</CardTitle>
+            <CardDescription>last 7 days</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea type="always" className="h-[330px] pr-4">
+              <BarChart
+                data={games.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
+                total={totalSent}
+              />
+            </ScrollArea>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-xl">Per segment</CardTitle>
+            <CardDescription>last 7 days</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea type="always" className="h-[330px] pr-4">
+              <BarChart
+                data={segments.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
+                total={totalSent}
+              />
+            </ScrollArea>
+          </CardContent>
+        </Card>
+
+        <Card className="col-span-full">
+          <CardHeader>
+            <CardTitle className="text-xl">Per language</CardTitle>
+            <CardDescription>last 7 days</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea type="always" className="h-[330px] pr-4">
+              <BarChart
+                data={languages.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
+                total={totalSent}
+              />
+            </ScrollArea>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
 const RecentOutputs = () => {
   const recentOutputsQuery = useQuery({
     ...outputsRecentQueryOptions,
@@ -350,17 +429,4 @@ const LoadingText = () => (
 
 const ErrorFetchingText = () => (
   <span className="text-lg font-semibold text-red-600 dark:text-red-500">Error fetching.</span>
-);
-
-const APILink = ({ url, title }: { url: string; title: string }) => (
-  <a
-    href={url}
-    target="_blank"
-    rel="noreferrer"
-    className="group flex items-center gap-1 underline-offset-4 hover:underline"
-  >
-    <Icons.arrowRight className="inline size-4 transition-transform group-hover:translate-x-1" />
-    <span className="hidden font-mono group-hover:inline">{url.split("stats.com")[1]}</span>
-    <span className="inline group-hover:hidden">{title}</span>
-  </a>
 );
