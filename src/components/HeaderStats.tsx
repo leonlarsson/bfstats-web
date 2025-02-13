@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { baseStatsQueryOptions, last7DaysQueryOptions } from "@/queries";
+import { baseStatsQueryOptions, outputsCountsLast7DaysQueryOptions } from "@/queries";
 import { useQueries } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { HomeIcon, SendIcon, StarIcon, User2Icon } from "lucide-react";
@@ -12,7 +12,7 @@ export const HeaderStats = () => {
         ...baseStatsQueryOptions,
         refetchInterval: 15_000,
       },
-      last7DaysQueryOptions,
+      outputsCountsLast7DaysQueryOptions,
     ],
   });
 

@@ -30,8 +30,8 @@ export const outputsDailyGamesNoGapsQueryOptions = queryOptions({
     ),
 });
 
-export const last7DaysQueryOptions = queryOptions({
-  queryKey: ["outputs", "last-7-days"],
+export const outputsCountsLast7DaysQueryOptions = queryOptions({
+  queryKey: ["outputs", "counts-last-7-days"],
   queryFn: async () =>
     fetch("https://api.battlefieldstats.com/outputs/counts-last-7-days").then(
       (res) => res.json() as unknown as CountsItem[],
