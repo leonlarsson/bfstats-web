@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useMemo } from "react";
 import { Bar, BarChart as BarChartRaw, CartesianGrid, Rectangle, Tooltip, XAxis, YAxis } from "recharts";
 import type { CategoricalChartProps } from "recharts/types/chart/generateCategoricalChart";
 import type { SentDailyItemGames } from "types";
@@ -9,43 +10,48 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 
 // Uses /outputs/daily/games-no-gaps
 export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGames[] }) => {
-  const totalData = data.filter((v, i, a) => a.findIndex((v2) => v2.day === v.day) === i);
+  const totalData = useMemo(() => {
+    return data.filter((v, i, a) => a.findIndex((v2) => v2.day === v.day) === i);
+  }, [data]);
 
-  const [showAll, setShowAll] = useState<boolean>(false);
+  // Show all, last 30 days, last 7 days
+  type DataSliceDays = 0 | -30 | -7;
+  const [dataSlice, setDataSlice] = useState<DataSliceDays>(-30);
   const [selectedGame, setSelectedGame] = useState("All games");
   const [selectedData, setSelectedData] = useState(totalData);
 
-  // On select change:
-  // NOT ANYMORE: If the selection is All games, show all
-  // Set selected game
-  // Set selected data:
-  // If All games, get each day.
-  // If not All games, get selected data from that game
   const handleGameChange = (selectValue: string) => {
-    // Removed due to the new endpoint that fills in the gaps
-    // if (selectValue !== "All games") setShowAll(true);
     setSelectedGame(selectValue);
     setSelectedData(selectValue === "All games" ? totalData : data.filter((x) => x.game === selectValue));
   };
 
+  const chartData = useMemo(() => {
+    return selectedData.slice(dataSlice).map((x) => ({
+      date: new Date(x.day).toLocaleDateString(),
+      value: selectedGame === "All games" ? x.totalSent : x.sent,
+    }));
+  }, [dataSlice, selectedData, selectedGame]);
+
   return (
     <div>
-      <RadioGroup className="mb-2" defaultValue={showAll ? "all" : "30days"} value={showAll ? "all" : "30days"}>
+      <RadioGroup
+        className="mb-2"
+        defaultValue={dataSlice.toString()}
+        onValueChange={(v) => {
+          setDataSlice(Number.parseInt(v) as DataSliceDays);
+        }}
+      >
         <div className="flex items-center space-x-2">
-          <RadioGroupItem id="r1" value="all" onClick={() => setShowAll(true)} />
+          <RadioGroupItem id="r1" value={"0"} />
           <Label htmlFor="r1">Since Jan 1st, 2023</Label>
         </div>
         <div className="flex items-center space-x-2">
-          <RadioGroupItem
-            id="r2"
-            value="30days"
-            onClick={() => {
-              setShowAll(false);
-              // Removed due to the new endpoint that fills in the gaps
-              // handleGameChange("All games");
-            }}
-          />
+          <RadioGroupItem id="r2" value={"-30"} />
           <Label htmlFor="r2">Last 30 days</Label>
+        </div>
+        <div className="flex items-center space-x-2">
+          <RadioGroupItem id="r3" value={"-7"} />
+          <Label htmlFor="r3">Last 7 days</Label>
         </div>
       </RadioGroup>
 
@@ -83,12 +89,7 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
           },
         }}
       >
-        <BarChartRaw
-          data={selectedData.slice(showAll ? 0 : -30).map((x) => ({
-            date: new Date(x.day).toLocaleDateString(),
-            value: selectedGame === "All games" ? x.totalSent : x.sent,
-          }))}
-        >
+        <BarChartRaw data={chartData}>
           <XAxis type="category" dataKey="date" />
           <YAxis type="number" tickFormatter={(v) => v.toLocaleString("en")} />
           <CartesianGrid vertical={false} />
@@ -96,7 +97,7 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
             content={
               <ChartTooltipContent
                 indicator="line"
-                labelFormatter={(label, i) => {
+                labelFormatter={(label) => {
                   return (
                     <div className="flex flex-col gap-1">
                       <span>{selectedGame}</span>
