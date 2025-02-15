@@ -16,6 +16,7 @@ export type Event = {
 
 export type BaseStats = {
   totalGuilds: number;
+  totalUserInstalls: number;
   totalChannels: number;
   totalMembers: number;
   totalStatsSent: {

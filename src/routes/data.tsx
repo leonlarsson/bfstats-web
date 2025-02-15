@@ -1,4 +1,5 @@
 import { BarChart, StatsSentPerDayChartWithFilter } from "@/components/Charts";
+import { Icons } from "@/components/icons";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -14,7 +15,7 @@ import {
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import humanizeDuration from "humanize-duration";
-import { Loader2Icon, MinusCircleIcon, PlusCircleIcon, SendIcon } from "lucide-react";
+import { HouseIcon, Loader2Icon, MinusCircleIcon, PlusCircleIcon, SendIcon, UserIcon } from "lucide-react";
 
 export const Route = createFileRoute("/data")({
   component: DataComponent,
@@ -40,9 +41,24 @@ function DataComponent() {
         used the bot, grouped by game.
       </span>
 
-      <br />
-      <br />
-      <div>
+      <div className="mt-3">
+        <div>
+          <h4 className="mb-1 text-lg font-bold">
+            <a
+              className="inline-flex items-center gap-2 group"
+              href="https://discord.com/oauth2/authorize?client_id=842768680252997662"
+              rel="noreferrer"
+              target="_blank"
+            >
+              <Icons.discord className="inline size-5 transition-[color,transform] group-hover:text-[#5865F2] group-hover:rotate-12" />{" "}
+              Install count
+            </a>
+          </h4>
+          <InstallCount />
+        </div>
+
+        <hr className="my-6 border-2" />
+
         <div>
           <h2 className="mb-1 text-2xl font-bold">Total (since May 25, 2021)</h2>
           <TotalStats />
@@ -79,6 +95,27 @@ function DataComponent() {
     </div>
   );
 }
+
+const InstallCount = () => {
+  const query = useQuery({
+    ...baseStatsQueryOptions,
+    staleTime: Number.POSITIVE_INFINITY,
+  });
+
+  if (query.isLoading) return <LoadingText />;
+  if (!query.isSuccess) return <ErrorFetchingText />;
+
+  return (
+    <div className="flex flex-col tabular-nums">
+      <span className="inline-flex items-center gap-2">
+        <HouseIcon className="inline size-5" /> {query.data.totalGuilds.toLocaleString("en")} Servers
+      </span>
+      <span className="inline-flex items-center gap-2">
+        <UserIcon className="inline size-5" /> {query.data.totalUserInstalls.toLocaleString("en")} User Installs
+      </span>
+    </div>
+  );
+};
 
 const TotalStats = () => {
   const totalStatsQuery = useQuery({

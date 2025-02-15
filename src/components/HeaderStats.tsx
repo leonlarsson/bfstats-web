@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { baseStatsQueryOptions, outputsCountsLast7DaysQueryOptions } from "@/queries";
 import { useQueries } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { HomeIcon, SendIcon, StarIcon, User2Icon } from "lucide-react";
+import { HomeIcon, SendIcon, StarIcon, User2Icon, UserIcon } from "lucide-react";
 import { Icons } from "./icons";
 
 export const HeaderStats = () => {
@@ -27,7 +27,12 @@ export const HeaderStats = () => {
           <Link to="/data">
             In{" "}
             <b>
-              {baseData?.totalGuilds.toLocaleString("en-US") ?? (
+              {baseData ? (
+                <span>
+                  {baseData.totalGuilds.toLocaleString("en-US")} (+ {baseData.totalUserInstalls.toLocaleString("en")}{" "}
+                  <UserIcon className="inline size-4" />)
+                </span>
+              ) : (
                 <Icons.spinner className="inline size-6 animate-spin" />
               )}
             </b>{" "}
@@ -52,8 +57,19 @@ export const HeaderStats = () => {
       <div className="my-4 hidden gap-2 sm:grid sm:grid-cols-2 lg:grid-cols-4">
         <StatsBox
           icon={<HomeIcon className="size-4 opacity-50" />}
-          title="Servers"
-          value={baseData?.totalGuilds.toLocaleString("en") ?? <Icons.spinner className="size-8 animate-spin" />}
+          title="Servers / User Installs"
+          value={
+            baseData ? (
+              <span className="space-x-1">
+                <span title="Total server installs">{baseData.totalGuilds.toLocaleString("en")}</span>
+                <span className="text-xs font-semibold opacity-70" title="Total User Installs">
+                  / {baseData.totalUserInstalls.toLocaleString("en")} <UserIcon className="inline size-4" />
+                </span>
+              </span>
+            ) : (
+              <Icons.spinner className="size-8 animate-spin" />
+            )
+          }
         />
         <StatsBox
           icon={<User2Icon className="size-4 opacity-50" />}
