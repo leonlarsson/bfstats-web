@@ -442,7 +442,7 @@ const RecentEvents = () => {
             className="flex flex-wrap justify-between rounded p-1 even:bg-neutral-200 dark:even:bg-neutral-900"
           >
             <span className="flex items-center gap-2">
-              {eventToIcon(event.event)} Bot {event.event === "guildCreate" ? "joined" : "left"} a guild
+              {eventToIcon(event.event)} Bot was {event.event === "guildCreate" ? "added to" : "removed from"} a server
             </span>
             <span title={new Date(`${event.date} UTC`).toLocaleString()}>
               {humanizeDuration(new Date(`${event.date} UTC`).getTime() - new Date().getTime(), {
