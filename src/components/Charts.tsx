@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMemo } from "react";
 import { Bar, BarChart as BarChartRaw, CartesianGrid, Rectangle, Tooltip, XAxis, YAxis } from "recharts";
 import type { CategoricalChartProps } from "recharts/types/chart/generateCategoricalChart";
-import type { SentDailyItemGames } from "types";
+import type { Game, SentDailyItemGames } from "types";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "./ui/chart";
 import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
@@ -17,10 +17,10 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
   // Show all, last 30 days, last 7 days
   type DataSliceDays = 0 | -30 | -7;
   const [dataSlice, setDataSlice] = useState<DataSliceDays>(-30);
-  const [selectedGame, setSelectedGame] = useState("All games");
+  const [selectedGame, setSelectedGame] = useState<Game | "All games">("All games");
   const [selectedData, setSelectedData] = useState(totalData);
 
-  const handleGameChange = (selectValue: string) => {
+  const handleGameChange = (selectValue: Game | "All games") => {
     setSelectedGame(selectValue);
     setSelectedData(selectValue === "All games" ? totalData : data.filter((x) => x.game === selectValue));
   };
@@ -55,7 +55,7 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
         </div>
       </RadioGroup>
 
-      <Select value={selectedGame} onValueChange={(e) => handleGameChange(e)}>
+      <Select value={selectedGame} onValueChange={(e: Game | "All games") => handleGameChange(e)}>
         <SelectTrigger className="mb-5 w-[250px]">
           <SelectValue />
         </SelectTrigger>
@@ -97,11 +97,12 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
             content={
               <ChartTooltipContent
                 indicator="line"
-                labelFormatter={(label) => {
+                labelFormatter={(label: string) => {
                   return (
                     <div className="flex flex-col gap-1">
                       <span>{selectedGame}</span>
                       <span className="font-medium">{label}</span>
+                      <ChartDataExtraNote selectedGame={selectedGame} date={label} />
                     </div>
                   );
                 }}
@@ -173,5 +174,49 @@ export const BarChart = (props: BarChartProps) => {
         <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
       </BarChartRaw>
     </ChartContainer>
+  );
+};
+
+const chartDataExtraNotes: Partial<Record<Game | "All games", Record<string, string>>> = {
+  "All games": {
+    "2025-02-03": "Note: Battlefield Labs was announced.",
+  },
+  "Battlefield Bad Company 2": {
+    "2023-12-01": "Note: BFBC2 stats API was discontinued.",
+  },
+};
+
+function getNotes(selectedGame: Game | "All games", date: string): string[] {
+  const notes: string[] = [];
+
+  // If All games is not selected but it has a note for the date, add it
+  if (selectedGame !== "All games" && chartDataExtraNotes["All games"]?.[date]) {
+    notes.push(chartDataExtraNotes["All games"][date]!);
+  }
+
+  // Add note for selected game
+  if (chartDataExtraNotes[selectedGame]?.[date]) {
+    notes.push(chartDataExtraNotes[selectedGame][date]!);
+  }
+
+  return notes;
+}
+
+type ChartDataExtraNoteProps = {
+  selectedGame: Game | "All games";
+  date: string;
+};
+
+const ChartDataExtraNote = ({ selectedGame, date }: ChartDataExtraNoteProps) => {
+  const notes = getNotes(selectedGame, date);
+  if (!notes.length) return null;
+  return (
+    <>
+      {notes.map((note, i) => (
+        <div className="text-xs opacity-75" key={`${note}-${i.toString()}`}>
+          {note}
+        </div>
+      ))}
+    </>
   );
 };
