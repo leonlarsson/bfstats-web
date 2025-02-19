@@ -32,6 +32,8 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
     }));
   }, [dataSlice, selectedData, selectedGame]);
 
+  const notesForGame = getAllNotesForGame(selectedGame);
+
   return (
     <div>
       <RadioGroup
@@ -112,6 +114,19 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
           <Bar isAnimationActive={false} dataKey="value" fill="var(--color-value)" radius={[4, 4, 0, 0]} />
         </BarChartRaw>
       </ChartContainer>
+
+      {notesForGame.length > 0 && (
+        <details>
+          <summary className="cursor-pointer w-fit">Notes</summary>
+          <div className="text-sm">
+            {notesForGame.map((noteEntry, i) => (
+              <div key={`${noteEntry.date}-${noteEntry.note}-${i.toString()}`}>
+                <span className="tabular-nums font-medium"> {noteEntry.date}</span>: {noteEntry.note}
+              </div>
+            ))}
+          </div>
+        </details>
+      )}
     </div>
   );
 };
@@ -179,14 +194,14 @@ export const BarChart = (props: BarChartProps) => {
 
 const chartDataExtraNotes: Partial<Record<Game | "All games", Record<string, string>>> = {
   "All games": {
-    "2025-02-03": "Note: Battlefield Labs was announced.",
+    "2025-02-03": "Battlefield Labs was announced.",
   },
   "Battlefield Bad Company 2": {
-    "2023-12-01": "Note: BFBC2 stats API was discontinued.",
+    "2023-12-01": "BFBC2 stats API was discontinued.",
   },
 };
 
-function getNotes(selectedGame: Game | "All games", date: string): string[] {
+const getNotesForGameOnDate = (selectedGame: Game | "All games", date: string): string[] => {
   const notes: string[] = [];
 
   // If All games is not selected but it has a note for the date, add it
@@ -200,7 +215,25 @@ function getNotes(selectedGame: Game | "All games", date: string): string[] {
   }
 
   return notes;
-}
+};
+
+const getAllNotesForGame = (selectedGame: Game | "All games"): { date: string; note: string }[] => {
+  const notes: { date: string; note: string }[] = [];
+
+  // Add notes for All games
+  if (selectedGame !== "All games") {
+    for (const noteEntry of Object.entries(chartDataExtraNotes["All games"] ?? {})) {
+      notes.push({ date: noteEntry[0], note: noteEntry[1] });
+    }
+  }
+
+  // Add notes for selected game
+  for (const noteEntry of Object.entries(chartDataExtraNotes[selectedGame] ?? {})) {
+    notes.push({ date: noteEntry[0], note: noteEntry[1] });
+  }
+
+  return notes.toSorted((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+};
 
 type ChartDataExtraNoteProps = {
   selectedGame: Game | "All games";
@@ -208,13 +241,13 @@ type ChartDataExtraNoteProps = {
 };
 
 const ChartDataExtraNote = ({ selectedGame, date }: ChartDataExtraNoteProps) => {
-  const notes = getNotes(selectedGame, date);
+  const notes = getNotesForGameOnDate(selectedGame, date);
   if (!notes.length) return null;
   return (
     <>
       {notes.map((note, i) => (
         <div className="text-xs opacity-75" key={`${note}-${i.toString()}`}>
-          {note}
+          Note: {note}
         </div>
       ))}
     </>
