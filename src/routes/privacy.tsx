@@ -8,7 +8,7 @@ function PrivacyComponent() {
   return (
     <div>
       <h1 className="text-3xl font-bold">Privacy Policy</h1>
-      <h5>(Updated February 12, 2025)</h5>
+      <h5>(Updated April 4, 2025)</h5>
 
       <br />
 
@@ -52,7 +52,7 @@ function PrivacyComponent() {
 
       <br />
 
-      <h3 className="text-2xl font-semibold">Deleting your stats image***</h3>
+      {/* <h3 className="text-2xl font-semibold">Deleting your stats image***</h3>
       <p>
         After every stats output, you have 15 seconds to delete it by clicking the red "Delete" button. Since these
         images are ONLY hosted on Discord, this will remove the image completely****.
@@ -60,7 +60,7 @@ function PrivacyComponent() {
         <img alt="Delete Button" src="/images/StatsDeleteButton.png" width={620} />
       </p>
 
-      <br />
+      <br /> */}
 
       <h3 className="text-2xl font-semibold">API information</h3>
       <p>
@@ -112,7 +112,7 @@ function PrivacyComponent() {
       <h3 className="text-2xl font-semibold">Requesting data redaction</h3>
       <p>
         If you want your data (user ID and username) to be redacted in the private database, you need to reach out to me
-        on Discord. My username is <q>mozzy</q>. Since I don't store any emails, emailing me does not work as
+        on Discord. My username is <q>mozzy</q>. Since I don't store (or have access to) any emails, emailing me does not work as
         verification. If you have your data redacted and then continue to use the bot, your data will once again be
         stored. Do not use the bot in this case.
       </p>
@@ -158,9 +158,9 @@ function PrivacyComponent() {
           <br />
           **Only displays your language if it's one of the supported ones.
           <br />
-          ***Not available in threads where the bot can't see the main channel.
+          {/* ***Not available in threads where the bot can't see the main channel. */}
           <br />
-          ****Unless the image was saved elsewhere.
+          {/* ****Unless the image was saved elsewhere. */}
         </i>
       </p>
     </div>
