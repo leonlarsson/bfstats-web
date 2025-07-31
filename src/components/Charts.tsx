@@ -194,6 +194,7 @@ export const BarChart = (props: BarChartProps) => {
 
 const chartDataExtraNotes: Partial<Record<Game | "All games", Record<string, string>>> = {
   "All games": {
+    "2025-07-31": "Battlefield 6 multiplayer reveal.",
     "2025-07-22": "Battlefield 6 reveal was announced.",
     "2025-02-03": "Battlefield Labs was announced.",
   },
