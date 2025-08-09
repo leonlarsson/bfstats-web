@@ -1,16 +1,16 @@
-export type User = {
+export type DBUser = {
   totalStatsSent: number;
 };
 
-export type Output = {
+export type DBOutput = {
   game: string;
   segment: string;
   language: string;
   date: string;
 };
 
-export type Event = {
-  event: string;
+export type DBEvent = {
+  event: "appGuildInstall" | "appUserInstall" | "appUninstall";
   date: string;
 };
 

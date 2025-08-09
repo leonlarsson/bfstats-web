@@ -15,7 +15,8 @@ import {
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import humanizeDuration from "humanize-duration";
-import { HouseIcon, Loader2Icon, MinusCircleIcon, PlusCircleIcon, SendIcon, UserIcon } from "lucide-react";
+import { HomeIcon, HouseIcon, Loader2Icon, MinusCircleIcon, PlusCircleIcon, SendIcon, UserIcon } from "lucide-react";
+import type { DBEvent } from "types";
 
 export const Route = createFileRoute("/data")({
   component: DataComponent,
@@ -88,7 +89,7 @@ function DataComponent() {
         <hr className="my-6 border-2" />
 
         <div>
-          <h2 className="mb-1 text-2xl font-bold">Last 20 events</h2>
+          <h2 className="mb-1 text-2xl font-bold">Last 40 events</h2>
           <RecentEvents />
         </div>
       </div>
@@ -422,12 +423,26 @@ const RecentEvents = () => {
 
   const events = recentEventsQuery.data;
 
-  const eventToIcon = (eventName: string) => {
+  const renderEventTitle = (eventName: DBEvent["event"]) => {
     switch (eventName) {
-      case "guildCreate":
-        return <PlusCircleIcon className="inline size-4" />;
-      case "guildDelete":
-        return <MinusCircleIcon className="inline size-4" />;
+      case "appGuildInstall":
+        return (
+          <>
+            <HomeIcon className="inline size-4" /> Bot was added to a server
+          </>
+        );
+      case "appUserInstall":
+        return (
+          <>
+            <UserIcon className="inline size-4" /> Bot was installed to an account
+          </>
+        );
+      case "appUninstall":
+        return (
+          <>
+            <MinusCircleIcon className="inline size-4" /> Bot was removed
+          </>
+        );
       default:
         return null;
     }
@@ -441,9 +456,7 @@ const RecentEvents = () => {
             key={`${i}-${event.date}`}
             className="flex flex-wrap justify-between rounded p-1 even:bg-neutral-200 dark:even:bg-neutral-900"
           >
-            <span className="flex items-center gap-2">
-              {eventToIcon(event.event)} Bot was {event.event === "guildCreate" ? "added to" : "removed from"} a server
-            </span>
+            <span className="flex items-center gap-2">{renderEventTitle(event.event)}</span>
             <span title={new Date(`${event.date} UTC`).toLocaleString()}>
               {humanizeDuration(new Date(`${event.date} UTC`).getTime() - new Date().getTime(), {
                 round: true,

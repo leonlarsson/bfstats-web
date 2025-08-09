@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import type { BaseStats, CountsItem, Event, Output, SentDailyItemGames, User } from "types";
+import type { BaseStats, CountsItem, DBEvent, DBOutput, DBUser, SentDailyItemGames } from "types";
 
 // BASE
 
@@ -19,7 +19,7 @@ export const outputsCountsQueryOptions = queryOptions({
 export const outputsRecentQueryOptions = queryOptions({
   queryKey: ["outputs", "recent"],
   queryFn: () =>
-    fetch("https://api.battlefieldstats.com/outputs/recent").then((res) => res.json() as unknown as Output[]),
+    fetch("https://api.battlefieldstats.com/outputs/recent").then((res) => res.json() as unknown as DBOutput[]),
 });
 
 export const outputsDailyGamesNoGapsQueryOptions = queryOptions({
@@ -50,7 +50,7 @@ export const usersCountQueryOptions = queryOptions({
 
 export const usersTopQueryOptions = queryOptions({
   queryKey: ["users", "top"],
-  queryFn: () => fetch("https://api.battlefieldstats.com/users/top").then((res) => res.json() as unknown as User[]),
+  queryFn: () => fetch("https://api.battlefieldstats.com/users/top").then((res) => res.json() as unknown as DBUser[]),
 });
 
 // EVENTS
@@ -58,5 +58,5 @@ export const usersTopQueryOptions = queryOptions({
 export const eventsRecentQueryOptions = queryOptions({
   queryKey: ["events", "recent"],
   queryFn: () =>
-    fetch("https://api.battlefieldstats.com/events/recent").then((res) => res.json() as unknown as Event[]),
+    fetch("https://api.battlefieldstats.com/events/recent").then((res) => res.json() as unknown as DBEvent[]),
 });
