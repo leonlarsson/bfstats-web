@@ -437,10 +437,16 @@ const RecentEvents = () => {
             <UserIcon className="inline size-4" /> Bot was installed to an account
           </>
         );
-      case "appUninstall":
+      case "appGuildUninstall":
         return (
           <>
-            <MinusCircleIcon className="inline size-4" /> Bot was removed
+            <MinusCircleIcon className="inline size-4" /> Bot was removed from a server
+          </>
+        );
+      case "appUserUninstall":
+        return (
+          <>
+            <MinusCircleIcon className="inline size-4" /> Bot was removed from an account
           </>
         );
       default:

@@ -10,7 +10,7 @@ export type DBOutput = {
 };
 
 export type DBEvent = {
-  event: "appGuildInstall" | "appUserInstall" | "appUninstall";
+  event: "appGuildInstall" | "appUserInstall" | "appGuildUninstall" | "appUserUninstall";
   date: string;
 };
 
