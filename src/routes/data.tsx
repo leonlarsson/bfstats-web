@@ -17,6 +17,7 @@ import { useQueries, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import humanizeDuration from "humanize-duration";
 import { HomeIcon, HouseIcon, Loader2Icon, MinusCircleIcon, PlusCircleIcon, SendIcon, UserIcon } from "lucide-react";
+import type { ReactNode } from "react";
 import type { DBEvent } from "types";
 
 export const Route = createFileRoute("/data")({
@@ -137,39 +138,27 @@ const TotalStats = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xl">Per game</CardTitle>
-            <CardDescription>since May 25, 2021</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ScrollArea type="always" className="h-[330px] pr-4">
-              <BarChart
-                data={Object.entries(baseStats.totalStatsSent.games)
-                  .map((x) => ({ name: x[0], value: x[1] }))
-                  .sort((a, b) => b.value - a.value)}
-                total={baseStats.totalStatsSent.total}
-              />
-            </ScrollArea>
-          </CardContent>
-        </Card>
+        <StatCard title="Per game" description="since May 25, 2021">
+          <ScrollArea type="always" className="h-[330px] pr-4">
+            <BarChart
+              data={Object.entries(baseStats.totalStatsSent.games)
+                .map((x) => ({ name: x[0], value: x[1] }))
+                .sort((a, b) => b.value - a.value)}
+              total={baseStats.totalStatsSent.total}
+            />
+          </ScrollArea>
+        </StatCard>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xl">Per language</CardTitle>
-            <CardDescription>since May 25, 2021</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ScrollArea type="always" className="h-[330px] pr-4">
-              <BarChart
-                data={Object.entries(baseStats.totalStatsSent.languages)
-                  .map((x) => ({ name: x[0], value: x[1] }))
-                  .sort((a, b) => b.value - a.value)}
-                total={baseStats.totalStatsSent.total}
-              />
-            </ScrollArea>
-          </CardContent>
-        </Card>
+        <StatCard title="Per language" description="since May 25, 2021">
+          <ScrollArea type="always" className="h-[330px] pr-4">
+            <BarChart
+              data={Object.entries(baseStats.totalStatsSent.languages)
+                .map((x) => ({ name: x[0], value: x[1] }))
+                .sort((a, b) => b.value - a.value)}
+              total={baseStats.totalStatsSent.total}
+            />
+          </ScrollArea>
+        </StatCard>
       </div>
     </>
   );
@@ -244,84 +233,50 @@ const SinceJanuary = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xl">Per game</CardTitle>
-            <CardDescription>since Jan 1, 2023</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ScrollArea type="always" className="h-[330px] pr-4">
-              <BarChart
-                data={games.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
-                total={totalSent}
-              />
-            </ScrollArea>
-          </CardContent>
-        </Card>
+        <StatCard title="Per game" description="since Jan 1, 2023">
+          <ScrollArea type="always" className="h-[330px] pr-4">
+            <BarChart
+              data={games.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
+              total={totalSent}
+            />
+          </ScrollArea>
+        </StatCard>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xl">Per segment</CardTitle>
-            <CardDescription>since Jan 1, 2023</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ScrollArea type="always" className="h-[330px] pr-4">
-              <BarChart
-                data={segments.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
-                total={totalSent}
-              />
-            </ScrollArea>
-          </CardContent>
-        </Card>
+        <StatCard title="Per segment" description="since Jan 1, 2023">
+          <ScrollArea type="always" className="h-[330px] pr-4">
+            <BarChart
+              data={segments.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
+              total={totalSent}
+            />
+          </ScrollArea>
+        </StatCard>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xl">Per language</CardTitle>
-            <CardDescription>since Jan 1, 2023</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ScrollArea type="always" className="h-[330px] pr-4">
-              <BarChart
-                data={languages.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
-                total={totalSent}
-              />
-            </ScrollArea>
-          </CardContent>
-        </Card>
+        <StatCard title="Per language" description="since Jan 1, 2023">
+          <ScrollArea type="always" className="h-[330px] pr-4">
+            <BarChart
+              data={languages.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
+              total={totalSent}
+            />
+          </ScrollArea>
+        </StatCard>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xl">Top users</CardTitle>
-            <CardDescription>since Jan 1, 2023</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ScrollArea type="always" className="h-[330px] pr-4">
-              <BarChart
-                data={topUsers.map((sent, i) => ({ name: `User #${i + 1}`, value: sent.totalStatsSent }))}
-                total={totalSent}
-              />
-            </ScrollArea>
-          </CardContent>
-        </Card>
+        <StatCard title="Top users" description="since Jan 1, 2023">
+          <ScrollArea type="always" className="h-[330px] pr-4">
+            <BarChart
+              data={topUsers.map((sent, i) => ({ name: `User #${i + 1}`, value: sent.totalStatsSent }))}
+              total={totalSent}
+            />
+          </ScrollArea>
+        </StatCard>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl">Stats sent per day</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <StatsSentPerDayChartWithFilter data={outputDailyGames} />
-        </CardContent>
-      </Card>
+      <StatCard title="Stats sent per day">
+        <StatsSentPerDayChartWithFilter data={outputDailyGames} />
+      </StatCard>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl">Events per day</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <EventsPerDayChartWithFilter data={eventsDaily} />
-        </CardContent>
-      </Card>
+      <StatCard title="Events per day">
+        <EventsPerDayChartWithFilter data={eventsDaily} />
+      </StatCard>
     </div>
   );
 };
@@ -349,50 +304,32 @@ const Last7Days = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xl">Per game</CardTitle>
-            <CardDescription>last 7 days</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ScrollArea type="always" className="h-[330px] pr-4">
-              <BarChart
-                data={games.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
-                total={totalSent}
-              />
-            </ScrollArea>
-          </CardContent>
-        </Card>
+        <StatCard title="Per game" description="last 7 days">
+          <ScrollArea type="always" className="h-[330px] pr-4">
+            <BarChart
+              data={games.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
+              total={totalSent}
+            />
+          </ScrollArea>
+        </StatCard>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xl">Per segment</CardTitle>
-            <CardDescription>last 7 days</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ScrollArea type="always" className="h-[330px] pr-4">
-              <BarChart
-                data={segments.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
-                total={totalSent}
-              />
-            </ScrollArea>
-          </CardContent>
-        </Card>
+        <StatCard title="Per segment" description="last 7 days">
+          <ScrollArea type="always" className="h-[330px] pr-4">
+            <BarChart
+              data={segments.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
+              total={totalSent}
+            />
+          </ScrollArea>
+        </StatCard>
 
-        <Card className="col-span-full">
-          <CardHeader>
-            <CardTitle className="text-xl">Per language</CardTitle>
-            <CardDescription>last 7 days</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ScrollArea type="always" className="h-[330px] pr-4">
-              <BarChart
-                data={languages.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
-                total={totalSent}
-              />
-            </ScrollArea>
-          </CardContent>
-        </Card>
+        <StatCard title="Per language" description="last 7 days" cardClassName="col-span-full">
+          <ScrollArea type="always" className="h-[330px] pr-4">
+            <BarChart
+              data={languages.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
+              total={totalSent}
+            />
+          </ScrollArea>
+        </StatCard>
       </div>
     </div>
   );
@@ -515,4 +452,19 @@ const LoadingText = () => (
 
 const ErrorFetchingText = () => (
   <span className="text-lg font-semibold text-red-600 dark:text-red-500">Error fetching.</span>
+);
+
+const StatCard = ({
+  title,
+  description,
+  cardClassName,
+  children,
+}: { title: string; description?: string; cardClassName?: string; children: ReactNode }) => (
+  <Card className={cardClassName}>
+    <CardHeader>
+      <CardTitle className="text-xl">{title}</CardTitle>
+      {description && <CardDescription>{description}</CardDescription>}
+    </CardHeader>
+    <CardContent>{children}</CardContent>
+  </Card>
 );
