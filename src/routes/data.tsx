@@ -1,9 +1,10 @@
-import { BarChart, StatsSentPerDayChartWithFilter } from "@/components/Charts";
+import { BarChart, EventsPerDayChartWithFilter, StatsSentPerDayChartWithFilter } from "@/components/Charts";
 import { Icons } from "@/components/icons";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   baseStatsQueryOptions,
+  eventsDailyNoGapsQueryOptions,
   eventsRecentQueryOptions,
   outputsCountsLast7DaysQueryOptions,
   outputsCountsQueryOptions,
@@ -175,7 +176,7 @@ const TotalStats = () => {
 };
 
 const SinceJanuary = () => {
-  const [countUsersQuery, topUsersQuery, outputCountsQuery, sentDailyQuery] = useQueries({
+  const [countUsersQuery, topUsersQuery, outputCountsQuery, sentDailyQuery, eventsDailyQuery] = useQueries({
     queries: [
       {
         ...usersCountQueryOptions,
@@ -193,24 +194,36 @@ const SinceJanuary = () => {
         ...outputsDailyGamesNoGapsQueryOptions,
         staleTime: Number.POSITIVE_INFINITY,
       },
+      {
+        ...eventsDailyNoGapsQueryOptions,
+        staleTime: Number.POSITIVE_INFINITY,
+      },
     ],
   });
 
-  if (countUsersQuery.isLoading || topUsersQuery.isLoading || outputCountsQuery.isLoading || sentDailyQuery.isLoading)
+  if (
+    countUsersQuery.isLoading ||
+    topUsersQuery.isLoading ||
+    outputCountsQuery.isLoading ||
+    sentDailyQuery.isLoading ||
+    eventsDailyQuery.isLoading
+  )
     return <LoadingText />;
   if (
     !countUsersQuery.isSuccess ||
     !topUsersQuery.isSuccess ||
     !outputCountsQuery.isSuccess ||
-    !sentDailyQuery.isSuccess
+    !sentDailyQuery.isSuccess ||
+    !eventsDailyQuery.isSuccess
   )
     return <ErrorFetchingText />;
 
-  const [totalUsers, topUsers, outputsCounts, outputDailyGames] = [
+  const [totalUsers, topUsers, outputsCounts, outputDailyGames, eventsDaily] = [
     countUsersQuery.data,
     topUsersQuery.data,
     outputCountsQuery.data,
     sentDailyQuery.data,
+    eventsDailyQuery.data,
   ];
 
   const games = outputsCounts.filter((x) => x.category === "game");
@@ -298,6 +311,15 @@ const SinceJanuary = () => {
         </CardHeader>
         <CardContent>
           <StatsSentPerDayChartWithFilter data={outputDailyGames} />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xl">Events per day</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <EventsPerDayChartWithFilter data={eventsDaily} />
         </CardContent>
       </Card>
     </div>
@@ -413,13 +435,21 @@ const RecentOutputs = () => {
 };
 
 const RecentEvents = () => {
-  const recentEventsQuery = useQuery({
-    ...eventsRecentQueryOptions,
-    staleTime: Number.POSITIVE_INFINITY,
+  const [recentEventsQuery, dailyEventsQuery] = useQueries({
+    queries: [
+      {
+        ...eventsRecentQueryOptions,
+        staleTime: Number.POSITIVE_INFINITY,
+      },
+      {
+        ...eventsDailyNoGapsQueryOptions,
+        staleTime: Number.POSITIVE_INFINITY,
+      },
+    ],
   });
 
-  if (recentEventsQuery.isLoading) return <LoadingText />;
-  if (!recentEventsQuery.isSuccess) return <ErrorFetchingText />;
+  if (recentEventsQuery.isLoading || dailyEventsQuery.isLoading) return <LoadingText />;
+  if (!recentEventsQuery.isSuccess || !dailyEventsQuery.isSuccess) return <ErrorFetchingText />;
 
   const events = recentEventsQuery.data;
 

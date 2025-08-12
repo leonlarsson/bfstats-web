@@ -72,6 +72,13 @@ export type SentDailyItemGames = {
   totalSent: number;
 };
 
+export type EventDailyItem = {
+  day: string;
+  event: DBEvent["event"];
+  count: number;
+  dailyTotal: number;
+};
+
 export type Game =
   | "Battlefield 2042"
   | "Battlefield V"

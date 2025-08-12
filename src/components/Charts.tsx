@@ -2,13 +2,13 @@ import { useState } from "react";
 import { useMemo } from "react";
 import { Bar, BarChart as BarChartRaw, CartesianGrid, Rectangle, Tooltip, XAxis, YAxis } from "recharts";
 import type { CategoricalChartProps } from "recharts/types/chart/generateCategoricalChart";
-import type { Game, SentDailyItemGames } from "types";
+import type { DBEvent, EventDailyItem, Game, SentDailyItemGames } from "types";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "./ui/chart";
 import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
-// Uses /outputs/daily/games-no-gaps
+// Uses /outputs/daily-games-no-gaps
 export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGames[] }) => {
   const totalData = useMemo(() => {
     return data.filter((v, i, a) => a.findIndex((v2) => v2.day === v.day) === i);
@@ -44,16 +44,16 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
         }}
       >
         <div className="flex items-center space-x-2">
-          <RadioGroupItem id="r1" value={"0"} />
-          <Label htmlFor="r1">Since Jan 1st, 2023</Label>
+          <RadioGroupItem id="game-sent-r1" value={"0"} />
+          <Label htmlFor="game-sent-r1">Since Jan 1st, 2023</Label>
         </div>
         <div className="flex items-center space-x-2">
-          <RadioGroupItem id="r2" value={"-30"} />
-          <Label htmlFor="r2">Last 30 days</Label>
+          <RadioGroupItem id="game-sent-r2" value={"-30"} />
+          <Label htmlFor="game-sent-r2">Last 30 days</Label>
         </div>
         <div className="flex items-center space-x-2">
-          <RadioGroupItem id="r3" value={"-7"} />
-          <Label htmlFor="r3">Last 7 days</Label>
+          <RadioGroupItem id="game-sent-r3" value={"-7"} />
+          <Label htmlFor="game-sent-r3">Last 7 days</Label>
         </div>
       </RadioGroup>
 
@@ -127,6 +127,103 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
           </div>
         </details>
       )}
+    </div>
+  );
+};
+// Uses /events/daily-no-gaps
+export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }) => {
+  const totalData = useMemo(() => {
+    return data.filter((v, i, a) => a.findIndex((v2) => v2.day === v.day) === i);
+  }, [data]);
+
+  // Show all, last 30 days, last 7 days
+  type DataSliceDays = 0 | -30 | -7;
+  const [dataSlice, setDataSlice] = useState<DataSliceDays>(-30);
+  const [selectedEvent, setSelectedEvent] = useState<DBEvent["event"] | "All events">("All events");
+  const [selectedData, setSelectedData] = useState(totalData);
+
+  const handleEventChange = (selectValue: DBEvent["event"] | "All events") => {
+    setSelectedEvent(selectValue);
+    setSelectedData(selectValue === "All events" ? totalData : data.filter((x) => x.event === selectValue));
+  };
+
+  const chartData = useMemo(() => {
+    return selectedData.slice(dataSlice).map((x) => ({
+      date: new Date(x.day).toLocaleDateString(),
+      value: selectedEvent === "All events" ? x.dailyTotal : x.count,
+    }));
+  }, [dataSlice, selectedData, selectedEvent]);
+
+  return (
+    <div>
+      <RadioGroup
+        className="mb-2"
+        defaultValue={dataSlice.toString()}
+        onValueChange={(v) => {
+          setDataSlice(Number.parseInt(v) as DataSliceDays);
+        }}
+      >
+        <div className="flex items-center space-x-2">
+          <RadioGroupItem id="event-r1" value={"0"} />
+          <Label htmlFor="event-r1">Since May 22nd, 2023</Label>
+        </div>
+        <div className="flex items-center space-x-2">
+          <RadioGroupItem id="event-r2" value={"-30"} />
+          <Label htmlFor="event-r2">Last 30 days</Label>
+        </div>
+        <div className="flex items-center space-x-2">
+          <RadioGroupItem id="event-r3" value={"-7"} />
+          <Label htmlFor="event-r3">Last 7 days</Label>
+        </div>
+      </RadioGroup>
+
+      <Select value={selectedEvent} onValueChange={(e: DBEvent["event"] | "All events") => handleEventChange(e)}>
+        <SelectTrigger className="mb-5 w-[250px]">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem value="All events">All events</SelectItem>
+            {["appGuildInstall", "appUserInstall", "appGuildUninstall", "appUserUninstall"].map((event) => (
+              <SelectItem key={event} value={event}>
+                {event}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+
+      <ChartContainer
+        className="h-[400px] w-full"
+        config={{
+          value: {
+            label: "Count",
+            color: "hsl(var(--chart-1))",
+          },
+        }}
+      >
+        <BarChartRaw data={chartData}>
+          <XAxis type="category" dataKey="date" />
+          <YAxis type="number" tickFormatter={(v) => v.toLocaleString("en")} />
+          <CartesianGrid vertical={false} />
+          <Tooltip
+            content={
+              <ChartTooltipContent
+                indicator="line"
+                labelFormatter={(label: string) => {
+                  return (
+                    <div className="flex flex-col gap-1">
+                      <span>{selectedEvent}</span>
+                      <span className="font-medium">{label}</span>
+                    </div>
+                  );
+                }}
+              />
+            }
+          />
+          <Bar isAnimationActive={false} dataKey="value" fill="var(--color-value)" radius={[4, 4, 0, 0]} />
+        </BarChartRaw>
+      </ChartContainer>
     </div>
   );
 };

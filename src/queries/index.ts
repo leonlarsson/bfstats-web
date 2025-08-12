@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import type { BaseStats, CountsItem, DBEvent, DBOutput, DBUser, SentDailyItemGames } from "types";
+import type { BaseStats, CountsItem, DBEvent, DBOutput, DBUser, EventDailyItem, SentDailyItemGames } from "types";
 
 // BASE
 
@@ -59,4 +59,12 @@ export const eventsRecentQueryOptions = queryOptions({
   queryKey: ["events", "recent"],
   queryFn: () =>
     fetch("https://api.battlefieldstats.com/events/recent").then((res) => res.json() as unknown as DBEvent[]),
+});
+
+export const eventsDailyNoGapsQueryOptions = queryOptions({
+  queryKey: ["events", "daily-no-gaps"],
+  queryFn: () =>
+    fetch("https://api.battlefieldstats.com/events/daily-no-gaps").then(
+      (res) => res.json() as unknown as EventDailyItem[],
+    ),
 });
