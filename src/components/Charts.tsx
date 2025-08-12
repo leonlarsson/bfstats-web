@@ -45,7 +45,7 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
       >
         <div className="flex items-center space-x-2">
           <RadioGroupItem id="game-sent-r1" value={"0"} />
-          <Label htmlFor="game-sent-r1">Since Jan 1st, 2023</Label>
+          <Label htmlFor="game-sent-r1">Since Jan 1, 2023</Label>
         </div>
         <div className="flex items-center space-x-2">
           <RadioGroupItem id="game-sent-r2" value={"-30"} />
@@ -165,7 +165,7 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
       >
         <div className="flex items-center space-x-2">
           <RadioGroupItem id="event-r1" value={"0"} />
-          <Label htmlFor="event-r1">Since May 22nd, 2023</Label>
+          <Label htmlFor="event-r1">Since Jan 1, 2023</Label>
         </div>
         <div className="flex items-center space-x-2">
           <RadioGroupItem id="event-r2" value={"-30"} />
