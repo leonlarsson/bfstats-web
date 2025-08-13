@@ -65,6 +65,7 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
           <SelectGroup>
             <SelectItem value="All games">All games</SelectItem>
             {[
+              "Battlefield 6",
               "Battlefield 2042",
               "Battlefield V",
               "Battlefield 1",
@@ -294,6 +295,9 @@ const chartDataExtraNotes: Partial<Record<Game | "All games", Record<string, str
     "2025-07-31": "Battlefield 6 multiplayer reveal.",
     "2025-07-22": "Battlefield 6 reveal was announced.",
     "2025-02-03": "Battlefield Labs was announced.",
+  },
+  "Battlefield 6": {
+    "2025-08-13": "Battlefield 6 Open Beta weekend 1 stats are available.",
   },
   "Battlefield Bad Company 2": {
     "2023-12-01": "BFBC2 stats API was discontinued.",

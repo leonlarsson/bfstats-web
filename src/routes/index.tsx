@@ -56,6 +56,10 @@ function HomeComponent() {
             <div className="ml-4">
               {[
                 {
+                  gameName: "Battlefield 6",
+                  segments: ["Stats (Open Beta)"],
+                },
+                {
                   gameName: "Battlefield 2042",
                   segments: ["Stats", "Leaderboard", "Servers", "Experience", "Playercard"],
                 },

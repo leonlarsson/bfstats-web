@@ -22,6 +22,7 @@ export type BaseStats = {
   totalStatsSent: {
     total: number;
     games: {
+      "Battlefield 6": number;
       "Battlefield 2042": number;
       "Battlefield V": number;
       "Battlefield 1": number;
@@ -80,6 +81,7 @@ export type EventDailyItem = {
 };
 
 export type Game =
+  | "Battlefield 6"
   | "Battlefield 2042"
   | "Battlefield V"
   | "Battlefield 1"
