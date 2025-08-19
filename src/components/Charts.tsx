@@ -4,6 +4,7 @@ import { Bar, BarChart as BarChartRaw, CartesianGrid, Rectangle, Tooltip, XAxis,
 import type { CategoricalChartProps } from "recharts/types/chart/generateCategoricalChart";
 import type { DBEvent, EventDailyItem, Game, SentDailyItemGames } from "types";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "./ui/chart";
+import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
@@ -19,6 +20,7 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
   const [dataSlice, setDataSlice] = useState<DataSliceDays>(-30);
   const [selectedGame, setSelectedGame] = useState<Game | "All games">("All games");
   const [selectedData, setSelectedData] = useState(totalData);
+  const [useLogScale, setUseLogScale] = useState(false);
 
   const handleGameChange = (selectValue: Game | "All games") => {
     setSelectedGame(selectValue);
@@ -57,31 +59,38 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
         </div>
       </RadioGroup>
 
-      <Select value={selectedGame} onValueChange={(e: Game | "All games") => handleGameChange(e)}>
-        <SelectTrigger className="mb-5 w-[250px]">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectItem value="All games">All games</SelectItem>
-            {[
-              "Battlefield 6",
-              "Battlefield 2042",
-              "Battlefield V",
-              "Battlefield 1",
-              "Battlefield Hardline",
-              "Battlefield 4",
-              "Battlefield 3",
-              "Battlefield Bad Company 2",
-              "Battlefield 2",
-            ].map((game) => (
-              <SelectItem key={game} value={game}>
-                {game}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+      <div className="flex flex-wrap justify-between gap-2 mb-5">
+        <Select value={selectedGame} onValueChange={(e: Game | "All games") => handleGameChange(e)}>
+          <SelectTrigger className="w-[250px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="All games">All games</SelectItem>
+              {[
+                "Battlefield 6",
+                "Battlefield 2042",
+                "Battlefield V",
+                "Battlefield 1",
+                "Battlefield Hardline",
+                "Battlefield 4",
+                "Battlefield 3",
+                "Battlefield Bad Company 2",
+                "Battlefield 2",
+              ].map((game) => (
+                <SelectItem key={game} value={game}>
+                  {game}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+        <div className="flex items-center gap-2">
+          <Checkbox id="log-scale-sent" onCheckedChange={(c) => setUseLogScale(!!c.valueOf())} />
+          <Label htmlFor="log-scale-sent">Log scale</Label>
+        </div>
+      </div>
 
       <ChartContainer
         className="h-[400px] w-full"
@@ -94,7 +103,12 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
       >
         <BarChartRaw data={chartData}>
           <XAxis type="category" dataKey="date" />
-          <YAxis type="number" tickFormatter={(v) => v.toLocaleString("en")} />
+          <YAxis
+            type="number"
+            tickFormatter={(v) => v.toLocaleString("en")}
+            scale={useLogScale ? "log" : undefined}
+            domain={["auto", "auto"]}
+          />
           <CartesianGrid vertical={false} />
           <Tooltip
             content={
@@ -142,6 +156,7 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
   const [dataSlice, setDataSlice] = useState<DataSliceDays>(-30);
   const [selectedEvent, setSelectedEvent] = useState<DBEvent["event"] | "All events">("All events");
   const [selectedData, setSelectedData] = useState(totalData);
+  const [useLogScale, setUseLogScale] = useState(false);
 
   const handleEventChange = (selectValue: DBEvent["event"] | "All events") => {
     setSelectedEvent(selectValue);
@@ -178,21 +193,28 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
         </div>
       </RadioGroup>
 
-      <Select value={selectedEvent} onValueChange={(e: DBEvent["event"] | "All events") => handleEventChange(e)}>
-        <SelectTrigger className="mb-5 w-[250px]">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectItem value="All events">All events</SelectItem>
-            {["appGuildInstall", "appUserInstall", "appGuildUninstall", "appUserUninstall"].map((event) => (
-              <SelectItem key={event} value={event}>
-                {event}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+      <div className="flex flex-wrap justify-between gap-2 mb-5">
+        <Select value={selectedEvent} onValueChange={(e: DBEvent["event"] | "All events") => handleEventChange(e)}>
+          <SelectTrigger className="w-[250px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="All events">All events</SelectItem>
+              {["appGuildInstall", "appUserInstall", "appGuildUninstall", "appUserUninstall"].map((event) => (
+                <SelectItem key={event} value={event}>
+                  {event}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+        <div className="flex items-center gap-2">
+          <Checkbox id="log-scale-events" onCheckedChange={(c) => setUseLogScale(!!c.valueOf())} />
+          <Label htmlFor="log-scale-events">Log scale</Label>
+        </div>
+      </div>
 
       <ChartContainer
         className="h-[400px] w-full"
@@ -205,7 +227,12 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
       >
         <BarChartRaw data={chartData}>
           <XAxis type="category" dataKey="date" />
-          <YAxis type="number" tickFormatter={(v) => v.toLocaleString("en")} />
+          <YAxis
+            type="number"
+            tickFormatter={(v) => v.toLocaleString("en")}
+            scale={useLogScale ? "log" : undefined}
+            domain={["auto", "auto"]}
+          />
           <CartesianGrid vertical={false} />
           <Tooltip
             content={
