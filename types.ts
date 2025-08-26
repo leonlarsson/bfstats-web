@@ -47,6 +47,7 @@ export type BaseStats = {
       Finnish: number;
       Arabic: number;
       Chinese: number;
+      Dutch: number;
     };
   };
   lastUpdated: {
@@ -118,4 +119,5 @@ export type Language =
   | "Norwegian"
   | "Finnish"
   | "Arabic"
-  | "Chinese";
+  | "Chinese"
+  | "Dutch";
