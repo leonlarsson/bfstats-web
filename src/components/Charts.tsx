@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMemo } from "react";
 import { Bar, BarChart as BarChartRaw, CartesianGrid, Rectangle, Tooltip, XAxis, YAxis } from "recharts";
 import type { CategoricalChartProps } from "recharts/types/chart/generateCategoricalChart";
@@ -8,6 +8,11 @@ import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+
+const logDomainMin = (chartData: { value: number }[]) => {
+  const minValue = Math.min(...chartData.map((d) => d.value));
+  return Math.max(1, Math.floor(minValue * 0.5));
+};
 
 // Uses /outputs/daily-games-no-gaps
 export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGames[] }) => {
@@ -28,11 +33,25 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
   };
 
   const chartData = useMemo(() => {
-    return selectedData.slice(dataSlice).map((x) => ({
+    const mapped = selectedData.slice(dataSlice).map((x) => ({
       date: new Date(x.day).toLocaleDateString(),
       value: selectedGame === "All games" ? x.totalSent : x.sent,
     }));
-  }, [dataSlice, selectedData, selectedGame]);
+
+    if (useLogScale) {
+      return mapped.filter((d) => d.value > 0);
+    }
+
+    return mapped;
+  }, [dataSlice, selectedData, selectedGame, useLogScale]);
+
+  const hasFilteredZeros = useMemo(() => {
+    if (!useLogScale) return false;
+    return selectedData.slice(dataSlice).some((x) => {
+      const value = selectedGame === "All games" ? x.totalSent : x.sent;
+      return value === 0;
+    });
+  }, [useLogScale, selectedData, dataSlice, selectedGame]);
 
   const notesForGame = getAllNotesForGame(selectedGame);
 
@@ -67,17 +86,19 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
           <SelectContent>
             <SelectGroup>
               <SelectItem value="All games">All games</SelectItem>
-              {[
-                "Battlefield 6",
-                "Battlefield 2042",
-                "Battlefield V",
-                "Battlefield 1",
-                "Battlefield Hardline",
-                "Battlefield 4",
-                "Battlefield 3",
-                "Battlefield Bad Company 2",
-                "Battlefield 2",
-              ].map((game) => (
+              {(
+                [
+                  "Battlefield 6",
+                  "Battlefield 2042",
+                  "Battlefield V",
+                  "Battlefield 1",
+                  "Battlefield Hardline",
+                  "Battlefield 4",
+                  "Battlefield 3",
+                  "Battlefield Bad Company 2",
+                  "Battlefield 2",
+                ] satisfies Game[]
+              ).map((game) => (
                 <SelectItem key={game} value={game}>
                   {game}
                 </SelectItem>
@@ -91,6 +112,10 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
           <Label htmlFor="log-scale-sent">Log scale</Label>
         </div>
       </div>
+
+      {hasFilteredZeros && (
+        <div className="text-sm text-muted-foreground mb-2">Days with zero activity are hidden in log scale.</div>
+      )}
 
       <ChartContainer
         className="h-[400px] w-full"
@@ -107,7 +132,7 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
             type="number"
             tickFormatter={(v) => v.toLocaleString("en")}
             scale={useLogScale ? "log" : undefined}
-            domain={["auto", "auto"]}
+            domain={useLogScale ? [logDomainMin(chartData), "auto"] : undefined}
           />
           <CartesianGrid vertical={false} />
           <Tooltip
@@ -145,6 +170,7 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
     </div>
   );
 };
+
 // Uses /events/daily-no-gaps
 export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }) => {
   const totalData = useMemo(() => {
@@ -164,11 +190,25 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
   };
 
   const chartData = useMemo(() => {
-    return selectedData.slice(dataSlice).map((x) => ({
+    const mapped = selectedData.slice(dataSlice).map((x) => ({
       date: new Date(x.day).toLocaleDateString(),
       value: selectedEvent === "All events" ? x.dailyTotal : x.count,
     }));
-  }, [dataSlice, selectedData, selectedEvent]);
+
+    if (useLogScale) {
+      return mapped.filter((d) => d.value > 0);
+    }
+
+    return mapped;
+  }, [dataSlice, selectedData, selectedEvent, useLogScale]);
+
+  const hasFilteredZeros = useMemo(() => {
+    if (!useLogScale) return false;
+    return selectedData.slice(dataSlice).some((x) => {
+      const value = selectedEvent === "All events" ? x.dailyTotal : x.count;
+      return value === 0;
+    });
+  }, [useLogScale, selectedData, dataSlice, selectedEvent]);
 
   return (
     <div>
@@ -201,7 +241,14 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
           <SelectContent>
             <SelectGroup>
               <SelectItem value="All events">All events</SelectItem>
-              {["appGuildInstall", "appUserInstall", "appGuildUninstall", "appUserUninstall"].map((event) => (
+              {(
+                [
+                  "appGuildInstall",
+                  "appUserInstall",
+                  "appGuildUninstall",
+                  "appUserUninstall",
+                ] satisfies DBEvent["event"][]
+              ).map((event) => (
                 <SelectItem key={event} value={event}>
                   {event}
                 </SelectItem>
@@ -215,6 +262,10 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
           <Label htmlFor="log-scale-events">Log scale</Label>
         </div>
       </div>
+
+      {hasFilteredZeros && (
+        <div className="text-sm text-muted-foreground mb-2">Days with zero activity are hidden in log scale.</div>
+      )}
 
       <ChartContainer
         className="h-[400px] w-full"
@@ -231,7 +282,7 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
             type="number"
             tickFormatter={(v) => v.toLocaleString("en")}
             scale={useLogScale ? "log" : undefined}
-            domain={["auto", "auto"]}
+            domain={useLogScale ? [logDomainMin(chartData), "auto"] : undefined}
           />
           <CartesianGrid vertical={false} />
           <Tooltip
