@@ -52,20 +52,10 @@ function PrivacyComponent() {
 
       <br />
 
-      {/* <h3 className="text-2xl font-semibold">Deleting your stats image***</h3>
-      <p>
-        After every stats output, you have 15 seconds to delete it by clicking the red "Delete" button. Since these
-        images are ONLY hosted on Discord, this will remove the image completely****.
-        <br />
-        <img alt="Delete Button" src="/images/StatsDeleteButton.png" width={620} />
-      </p>
-
-      <br /> */}
-
       <h3 className="text-2xl font-semibold">API information</h3>
       <p>
         This bot gets data from{" "}
-        <a className="link" href="https://battlefieldtracker.com/" rel="noreferrer" target="_blank">
+        <a className="link" href="https://tracker.gg/" rel="noreferrer" target="_blank">
           Battlefield Tracker
         </a>{" "}
         and{" "}
@@ -112,9 +102,9 @@ function PrivacyComponent() {
       <h3 className="text-2xl font-semibold">Requesting data redaction</h3>
       <p>
         If you want your data (user ID and username) to be redacted in the private database, you need to reach out to me
-        on Discord. My username is <q>mozzy</q>. Since I don't store (or have access to) any emails, emailing me does not work as
-        verification. If you have your data redacted and then continue to use the bot, your data will once again be
-        stored. Do not use the bot in this case.
+        on Discord. My username is <q>mozzy</q>. Since I don't store (or have access to) any emails, emailing me does
+        not work as verification. If you have your data redacted and then continue to use the bot, your data will once
+        again be stored. Do not use the bot in this case.
       </p>
 
       <br />

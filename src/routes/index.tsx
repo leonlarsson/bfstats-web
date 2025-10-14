@@ -57,7 +57,7 @@ function HomeComponent() {
               {[
                 {
                   gameName: "Battlefield 6",
-                  segments: ["Stats (Open Beta)"],
+                  segments: ["Stats (Live + Open Beta 1 & 2)", "Leaderboard"],
                 },
                 {
                   gameName: "Battlefield 2042",
@@ -90,6 +90,7 @@ function HomeComponent() {
           <AccordionContent>
             <b>These are the available commands:</b>
             <ul className="ml-4 list-inside list-disc">
+              <li>/bf6</li>
               <li>/bf2042</li>
               <li>/bfv</li>
               <li>/bf1</li>
@@ -118,12 +119,7 @@ function HomeComponent() {
                 This bot is not endorsed by, supported by, or affiliated with EA, DICE, or any EA entity. Any
                 Battlefield imagery displayed in this bot and its output are properties of EA/DICE. The bot uses stats
                 from{" "}
-                <a
-                  className="link"
-                  href="https://battlefieldtracker.com/?utm_source=discord&utm_medium=full-stats&utm_campaign=mozzy-bot"
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <a className="link" href="https://tracker.gg/" target="_blank" rel="noreferrer">
                   Tracker Network
                 </a>{" "}
                 and{" "}
@@ -146,9 +142,9 @@ function HomeComponent() {
               </p>
 
               <p>
-                Massive thanks to all the community translators: VIP-AHMAD-007, PeterSMK2, Salty Tenten, Rephii, Mozzy,
-                CaptPerry, Dragory, Sephi, PierrotL'Asticot, Matteo 'Forever.exe' Besutti, Navigando, Pug, Klikard,
-                Szymon Olejniczak, Rubinsk, EIGuimaraes, TheLetslook, TR-BatuhanKara, Arall.
+                Massive thanks to all the community translators: VIP-AHMAD-007, PeterSMK2, Salty Tenten, Rephii, Demz,
+                Mozzy, CaptPerry, Dragory, Sephi, PierrotL'Asticot, Matteo 'Forever.exe' Besutti, Navigando, GioNL, Pug,
+                Klikard, Szymon Olejniczak, Rubinsk, EIGuimaraes, TheLetslook, TR-BatuhanKara, Arall, chawu.
               </p>
             </div>
           </AccordionContent>
