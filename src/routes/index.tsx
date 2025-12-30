@@ -57,7 +57,7 @@ function HomeComponent() {
               {[
                 {
                   gameName: "Battlefield 6",
-                  segments: ["Stats (Live + Open Beta 1 & 2)", "Leaderboard"],
+                  segments: ["Stats", "Leaderboard"],
                 },
                 {
                   gameName: "Battlefield 2042",
