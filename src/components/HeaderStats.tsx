@@ -1,8 +1,8 @@
-import { cn } from "@/lib/utils";
-import { baseStatsQueryOptions, outputsCountsLast7DaysQueryOptions } from "@/queries";
 import { useQueries } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { HomeIcon, SendIcon, StarIcon, User2Icon, UserIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { baseStatsQueryOptions, outputsCountsLast7DaysQueryOptions } from "@/queries";
 import { Icons } from "./icons";
 
 export const HeaderStats = () => {
@@ -103,7 +103,11 @@ const StatsBox = ({
   title,
   value,
   icon,
-}: { title: string; value: string | React.ReactNode; icon?: React.ReactNode }) => (
+}: {
+  title: string;
+  value: string | React.ReactNode;
+  icon?: React.ReactNode;
+}) => (
   <Link
     className={cn("group flex flex-col gap-2 rounded border p-4 hover:border-black dark:hover:border-white")}
     to="/data"

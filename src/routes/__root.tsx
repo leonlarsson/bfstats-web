@@ -1,8 +1,8 @@
+import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { lazy } from "react";
 import { Header } from "@/components/Header";
 import { HeaderStats } from "@/components/HeaderStats";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { Outlet, createRootRoute } from "@tanstack/react-router";
-import { lazy } from "react";
 
 const TanStackRouterDevtools =
   process.env.NODE_ENV === "production"

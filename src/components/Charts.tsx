@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { Bar, BarChart as BarChartRaw, Brush, CartesianGrid, Rectangle, Tooltip, XAxis, YAxis } from "recharts";
-import type { CategoricalChartProps } from "recharts/types/chart/generateCategoricalChart";
+import type { CartesianChartProps } from "recharts/types/util/types";
 import type { DBEvent, EventDailyItem, Game, SentDailyItemGames } from "types";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "./ui/chart";
 import { Checkbox } from "./ui/checkbox";
@@ -70,11 +70,15 @@ const DailyChartTimeRange = ({
   idPrefix,
   dataSlice,
   onChange,
-}: { idPrefix: string; dataSlice: DataSliceDays; onChange: (v: DataSliceDays) => void }) => (
+}: {
+  idPrefix: string;
+  dataSlice: DataSliceDays;
+  onChange: (v: DataSliceDays) => void;
+}) => (
   <RadioGroup
     className="mb-2"
     defaultValue={dataSlice.toString()}
-    onValueChange={(v) => onChange(Number.parseInt(v) as DataSliceDays)}
+    onValueChange={(v) => onChange(Number.parseInt(v, 10) as DataSliceDays)}
   >
     <div className="flex items-center space-x-2">
       <RadioGroupItem id={`${idPrefix}-r1`} value={"0"} />
@@ -216,12 +220,12 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
             content={
               <ChartTooltipContent
                 indicator="line"
-                labelFormatter={(label: string) => {
+                labelFormatter={(label) => {
                   return (
                     <div className="flex flex-col gap-1">
                       <span>{selectedGame}</span>
                       <span className="font-medium">{label}</span>
-                      <ChartDataExtraNote selectedGame={selectedGame} date={label} />
+                      <ChartDataExtraNote selectedGame={selectedGame} date={String(label)} />
                     </div>
                   );
                 }}
@@ -370,7 +374,7 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
             content={
               <ChartTooltipContent
                 indicator="line"
-                labelFormatter={(label: string) => {
+                labelFormatter={(label) => {
                   return (
                     <div className="flex flex-col gap-1">
                       <span>{selectedEvent}</span>
@@ -396,7 +400,7 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
   );
 };
 
-type BarChartProps = CategoricalChartProps & { chartConfig?: ChartConfig; total: number };
+type BarChartProps = CartesianChartProps & { chartConfig?: ChartConfig; total: number };
 export const BarChart = (props: BarChartProps) => {
   const barHeight = 32;
   const barGap = 8;
@@ -423,7 +427,6 @@ export const BarChart = (props: BarChartProps) => {
         <YAxis dataKey="name" type="category" hide />
         <Bar
           dataKey="value"
-          layout="vertical"
           fill="var(--color-value)"
           background={{ radius: 0, fill: "hsl(var(--muted))" }}
           radius={[0, 2, 2, 0]}

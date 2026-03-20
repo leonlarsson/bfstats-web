@@ -1,3 +1,9 @@
+import { useQueries, useQuery } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
+import humanizeDuration from "humanize-duration";
+import { HomeIcon, HouseIcon, Loader2Icon, MinusCircleIcon, SendIcon, UserIcon } from "lucide-react";
+import type { ReactNode } from "react";
+import type { DBEvent } from "types";
 import { BarChart, EventsPerDayChartWithFilter, StatsSentPerDayChartWithFilter } from "@/components/Charts";
 import { Icons } from "@/components/icons";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,12 +19,6 @@ import {
   usersCountQueryOptions,
   usersTopQueryOptions,
 } from "@/queries";
-import { useQueries, useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
-import humanizeDuration from "humanize-duration";
-import { HomeIcon, HouseIcon, Loader2Icon, MinusCircleIcon, PlusCircleIcon, SendIcon, UserIcon } from "lucide-react";
-import type { ReactNode } from "react";
-import type { DBEvent } from "types";
 
 export const Route = createFileRoute("/data")({
   component: DataComponent,
@@ -349,16 +349,16 @@ const RecentOutputs = () => {
   return (
     <div className="flex flex-col">
       <ScrollArea type="always" className="h-[370px] rounded pr-4">
-        {outputs.map((output, i) => (
+        {outputs.map((output) => (
           <div
-            key={`${i}-${output.date}`}
+            key={output.date}
             className="flex flex-wrap justify-between rounded p-1 even:bg-neutral-200 dark:even:bg-neutral-900"
           >
             <span className="flex items-center gap-2">
               <SendIcon className="inline size-4" /> {output.game} {output.segment} - {output.language}
             </span>
             <span title={new Date(`${output.date} UTC`).toLocaleString()}>
-              {humanizeDuration(new Date(`${output.date} UTC`).getTime() - new Date().getTime(), {
+              {humanizeDuration(new Date(`${output.date} UTC`).getTime() - Date.now(), {
                 round: true,
                 units: ["d", "h", "m"],
               })}{" "}
@@ -424,14 +424,14 @@ const RecentEvents = () => {
   return (
     <div className="flex flex-col">
       <ScrollArea type="always" className="h-[370px] rounded pr-4">
-        {events.map((event, i) => (
+        {events.map((event) => (
           <div
-            key={`${i}-${event.date}`}
+            key={event.date}
             className="flex flex-wrap justify-between rounded p-1 even:bg-neutral-200 dark:even:bg-neutral-900"
           >
             <span className="flex items-center gap-2">{renderEventTitle(event.event)}</span>
             <span title={new Date(`${event.date} UTC`).toLocaleString()}>
-              {humanizeDuration(new Date(`${event.date} UTC`).getTime() - new Date().getTime(), {
+              {humanizeDuration(new Date(`${event.date} UTC`).getTime() - Date.now(), {
                 round: true,
                 units: ["d", "h", "m"],
               })}{" "}
@@ -459,7 +459,12 @@ const StatCard = ({
   description,
   cardClassName,
   children,
-}: { title: string; description?: string; cardClassName?: string; children: ReactNode }) => (
+}: {
+  title: string;
+  description?: string;
+  cardClassName?: string;
+  children: ReactNode;
+}) => (
   <Card className={cardClassName}>
     <CardHeader>
       <CardTitle className="text-xl">{title}</CardTitle>

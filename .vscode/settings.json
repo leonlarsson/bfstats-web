@@ -9,6 +9,8 @@
     "**/routeTree.gen.ts": true
   },
 
+  "tailwindCSS.lint.suggestCanonicalClasses": "ignore",
+
   "editor.formatOnSave": true,
     "editor.defaultFormatter": "biomejs.biome",
     "editor.codeActionsOnSave": {
