@@ -79,3 +79,25 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Recharts brush styling */
+.recharts-brush-slide {
+  fill: hsl(var(--chart-1));
+  fill-opacity: 0.1;
+}
+.recharts-brush > rect:first-child {
+  fill: transparent;
+  stroke: hsl(var(--border));
+}
+.recharts-brush-traveller rect {
+  fill: hsl(var(--background));
+  stroke: hsl(var(--border));
+}
+.recharts-brush text {
+  fill: hsl(var(--muted-foreground));
+  font-size: 0.65rem;
+}
+.brush-disabled,
+.brush-disabled * {
+  cursor: not-allowed !important;
+}

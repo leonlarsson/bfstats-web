@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-import { useMemo } from "react";
-import { Bar, BarChart as BarChartRaw, CartesianGrid, Rectangle, Tooltip, XAxis, YAxis } from "recharts";
+import { useCallback, useMemo, useState } from "react";
+import { Bar, BarChart as BarChartRaw, Brush, CartesianGrid, Rectangle, Tooltip, XAxis, YAxis } from "recharts";
 import type { CategoricalChartProps } from "recharts/types/chart/generateCategoricalChart";
 import type { DBEvent, EventDailyItem, Game, SentDailyItemGames } from "types";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "./ui/chart";
@@ -8,6 +7,89 @@ import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+
+type ChartItem = { date: string; value: number; ts: number };
+
+const aggregateByMonth = (data: ChartItem[]): ChartItem[] => {
+  const map = new Map<string, ChartItem>();
+  for (const item of data) {
+    const d = new Date(item.ts);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    if (!map.has(key)) {
+      const firstOfMonth = new Date(d.getFullYear(), d.getMonth(), 1);
+      map.set(key, {
+        ts: firstOfMonth.getTime(),
+        date: firstOfMonth.toLocaleDateString("en", { year: "numeric", month: "short" }),
+        value: 0,
+      });
+    }
+    map.get(key)!.value += item.value;
+  }
+  return Array.from(map.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([, item]) => item);
+};
+
+type DataSliceDays = 0 | -30 | -7;
+
+const useBrush = (chartData: ChartItem[], useMonthly: boolean) => {
+  const [brushRange, setBrushRange] = useState<{ start: number; end: number } | null>(null);
+
+  const brushIndices = useMemo(() => {
+    const last = chartData.length - 1;
+    if (!brushRange || last < 0) return { startIndex: 0, endIndex: last };
+    let startIndex = chartData.findLastIndex((d) => d.ts <= brushRange.start);
+    let endIndex = chartData.findLastIndex((d) => d.ts <= brushRange.end);
+    if (startIndex === -1) startIndex = 0;
+    if (endIndex === -1) endIndex = last;
+    return { startIndex, endIndex: Math.min(endIndex, last) };
+  }, [brushRange, chartData]);
+
+  const handleBrushChange = useCallback(
+    ({ startIndex, endIndex }: { startIndex?: number; endIndex?: number }) => {
+      if (startIndex == null || endIndex == null) return;
+      const start = chartData[startIndex]?.ts;
+      const endItem = chartData[endIndex];
+      if (start == null || !endItem) return;
+      let end = endItem.ts;
+      if (useMonthly) {
+        const d = new Date(endItem.ts);
+        end = new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59, 999).getTime();
+      }
+      setBrushRange({ start, end });
+    },
+    [chartData, useMonthly],
+  );
+
+  const resetBrush = useCallback(() => setBrushRange(null), []);
+
+  return { brushIndices, handleBrushChange, resetBrush };
+};
+
+const DailyChartTimeRange = ({
+  idPrefix,
+  dataSlice,
+  onChange,
+}: { idPrefix: string; dataSlice: DataSliceDays; onChange: (v: DataSliceDays) => void }) => (
+  <RadioGroup
+    className="mb-2"
+    defaultValue={dataSlice.toString()}
+    onValueChange={(v) => onChange(Number.parseInt(v) as DataSliceDays)}
+  >
+    <div className="flex items-center space-x-2">
+      <RadioGroupItem id={`${idPrefix}-r1`} value={"0"} />
+      <Label htmlFor={`${idPrefix}-r1`}>Since Jan 1, 2023</Label>
+    </div>
+    <div className="flex items-center space-x-2">
+      <RadioGroupItem id={`${idPrefix}-r2`} value={"-30"} />
+      <Label htmlFor={`${idPrefix}-r2`}>Last 30 days</Label>
+    </div>
+    <div className="flex items-center space-x-2">
+      <RadioGroupItem id={`${idPrefix}-r3`} value={"-7"} />
+      <Label htmlFor={`${idPrefix}-r3`}>Last 7 days</Label>
+    </div>
+  </RadioGroup>
+);
 
 const logDomainMin = (chartData: { value: number }[]) => {
   const minValue = Math.min(...chartData.map((d) => d.value));
@@ -20,12 +102,11 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
     return data.filter((v, i, a) => a.findIndex((v2) => v2.day === v.day) === i);
   }, [data]);
 
-  // Show all, last 30 days, last 7 days
-  type DataSliceDays = 0 | -30 | -7;
   const [dataSlice, setDataSlice] = useState<DataSliceDays>(-30);
   const [selectedGame, setSelectedGame] = useState<Game | "All games">("All games");
   const [selectedData, setSelectedData] = useState(totalData);
   const [useLogScale, setUseLogScale] = useState(false);
+  const [useMonthly, setUseMonthly] = useState(false);
 
   const handleGameChange = (selectValue: Game | "All games") => {
     setSelectedGame(selectValue);
@@ -33,17 +114,16 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
   };
 
   const chartData = useMemo(() => {
-    const mapped = selectedData.slice(dataSlice).map((x) => ({
-      date: new Date(x.day).toLocaleDateString(),
+    const mapped: ChartItem[] = selectedData.slice(dataSlice || undefined).map((x) => ({
+      ts: new Date(x.day).getTime(),
+      date: new Date(x.day).toLocaleDateString("en"),
       value: selectedGame === "All games" ? x.totalSent : x.sent,
     }));
+    const aggregated = useMonthly ? aggregateByMonth(mapped) : mapped;
+    return useLogScale ? aggregated.filter((d) => d.value > 0) : aggregated;
+  }, [dataSlice, selectedData, selectedGame, useLogScale, useMonthly]);
 
-    if (useLogScale) {
-      return mapped.filter((d) => d.value > 0);
-    }
-
-    return mapped;
-  }, [dataSlice, selectedData, selectedGame, useLogScale]);
+  const { brushIndices, handleBrushChange, resetBrush } = useBrush(chartData, useMonthly);
 
   const hasFilteredZeros = useMemo(() => {
     if (!useLogScale) return false;
@@ -57,26 +137,15 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
 
   return (
     <div>
-      <RadioGroup
-        className="mb-2"
-        defaultValue={dataSlice.toString()}
-        onValueChange={(v) => {
-          setDataSlice(Number.parseInt(v) as DataSliceDays);
+      <DailyChartTimeRange
+        idPrefix="game-sent"
+        dataSlice={dataSlice}
+        onChange={(v) => {
+          setDataSlice(v);
+          resetBrush();
+          setUseMonthly(false);
         }}
-      >
-        <div className="flex items-center space-x-2">
-          <RadioGroupItem id="game-sent-r1" value={"0"} />
-          <Label htmlFor="game-sent-r1">Since Jan 1, 2023</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <RadioGroupItem id="game-sent-r2" value={"-30"} />
-          <Label htmlFor="game-sent-r2">Last 30 days</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <RadioGroupItem id="game-sent-r3" value={"-7"} />
-          <Label htmlFor="game-sent-r3">Last 7 days</Label>
-        </div>
-      </RadioGroup>
+      />
 
       <div className="flex flex-wrap justify-between gap-2 mb-5">
         <Select value={selectedGame} onValueChange={(e: Game | "All games") => handleGameChange(e)}>
@@ -107,9 +176,17 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
           </SelectContent>
         </Select>
 
-        <div className="flex items-center gap-2">
-          <Checkbox id="log-scale-sent" onCheckedChange={(c) => setUseLogScale(!!c.valueOf())} />
-          <Label htmlFor="log-scale-sent">Log scale</Label>
+        <div className="flex items-center gap-4">
+          {dataSlice === 0 && (
+            <div className="flex items-center gap-2">
+              <Checkbox id="monthly-sent" onCheckedChange={(c) => setUseMonthly(!!c.valueOf())} />
+              <Label htmlFor="monthly-sent">Monthly</Label>
+            </div>
+          )}
+          <div className="flex items-center gap-2">
+            <Checkbox id="log-scale-sent" onCheckedChange={(c) => setUseLogScale(!!c.valueOf())} />
+            <Label htmlFor="log-scale-sent">Log scale</Label>
+          </div>
         </div>
       </div>
 
@@ -152,6 +229,15 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
             }
           />
           <Bar isAnimationActive={false} dataKey="value" fill="var(--color-value)" radius={[4, 4, 0, 0]} />
+          <Brush
+            dataKey="date"
+            height={24}
+            travellerWidth={dataSlice === 0 ? 8 : 0}
+            className={dataSlice === 0 ? undefined : "brush-disabled"}
+            style={dataSlice === 0 ? undefined : { opacity: 0 }}
+            {...(dataSlice === 0 ? brushIndices : { startIndex: 0, endIndex: chartData.length - 1 })}
+            onChange={handleBrushChange}
+          />
         </BarChartRaw>
       </ChartContainer>
 
@@ -177,12 +263,11 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
     return data.filter((v, i, a) => a.findIndex((v2) => v2.day === v.day) === i);
   }, [data]);
 
-  // Show all, last 30 days, last 7 days
-  type DataSliceDays = 0 | -30 | -7;
   const [dataSlice, setDataSlice] = useState<DataSliceDays>(-30);
   const [selectedEvent, setSelectedEvent] = useState<DBEvent["event"] | "All events">("All events");
   const [selectedData, setSelectedData] = useState(totalData);
   const [useLogScale, setUseLogScale] = useState(false);
+  const [useMonthly, setUseMonthly] = useState(false);
 
   const handleEventChange = (selectValue: DBEvent["event"] | "All events") => {
     setSelectedEvent(selectValue);
@@ -190,17 +275,16 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
   };
 
   const chartData = useMemo(() => {
-    const mapped = selectedData.slice(dataSlice).map((x) => ({
-      date: new Date(x.day).toLocaleDateString(),
+    const mapped: ChartItem[] = selectedData.slice(dataSlice || undefined).map((x) => ({
+      ts: new Date(x.day).getTime(),
+      date: new Date(x.day).toLocaleDateString("en"),
       value: selectedEvent === "All events" ? x.dailyTotal : x.count,
     }));
+    const aggregated = useMonthly ? aggregateByMonth(mapped) : mapped;
+    return useLogScale ? aggregated.filter((d) => d.value > 0) : aggregated;
+  }, [dataSlice, selectedData, selectedEvent, useLogScale, useMonthly]);
 
-    if (useLogScale) {
-      return mapped.filter((d) => d.value > 0);
-    }
-
-    return mapped;
-  }, [dataSlice, selectedData, selectedEvent, useLogScale]);
+  const { brushIndices, handleBrushChange, resetBrush } = useBrush(chartData, useMonthly);
 
   const hasFilteredZeros = useMemo(() => {
     if (!useLogScale) return false;
@@ -212,26 +296,15 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
 
   return (
     <div>
-      <RadioGroup
-        className="mb-2"
-        defaultValue={dataSlice.toString()}
-        onValueChange={(v) => {
-          setDataSlice(Number.parseInt(v) as DataSliceDays);
+      <DailyChartTimeRange
+        idPrefix="event"
+        dataSlice={dataSlice}
+        onChange={(v) => {
+          setDataSlice(v);
+          resetBrush();
+          setUseMonthly(false);
         }}
-      >
-        <div className="flex items-center space-x-2">
-          <RadioGroupItem id="event-r1" value={"0"} />
-          <Label htmlFor="event-r1">Since Jan 1, 2023</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <RadioGroupItem id="event-r2" value={"-30"} />
-          <Label htmlFor="event-r2">Last 30 days</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <RadioGroupItem id="event-r3" value={"-7"} />
-          <Label htmlFor="event-r3">Last 7 days</Label>
-        </div>
-      </RadioGroup>
+      />
 
       <div className="flex flex-wrap justify-between gap-2 mb-5">
         <Select value={selectedEvent} onValueChange={(e: DBEvent["event"] | "All events") => handleEventChange(e)}>
@@ -257,9 +330,17 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
           </SelectContent>
         </Select>
 
-        <div className="flex items-center gap-2">
-          <Checkbox id="log-scale-events" onCheckedChange={(c) => setUseLogScale(!!c.valueOf())} />
-          <Label htmlFor="log-scale-events">Log scale</Label>
+        <div className="flex items-center gap-4">
+          {dataSlice === 0 && (
+            <div className="flex items-center gap-2">
+              <Checkbox id="monthly-events" onCheckedChange={(c) => setUseMonthly(!!c.valueOf())} />
+              <Label htmlFor="monthly-events">Monthly</Label>
+            </div>
+          )}
+          <div className="flex items-center gap-2">
+            <Checkbox id="log-scale-events" onCheckedChange={(c) => setUseLogScale(!!c.valueOf())} />
+            <Label htmlFor="log-scale-events">Log scale</Label>
+          </div>
         </div>
       </div>
 
@@ -301,6 +382,14 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
             }
           />
           <Bar isAnimationActive={false} dataKey="value" fill="var(--color-value)" radius={[4, 4, 0, 0]} />
+          <Brush
+            dataKey="date"
+            height={24}
+            travellerWidth={selectedEvent === "All events" ? 8 : 0}
+            style={dataSlice === 0 ? undefined : { opacity: 0 }}
+            {...(dataSlice === 0 ? brushIndices : { startIndex: 0, endIndex: chartData.length - 1 })}
+            onChange={handleBrushChange}
+          />
         </BarChartRaw>
       </ChartContainer>
     </div>
