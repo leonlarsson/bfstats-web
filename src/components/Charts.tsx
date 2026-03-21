@@ -236,6 +236,7 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
           />
           <Bar isAnimationActive={false} dataKey="value" fill="var(--color-value)" radius={[4, 4, 0, 0]} />
           <Brush
+            key={`${dataSlice}-${useLogScale}-${useMonthly}`}
             dataKey="date"
             height={24}
             travellerWidth={dataSlice === 0 ? 8 : 0}
@@ -395,9 +396,11 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
           />
           <Bar isAnimationActive={false} dataKey="value" fill="var(--color-value)" radius={[4, 4, 0, 0]} />
           <Brush
+            key={`${dataSlice}-${useLogScale}-${useMonthly}`}
             dataKey="date"
             height={24}
-            travellerWidth={selectedEvent === "All events" ? 8 : 0}
+            travellerWidth={dataSlice === 0 ? 8 : 0}
+            className={dataSlice === 0 ? undefined : "brush-disabled"}
             style={dataSlice === 0 ? undefined : { opacity: 0 }}
             {...(dataSlice === 0 ? brushIndices : { startIndex: 0, endIndex: chartData.length - 1 })}
             onChange={handleBrushChange}
