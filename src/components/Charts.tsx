@@ -147,7 +147,7 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
         onChange={(v) => {
           setDataSlice(v);
           resetBrush();
-          setUseMonthly(false);
+          setUseMonthly(v === 0);
         }}
       />
 
@@ -183,7 +183,7 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
         <div className="flex items-center gap-4">
           {dataSlice === 0 && (
             <div className="flex items-center gap-2">
-              <Checkbox id="monthly-sent" onCheckedChange={(c) => setUseMonthly(!!c.valueOf())} />
+              <Checkbox id="monthly-sent" checked={useMonthly} onCheckedChange={(c) => setUseMonthly(!!c.valueOf())} />
               <Label htmlFor="monthly-sent">Monthly</Label>
             </div>
           )}
@@ -195,7 +195,9 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
       </div>
 
       {hasFilteredZeros && (
-        <div className="text-sm text-muted-foreground mb-2">Days with zero activity are hidden in log scale.</div>
+        <div className="text-sm text-muted-foreground mb-2">
+          {useMonthly ? "Months" : "Days"} with zero activity are hidden in log scale.
+        </div>
       )}
 
       <ChartContainer
@@ -306,7 +308,7 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
         onChange={(v) => {
           setDataSlice(v);
           resetBrush();
-          setUseMonthly(false);
+          setUseMonthly(v === 0);
         }}
       />
 
@@ -337,7 +339,11 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
         <div className="flex items-center gap-4">
           {dataSlice === 0 && (
             <div className="flex items-center gap-2">
-              <Checkbox id="monthly-events" onCheckedChange={(c) => setUseMonthly(!!c.valueOf())} />
+              <Checkbox
+                id="monthly-events"
+                checked={useMonthly}
+                onCheckedChange={(c) => setUseMonthly(!!c.valueOf())}
+              />
               <Label htmlFor="monthly-events">Monthly</Label>
             </div>
           )}
@@ -349,7 +355,9 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
       </div>
 
       {hasFilteredZeros && (
-        <div className="text-sm text-muted-foreground mb-2">Days with zero activity are hidden in log scale.</div>
+        <div className="text-sm text-muted-foreground mb-2">
+          {useMonthly ? "Months" : "Days"} with zero activity are hidden in log scale.
+        </div>
       )}
 
       <ChartContainer
