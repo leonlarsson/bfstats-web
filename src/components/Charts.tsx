@@ -327,6 +327,8 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
                   "appUserInstall",
                   "appGuildUninstall",
                   "appUserUninstall",
+                  "bfAccountLink",
+                  "bfAccountUnlink",
                 ] satisfies DBEvent["event"][]
               ).map((event) => (
                 <SelectItem key={event} value={event}>

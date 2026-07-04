@@ -1,7 +1,16 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import humanizeDuration from "humanize-duration";
-import { HomeIcon, HouseIcon, Loader2Icon, MinusCircleIcon, SendIcon, UserIcon } from "lucide-react";
+import {
+  HomeIcon,
+  HouseIcon,
+  Link2Icon,
+  Link2OffIcon,
+  Loader2Icon,
+  MinusCircleIcon,
+  SendIcon,
+  UserIcon,
+} from "lucide-react";
 import type { ReactNode } from "react";
 import type { DBEvent } from "types";
 import { BarChart, EventsPerDayChartWithFilter, StatsSentPerDayChartWithFilter } from "@/components/Charts";
@@ -414,6 +423,18 @@ const RecentEvents = () => {
         return (
           <>
             <MinusCircleIcon className="inline size-4" /> Bot was removed from an account
+          </>
+        );
+      case "bfAccountLink":
+        return (
+          <>
+            <Link2Icon className="inline size-4" /> Battlefield account was linked to a Discord account
+          </>
+        );
+      case "bfAccountUnlink":
+        return (
+          <>
+            <Link2OffIcon className="inline size-4" /> Battlefield account was unlinked from a Discord account
           </>
         );
       default:

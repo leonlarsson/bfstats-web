@@ -10,7 +10,13 @@ export type DBOutput = {
 };
 
 export type DBEvent = {
-  event: "appGuildInstall" | "appUserInstall" | "appGuildUninstall" | "appUserUninstall";
+  event:
+    | "appGuildInstall"
+    | "appUserInstall"
+    | "appGuildUninstall"
+    | "appUserUninstall"
+    | "bfAccountLink"
+    | "bfAccountUnlink";
   date: string;
 };
 
