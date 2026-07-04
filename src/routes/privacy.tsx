@@ -8,7 +8,7 @@ function PrivacyComponent() {
   return (
     <div>
       <h1 className="text-3xl font-bold">Privacy Policy</h1>
-      <h5>(Updated April 4, 2025)</h5>
+      <h5>(Updated July 4, 2026)</h5>
 
       <br />
 
@@ -39,6 +39,13 @@ function PrivacyComponent() {
         bot if they are found to be abusing the bot. I store the bot output (stats, image or text format) to continously
         improve the quality of the bot and to correct potential issues. No identifying information is ever shared with
         any parties.
+        <br />
+        <br />
+        Starting July 4, 2026, I optionally allow users to "link" their Battlefield account to their Discord account.
+        This stores the user's Discord ID along the chosen platform and username. This is used to allow users to quickly
+        search for their stats without having to type in their username and platform every time. This data is only
+        stored if the user explicitly chooses to link their account, and can be deleted/unlinked at any time by running
+        /link remove.
       </p>
 
       <br />
