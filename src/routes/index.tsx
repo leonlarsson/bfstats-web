@@ -156,7 +156,7 @@ function HomeComponent() {
         alt="The bot's output."
         className="w-full max-w-2xl"
         height={750}
-        src="/images/example_bf2042.png"
+        src="/images/example_bf6.png"
         width={1200}
       />
     </>
