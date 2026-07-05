@@ -11,8 +11,9 @@ import {
   SendIcon,
   UserIcon,
 } from "lucide-react";
-import type { ReactNode } from "react";
+import { type ReactNode, useMemo } from "react";
 import type { DBEvent } from "types";
+import { ActivityHeatmap } from "@/components/ActivityHeatmap";
 import { BarChart, EventsPerDayChartWithFilter, StatsSentPerDayChartWithFilter } from "@/components/Charts";
 import { Icons } from "@/components/icons";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -202,6 +203,13 @@ const SinceJanuary = () => {
     ],
   });
 
+  const dailyTotals = useMemo(() => {
+    const seen = new Set<string>();
+    return (sentDailyQuery.data ?? [])
+      .filter((d) => (seen.has(d.day) ? false : seen.add(d.day)))
+      .map((d) => ({ day: d.day, value: d.totalSent }));
+  }, [sentDailyQuery.data]);
+
   if (
     countUsersQuery.isLoading ||
     topUsersQuery.isLoading ||
@@ -281,6 +289,10 @@ const SinceJanuary = () => {
           </ScrollArea>
         </StatCard>
       </div>
+
+      <StatCard title="Activity heatmap" description="stats sent per day, since Jan 1, 2023">
+        <ActivityHeatmap data={dailyTotals} />
+      </StatCard>
 
       <StatCard title="Stats sent per day">
         <StatsSentPerDayChartWithFilter data={outputDailyGames} />

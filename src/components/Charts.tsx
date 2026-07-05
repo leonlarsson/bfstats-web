@@ -477,7 +477,8 @@ const chartDataExtraNotes: Partial<Record<Game | "All games", Record<string, str
   "All games": {
     "2025-10-14": "Battlefield 6 stats are available.",
     "2025-10-10": "Battlefield 6 release.",
-    "2025-08-13": "Battlefield 6 Open Beta weekend 1 stats are available.",
+    "2025-08-19": "Battlefield 6 Open Beta weekend 2 stats are available.",
+    "2025-08-14": "Battlefield 6 Open Beta weekend 1 stats are available.",
     "2025-07-31": "Battlefield 6 multiplayer reveal.",
     "2025-07-22": "Battlefield 6 reveal was announced.",
     "2025-02-03": "Battlefield Labs was announced.",
@@ -487,7 +488,7 @@ const chartDataExtraNotes: Partial<Record<Game | "All games", Record<string, str
   },
 };
 
-const getNotesForGameOnDate = (selectedGame: Game | "All games", date: string): string[] => {
+export const getNotesForGameOnDate = (selectedGame: Game | "All games", date: string): string[] => {
   const notes: string[] = [];
 
   // If All games is not selected but it has a note for the date, add it
