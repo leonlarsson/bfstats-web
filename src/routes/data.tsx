@@ -428,13 +428,13 @@ const RecentEvents = () => {
       case "bfAccountLink":
         return (
           <>
-            <Link2Icon className="inline size-4" /> Battlefield account was linked to a Discord account
+            <Link2Icon className="inline size-4" /> Someone linked their Battlefield
           </>
         );
       case "bfAccountUnlink":
         return (
           <>
-            <Link2OffIcon className="inline size-4" /> Battlefield account was unlinked from a Discord account
+            <Link2OffIcon className="inline size-4" /> Someone unlinked their Battlefield account
           </>
         );
       default:
