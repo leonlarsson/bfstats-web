@@ -33,6 +33,9 @@ export const Route = createFileRoute("/data")({
   component: DataComponent,
 });
 
+// Fix for mobile
+const parseUTCDate = (date: string) => new Date(`${date.replace(" ", "T")}Z`);
+
 function DataComponent() {
   return (
     <div>
@@ -366,8 +369,8 @@ const RecentOutputs = () => {
             <span className="flex items-center gap-2">
               <SendIcon className="inline size-4" /> {output.game} {output.segment} - {output.language}
             </span>
-            <span title={new Date(`${output.date} UTC`).toLocaleString()}>
-              {humanizeDuration(new Date(`${output.date} UTC`).getTime() - Date.now(), {
+            <span title={parseUTCDate(output.date).toLocaleString()}>
+              {humanizeDuration(parseUTCDate(output.date).getTime() - Date.now(), {
                 round: true,
                 units: ["d", "h", "m"],
               })}{" "}
@@ -451,8 +454,8 @@ const RecentEvents = () => {
             className="flex flex-wrap justify-between rounded p-1 even:bg-neutral-200 dark:even:bg-neutral-900"
           >
             <span className="flex items-center gap-2">{renderEventTitle(event.event)}</span>
-            <span title={new Date(`${event.date} UTC`).toLocaleString()}>
-              {humanizeDuration(new Date(`${event.date} UTC`).getTime() - Date.now(), {
+            <span title={parseUTCDate(event.date).toLocaleString()}>
+              {humanizeDuration(parseUTCDate(event.date).getTime() - Date.now(), {
                 round: true,
                 units: ["d", "h", "m"],
               })}{" "}
