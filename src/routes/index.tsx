@@ -112,6 +112,37 @@ function HomeComponent() {
         </AccordionItem>
 
         <AccordionItem value="item-3">
+          <AccordionTrigger className="text-lg">Linking your Battlefield account</AccordionTrigger>
+          <AccordionContent>
+            <div className="flex flex-col gap-2">
+              <p>
+                You can link your Battlefield account so you don't have to enter your username and platform every time
+                you run a command. Linking is private, and only you can see or use your linked accounts.
+              </p>
+
+              <p>
+                To link, run <span className="font-semibold">/link add</span>. See more info with{" "}
+                <span className="font-semibold">/link help</span>. You will also see a <b>Link Account</b> button in a
+                stats response:
+              </p>
+
+              <video
+                aria-label="Demonstration of linking a Battlefield account."
+                className="w-full max-w-2xl rounded-lg sm:w-3/4"
+                controls
+                autoPlay
+                muted
+                playsInline
+                preload="metadata"
+              >
+                <source src="/images/linking.mp4" type="video/mp4" />
+                Your browser does not support embedded videos.
+              </video>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="item-4">
           <AccordionTrigger className="text-lg">PSA & Credits</AccordionTrigger>
           <AccordionContent>
             <div className="flex flex-col gap-2">
