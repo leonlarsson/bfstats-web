@@ -1,6 +1,8 @@
 import { type MouseEvent, useEffect, useMemo, useRef, useState } from "react";
+import type { Game, SentDailyItemGames } from "types";
 import { getNotesForGameOnDate } from "@/components/Charts";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
 type HeatmapDay = { day: string; value: number };
@@ -9,6 +11,18 @@ type HoveredCell = { x: number; y: number; date: Date; value: number };
 const DAY_MS = 24 * 60 * 60 * 1000;
 const MIN_OPACITY = 0.12;
 const MAX_OPACITY = 1;
+
+const GAMES = [
+  "Battlefield 6",
+  "Battlefield 2042",
+  "Battlefield V",
+  "Battlefield 1",
+  "Battlefield Hardline",
+  "Battlefield 4",
+  "Battlefield 3",
+  "Battlefield Bad Company 2",
+  "Battlefield 2",
+] satisfies Game[];
 
 // UTC-only: local-time methods here would shift days in timezones behind UTC.
 const toDateOnly = (d: Date) => {
@@ -29,9 +43,21 @@ const percentile = (sorted: number[], p: number) => {
   return sorted[lower]! + (sorted[upper]! - sorted[lower]!) * (index - lower);
 };
 
-export const ActivityHeatmap = ({ data }: { data: HeatmapDay[] }) => {
+export const ActivityHeatmap = ({ data }: { data: SentDailyItemGames[] }) => {
+  const [selectedGame, setSelectedGame] = useState<Game | "All games">("All games");
+
+  const heatmapData = useMemo<HeatmapDay[]>(() => {
+    if (selectedGame === "All games") {
+      const seen = new Set<string>();
+      return data
+        .filter((d) => (seen.has(d.day) ? false : seen.add(d.day)))
+        .map((d) => ({ day: d.day, value: d.totalSent }));
+    }
+    return data.filter((d) => d.game === selectedGame).map((d) => ({ day: d.day, value: d.sent }));
+  }, [data, selectedGame]);
+
   const { weeks, monthLabels, yearLabels, colorLow, colorHigh } = useMemo(() => {
-    if (data.length === 0)
+    if (heatmapData.length === 0)
       return {
         weeks: [] as { date: Date; value: number }[][],
         monthLabels: [],
@@ -40,8 +66,8 @@ export const ActivityHeatmap = ({ data }: { data: HeatmapDay[] }) => {
         colorHigh: 1,
       };
 
-    const valueByDay = new Map(data.map((d) => [d.day, d.value]));
-    const sortedDates = data.map((d) => new Date(d.day)).sort((a, b) => a.getTime() - b.getTime());
+    const valueByDay = new Map(heatmapData.map((d) => [d.day, d.value]));
+    const sortedDates = heatmapData.map((d) => new Date(d.day)).sort((a, b) => a.getTime() - b.getTime());
 
     const start = toDateOnly(sortedDates[0]!);
     start.setUTCDate(start.getUTCDate() - ((start.getUTCDay() + 6) % 7));
@@ -87,7 +113,7 @@ export const ActivityHeatmap = ({ data }: { data: HeatmapDay[] }) => {
     const colorHigh = Math.max(nonZeroSorted[nonZeroSorted.length - 1] ?? colorLow + 1, colorLow + 1);
 
     return { weeks, monthLabels, yearLabels, colorLow, colorHigh };
-  }, [data]);
+  }, [heatmapData]);
 
   const [hovered, setHovered] = useState<HoveredCell | null>(null);
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
@@ -98,8 +124,6 @@ export const ActivityHeatmap = ({ data }: { data: HeatmapDay[] }) => {
     const viewport = scrollAreaRef.current?.querySelector<HTMLDivElement>("[data-radix-scroll-area-viewport]");
     if (viewport) viewport.scrollLeft = viewport.scrollWidth;
   }, [weeks.length]);
-
-  if (weeks.length === 0) return null;
 
   const opacityForValue = (value: number) => {
     if (value <= 0) return 0;
@@ -115,12 +139,28 @@ export const ActivityHeatmap = ({ data }: { data: HeatmapDay[] }) => {
     setHovered({ x: rect.left + rect.width / 2, y: rect.top, date, value });
   };
 
-  const hoveredNotes = hovered ? getNotesForGameOnDate("All games", toKey(hovered.date)) : [];
+  const hoveredNotes = hovered ? getNotesForGameOnDate(selectedGame, toKey(hovered.date)) : [];
 
   const dayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   return (
     <div className="relative">
+      <Select value={selectedGame} onValueChange={(v: Game | "All games") => setSelectedGame(v)}>
+        <SelectTrigger className="mb-3 w-[250px]">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem value="All games">All games</SelectItem>
+            {GAMES.map((game) => (
+              <SelectItem key={game} value={game}>
+                {game}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+
       {/* fixed, not inside the scroll container, so it never gets clipped */}
       {hovered && (
         <div
@@ -135,7 +175,9 @@ export const ActivityHeatmap = ({ data }: { data: HeatmapDay[] }) => {
               timeZone: "UTC",
             })}
           </div>
-          <div className="text-muted-foreground">{hovered.value.toLocaleString("en")} sent</div>
+          <div className="text-muted-foreground">
+            {hovered.value.toLocaleString("en")} sent {selectedGame === "All games" ? "" : `(${selectedGame})`}
+          </div>
           {hoveredNotes.length > 0 && (
             <div className="mt-1 max-w-56 whitespace-normal border-t pt-1 text-muted-foreground">
               {hoveredNotes.map((note, i) => (
@@ -146,61 +188,65 @@ export const ActivityHeatmap = ({ data }: { data: HeatmapDay[] }) => {
         </div>
       )}
 
-      <ScrollArea ref={scrollAreaRef} type="always" className="w-full pb-4">
-        {/* pr-4: room for the last label ("Jul", "2025") to overflow without extending scroll width */}
-        <div className="inline-flex flex-col gap-1 pr-4">
-          <div className="flex gap-1 pl-8 text-xs text-muted-foreground">
-            {weeks.map((week, i) => (
-              <div key={week[0]!.date.toISOString()} className="w-[11px] shrink-0">
-                {monthLabels.find((m) => m.weekIndex === i)?.label}
-              </div>
-            ))}
-          </div>
-
-          <div className="flex gap-1">
-            <div className="flex flex-col gap-1 pr-1 text-xs text-muted-foreground">
-              {dayLabels.map((label, i) => (
-                <div key={`${label}-${i.toString()}`} className="h-[11px] leading-[11px]">
-                  {label}
-                </div>
-              ))}
-            </div>
-
-            {weeks.map((week) => (
-              <div key={week[0]!.date.toISOString()} className="flex shrink-0 flex-col gap-1">
-                {week.map((day) => {
-                  const hasNote = getNotesForGameOnDate("All games", toKey(day.date)).length > 0;
-                  return (
-                    // biome-ignore lint/a11y/noStaticElementInteractions: decorative hover-only tooltip trigger, not keyboard operable
-                    <div
-                      key={day.date.toISOString()}
-                      onMouseEnter={(e) => showTooltip(e, day.date, day.value)}
-                      onMouseLeave={() => setHovered(null)}
-                      className={cn("size-[11px] rounded-[2px]", hasNote && "outline-1 -outline-offset-1")}
-                      style={{
-                        backgroundColor:
-                          day.value === 0 ? "hsl(var(--muted))" : `hsl(var(--chart-1) / ${opacityForValue(day.value)})`,
-                        outlineColor: hasNote ? "hsl(var(--foreground) / 0.15)" : undefined,
-                      }}
-                    />
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-
-          {yearLabels.length > 1 && (
+      {weeks.length > 0 && (
+        <ScrollArea ref={scrollAreaRef} type="always" className="w-full pb-4">
+          {/* pr-4: room for the last label ("Jul", "2025") to overflow without extending scroll width */}
+          <div className="inline-flex flex-col gap-1 pr-4">
             <div className="flex gap-1 pl-8 text-xs text-muted-foreground">
               {weeks.map((week, i) => (
                 <div key={week[0]!.date.toISOString()} className="w-[11px] shrink-0">
-                  {yearLabels.find((y) => y.weekIndex === i)?.label}
+                  {monthLabels.find((m) => m.weekIndex === i)?.label}
                 </div>
               ))}
             </div>
-          )}
-        </div>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
+
+            <div className="flex gap-1">
+              <div className="flex flex-col gap-1 pr-1 text-xs text-muted-foreground">
+                {dayLabels.map((label, i) => (
+                  <div key={`${label}-${i.toString()}`} className="h-[11px] leading-[11px]">
+                    {label}
+                  </div>
+                ))}
+              </div>
+
+              {weeks.map((week) => (
+                <div key={week[0]!.date.toISOString()} className="flex shrink-0 flex-col gap-1">
+                  {week.map((day) => {
+                    const hasNote = getNotesForGameOnDate(selectedGame, toKey(day.date)).length > 0;
+                    return (
+                      // biome-ignore lint/a11y/noStaticElementInteractions: decorative hover-only tooltip trigger, not keyboard operable
+                      <div
+                        key={day.date.toISOString()}
+                        onMouseEnter={(e) => showTooltip(e, day.date, day.value)}
+                        onMouseLeave={() => setHovered(null)}
+                        className={cn("size-[11px] rounded-[2px]", hasNote && "outline-1 -outline-offset-1")}
+                        style={{
+                          backgroundColor:
+                            day.value === 0
+                              ? "hsl(var(--muted))"
+                              : `hsl(var(--chart-1) / ${opacityForValue(day.value)})`,
+                          outlineColor: hasNote ? "hsl(var(--foreground) / 0.15)" : undefined,
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+
+            {yearLabels.length > 1 && (
+              <div className="flex gap-1 pl-8 text-xs text-muted-foreground">
+                {weeks.map((week, i) => (
+                  <div key={week[0]!.date.toISOString()} className="w-[11px] shrink-0">
+                    {yearLabels.find((y) => y.weekIndex === i)?.label}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
+      )}
     </div>
   );
 };
