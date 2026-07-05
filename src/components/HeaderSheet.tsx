@@ -75,7 +75,7 @@ export const HeaderSheet = () => {
               <Icons.twitterX className="size-6" />
             </a>
 
-            <a
+            {/* <a
               className="rounded p-2 opacity-80 hover:bg-neutral-200 dark:hover:bg-neutral-800"
               href="https://bsky.app/profile/leon.ms"
               rel="noreferrer"
@@ -83,7 +83,7 @@ export const HeaderSheet = () => {
               title="Bluesky"
             >
               <Icons.bluesky className="size-6" />
-            </a>
+            </a> */}
 
             <a
               className="rounded p-2 opacity-80 hover:bg-neutral-200 dark:hover:bg-neutral-800"

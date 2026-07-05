@@ -68,7 +68,7 @@ export const Header = () => {
             <Icons.twitterX className="size-6" />
           </a>
 
-          <a
+          {/* <a
             className="rounded p-2 opacity-80 transition-[background-color] hover:bg-neutral-200 dark:hover:bg-neutral-800"
             href="https://bsky.app/profile/leon.ms"
             target="_blank"
@@ -76,10 +76,10 @@ export const Header = () => {
             title="Bluesky"
           >
             <Icons.bluesky className="size-6" />
-          </a>
+          </a> */}
 
           <a
-            className="rounded p-2 opacity-80 transition-[background-color] hover:bg-neutral-200 dark:hover:bg-neutral-800"
+            className="rounded p-2 opacity-80 transition-[background-color] hover:bg-neutral-200 dark:hover:bg-neutral-800 mr-1"
             href="https://github.com/leonlarsson/bfstats-web"
             target="_blank"
             rel="noreferrer"
