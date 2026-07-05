@@ -10,16 +10,18 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 
 type ChartItem = { date: string; value: number; ts: number };
 
+const NOTE_FILL = "color-mix(in srgb, hsl(var(--chart-1)) 65%, hsl(var(--foreground)) 35%)";
+
 const aggregateByMonth = (data: ChartItem[]): ChartItem[] => {
   const map = new Map<string, ChartItem>();
   for (const item of data) {
     const d = new Date(item.ts);
-    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    const key = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
     if (!map.has(key)) {
-      const firstOfMonth = new Date(d.getFullYear(), d.getMonth(), 1);
+      const firstOfMonth = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1));
       map.set(key, {
         ts: firstOfMonth.getTime(),
-        date: firstOfMonth.toLocaleDateString("en", { year: "numeric", month: "short" }),
+        date: firstOfMonth.toLocaleDateString("en", { year: "numeric", month: "short", timeZone: "UTC" }),
         value: 0,
       });
     }
@@ -222,19 +224,36 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
             content={
               <ChartTooltipContent
                 indicator="line"
-                labelFormatter={(label) => {
+                labelFormatter={(label, payload) => {
+                  const item = payload?.[0]?.payload as ChartItem | undefined;
+                  const notes = item ? getNotesForBucket(selectedGame, item.ts, useMonthly) : [];
                   return (
                     <div className="flex flex-col gap-1">
                       <span>{selectedGame}</span>
                       <span className="font-medium">{label}</span>
-                      <ChartDataExtraNote selectedGame={selectedGame} date={String(label)} />
+                      {notes.map((note, i) => (
+                        <div className="text-xs opacity-75" key={`${note}-${i.toString()}`}>
+                          Note: {note}
+                        </div>
+                      ))}
                     </div>
                   );
                 }}
               />
             }
           />
-          <Bar isAnimationActive={false} dataKey="value" fill="var(--color-value)" radius={[4, 4, 0, 0]} />
+          <Bar
+            isAnimationActive={false}
+            dataKey="value"
+            fill="var(--color-value)"
+            radius={[4, 4, 0, 0]}
+            // biome-ignore lint/suspicious/noExplicitAny: recharts shape props aren't meaningfully typeable
+            shape={(shapeProps: any) => {
+              const item = shapeProps.payload as ChartItem;
+              const hasNote = getNotesForBucket(selectedGame, item.ts, useMonthly).length > 0;
+              return <Rectangle {...shapeProps} fill={hasNote ? NOTE_FILL : shapeProps.fill} />;
+            }}
+          />
           <Brush
             key={`${dataSlice}-${useLogScale}-${useMonthly}`}
             dataKey="date"
@@ -300,6 +319,8 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
       return value === 0;
     });
   }, [useLogScale, selectedData, dataSlice, selectedEvent]);
+
+  const notesForAllGames = getAllNotesForGame("All games");
 
   return (
     <div>
@@ -385,18 +406,36 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
             content={
               <ChartTooltipContent
                 indicator="line"
-                labelFormatter={(label) => {
+                labelFormatter={(label, payload) => {
+                  const item = payload?.[0]?.payload as ChartItem | undefined;
+                  const notes = item ? getNotesForBucket("All games", item.ts, useMonthly) : [];
                   return (
                     <div className="flex flex-col gap-1">
                       <span>{selectedEvent}</span>
                       <span className="font-medium">{label}</span>
+                      {notes.map((note, i) => (
+                        <div className="text-xs opacity-75" key={`${note}-${i.toString()}`}>
+                          Note: {note}
+                        </div>
+                      ))}
                     </div>
                   );
                 }}
               />
             }
           />
-          <Bar isAnimationActive={false} dataKey="value" fill="var(--color-value)" radius={[4, 4, 0, 0]} />
+          <Bar
+            isAnimationActive={false}
+            dataKey="value"
+            fill="var(--color-value)"
+            radius={[4, 4, 0, 0]}
+            // biome-ignore lint/suspicious/noExplicitAny: recharts shape props aren't meaningfully typeable
+            shape={(shapeProps: any) => {
+              const item = shapeProps.payload as ChartItem;
+              const hasNote = getNotesForBucket("All games", item.ts, useMonthly).length > 0;
+              return <Rectangle {...shapeProps} fill={hasNote ? NOTE_FILL : shapeProps.fill} />;
+            }}
+          />
           <Brush
             key={`${dataSlice}-${useLogScale}-${useMonthly}`}
             dataKey="date"
@@ -409,6 +448,19 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
           />
         </BarChartRaw>
       </ChartContainer>
+
+      {notesForAllGames.length > 0 && (
+        <details>
+          <summary className="cursor-pointer w-fit">Notes</summary>
+          <div className="text-sm">
+            {notesForAllGames.map((noteEntry, i) => (
+              <div key={`${noteEntry.date}-${noteEntry.note}-${i.toString()}`}>
+                <span className="tabular-nums font-medium"> {noteEntry.date}</span>: {noteEntry.note}
+              </div>
+            ))}
+          </div>
+        </details>
+      )}
     </div>
   );
 };
@@ -505,6 +557,20 @@ export const getNotesForGameOnDate = (selectedGame: Game | "All games", date: st
   return notes;
 };
 
+// Notes for a chart bucket's period (a day, or a whole month when aggregated monthly).
+const getNotesForBucket = (selectedGame: Game | "All games", bucketStartMs: number, useMonthly: boolean) => {
+  const start = new Date(bucketStartMs);
+  const end = useMonthly
+    ? new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + 1, 1))
+    : new Date(bucketStartMs + 24 * 60 * 60 * 1000);
+  return getAllNotesForGame(selectedGame)
+    .filter((n) => {
+      const d = new Date(n.date);
+      return d >= start && d < end;
+    })
+    .map((n) => n.note);
+};
+
 const getAllNotesForGame = (selectedGame: Game | "All games"): { date: string; note: string }[] => {
   const notes: { date: string; note: string }[] = [];
 
@@ -521,23 +587,4 @@ const getAllNotesForGame = (selectedGame: Game | "All games"): { date: string; n
   }
 
   return notes.toSorted((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-};
-
-type ChartDataExtraNoteProps = {
-  selectedGame: Game | "All games";
-  date: string;
-};
-
-const ChartDataExtraNote = ({ selectedGame, date }: ChartDataExtraNoteProps) => {
-  const notes = getNotesForGameOnDate(selectedGame, date);
-  if (!notes.length) return null;
-  return (
-    <>
-      {notes.map((note, i) => (
-        <div className="text-xs opacity-75" key={`${note}-${i.toString()}`}>
-          Note: {note}
-        </div>
-      ))}
-    </>
-  );
 };
