@@ -1,4 +1,4 @@
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import humanizeDuration from "humanize-duration";
 import {
@@ -12,7 +12,7 @@ import {
   UserIcon,
 } from "lucide-react";
 import type { ReactNode } from "react";
-import type { DBEvent } from "types";
+import type { BaseStats, CountsItem, DBEvent, DBOutput, DBUser, EventDailyItem, SentDailyItemGames } from "types";
 import { ActivityHeatmap } from "@/components/ActivityHeatmap";
 import { BarChart, EventsPerDayChartWithFilter, StatsSentPerDayChartWithFilter } from "@/components/Charts";
 import { Icons } from "@/components/icons";
@@ -38,6 +38,45 @@ export const Route = createFileRoute("/data")({
 const parseUTCDate = (date: string) => new Date(`${date.replace(" ", "T")}Z`);
 
 function DataComponent() {
+  const [
+    baseStatsQuery,
+    usersCountQuery,
+    usersTopQuery,
+    outputsCountsQuery,
+    outputsDailyGamesNoGapsQuery,
+    eventsDailyNoGapsQuery,
+    outputsCountsLast7DaysQuery,
+    outputsRecentQuery,
+    eventsRecentQuery,
+  ] = useQueries({
+    queries: [
+      { ...baseStatsQueryOptions, staleTime: Number.POSITIVE_INFINITY },
+      { ...usersCountQueryOptions, staleTime: Number.POSITIVE_INFINITY },
+      { ...usersTopQueryOptions, staleTime: Number.POSITIVE_INFINITY },
+      { ...outputsCountsQueryOptions, staleTime: Number.POSITIVE_INFINITY },
+      { ...outputsDailyGamesNoGapsQueryOptions, staleTime: Number.POSITIVE_INFINITY },
+      { ...eventsDailyNoGapsQueryOptions, staleTime: Number.POSITIVE_INFINITY },
+      { ...outputsCountsLast7DaysQueryOptions, staleTime: Number.POSITIVE_INFINITY },
+      { ...outputsRecentQueryOptions, staleTime: Number.POSITIVE_INFINITY },
+      { ...eventsRecentQueryOptions, staleTime: Number.POSITIVE_INFINITY },
+    ],
+  });
+
+  const queries = [
+    baseStatsQuery,
+    usersCountQuery,
+    usersTopQuery,
+    outputsCountsQuery,
+    outputsDailyGamesNoGapsQuery,
+    eventsDailyNoGapsQuery,
+    outputsCountsLast7DaysQuery,
+    outputsRecentQuery,
+    eventsRecentQuery,
+  ];
+
+  const isLoading = queries.some((query) => query.isLoading);
+  const isError = queries.some((query) => !query.isSuccess);
+
   return (
     <div>
       <span className="text-3xl font-bold">Data</span>
@@ -58,92 +97,86 @@ function DataComponent() {
       </span>
 
       <div className="mt-3">
-        <div>
-          <h4 className="mb-1 text-lg font-bold">
-            <a
-              className="inline-flex items-center gap-2 group"
-              href="https://discord.com/oauth2/authorize?client_id=842768680252997662"
-              rel="noreferrer"
-              target="_blank"
-            >
-              <Icons.discord className="inline size-5 transition-[color,transform] group-hover:text-[#5865F2] group-hover:rotate-12" />{" "}
-              Install count
-            </a>
-          </h4>
-          <InstallCount />
-        </div>
+        {isLoading ? (
+          <LoadingText />
+        ) : isError ? (
+          <ErrorFetchingText />
+        ) : (
+          <>
+            <div>
+              <h4 className="mb-1 text-lg font-bold">
+                <a
+                  className="inline-flex items-center gap-2 group"
+                  href="https://discord.com/oauth2/authorize?client_id=842768680252997662"
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  <Icons.discord className="inline size-5 transition-[color,transform] group-hover:text-[#5865F2] group-hover:rotate-12" />{" "}
+                  Install count
+                </a>
+              </h4>
+              <InstallCount baseStats={baseStatsQuery.data as BaseStats} />
+            </div>
 
-        <hr className="my-6 border-2" />
+            <hr className="my-6 border-2" />
 
-        <div>
-          <h2 className="mb-1 text-2xl font-bold">Total (since May 25, 2021)</h2>
-          <TotalStats />
-        </div>
+            <div>
+              <h2 className="mb-1 text-2xl font-bold">Total (since May 25, 2021)</h2>
+              <TotalStats baseStats={baseStatsQuery.data as BaseStats} />
+            </div>
 
-        <hr className="my-6 border-2" />
+            <hr className="my-6 border-2" />
 
-        <div>
-          <h2 className="mb-1 text-2xl font-bold">Since January 1, 2023</h2>
-          <SinceJanuary />
-        </div>
+            <div>
+              <h2 className="mb-1 text-2xl font-bold">Since January 1, 2023</h2>
+              <SinceJanuary
+                totalUsers={usersCountQuery.data as { totalUsers: number }}
+                topUsers={usersTopQuery.data as DBUser[]}
+                outputsCounts={outputsCountsQuery.data as CountsItem[]}
+                outputDailyGames={outputsDailyGamesNoGapsQuery.data as SentDailyItemGames[]}
+                eventsDaily={eventsDailyNoGapsQuery.data as EventDailyItem[]}
+              />
+            </div>
 
-        <hr className="my-6 border-2" />
+            <hr className="my-6 border-2" />
 
-        <div>
-          <h2 className="mb-1 text-2xl font-bold">Last 7 days</h2>
-          <Last7Days />
-        </div>
+            <div>
+              <h2 className="mb-1 text-2xl font-bold">Last 7 days</h2>
+              <Last7Days outputsCounts={outputsCountsLast7DaysQuery.data as CountsItem[]} />
+            </div>
 
-        <hr className="my-6 border-2" />
+            <hr className="my-6 border-2" />
 
-        <div>
-          <h2 className="mb-1 text-2xl font-bold">Last 20 stats sent</h2>
-          <RecentOutputs />
-        </div>
+            <div>
+              <h2 className="mb-1 text-2xl font-bold">Last 20 stats sent</h2>
+              <RecentOutputs outputs={outputsRecentQuery.data as DBOutput[]} />
+            </div>
 
-        <hr className="my-6 border-2" />
+            <hr className="my-6 border-2" />
 
-        <div>
-          <h2 className="mb-1 text-2xl font-bold">Last 40 events</h2>
-          <RecentEvents />
-        </div>
+            <div>
+              <h2 className="mb-1 text-2xl font-bold">Last 40 events</h2>
+              <RecentEvents events={eventsRecentQuery.data as DBEvent[]} />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
 }
 
-const InstallCount = () => {
-  const query = useQuery({
-    ...baseStatsQueryOptions,
-    staleTime: Number.POSITIVE_INFINITY,
-  });
+const InstallCount = ({ baseStats }: { baseStats: BaseStats }) => (
+  <div className="flex flex-col tabular-nums">
+    <span className="inline-flex items-center gap-2">
+      <HouseIcon className="inline size-5" /> {baseStats.totalGuilds.toLocaleString("en")} Servers
+    </span>
+    <span className="inline-flex items-center gap-2">
+      <UserIcon className="inline size-5" /> {baseStats.totalUserInstalls.toLocaleString("en")} User Installs
+    </span>
+  </div>
+);
 
-  if (query.isLoading) return <LoadingText />;
-  if (!query.isSuccess) return <ErrorFetchingText />;
-
-  return (
-    <div className="flex flex-col tabular-nums">
-      <span className="inline-flex items-center gap-2">
-        <HouseIcon className="inline size-5" /> {query.data.totalGuilds.toLocaleString("en")} Servers
-      </span>
-      <span className="inline-flex items-center gap-2">
-        <UserIcon className="inline size-5" /> {query.data.totalUserInstalls.toLocaleString("en")} User Installs
-      </span>
-    </div>
-  );
-};
-
-const TotalStats = () => {
-  const totalStatsQuery = useQuery({
-    ...baseStatsQueryOptions,
-    staleTime: Number.POSITIVE_INFINITY,
-  });
-
-  if (totalStatsQuery.isLoading) return <LoadingText />;
-  if (!totalStatsQuery.isSuccess) return <ErrorFetchingText />;
-
-  const baseStats = totalStatsQuery.data;
-
+const TotalStats = ({ baseStats }: { baseStats: BaseStats }) => {
   return (
     <>
       <div className="mb-3">
@@ -177,57 +210,19 @@ const TotalStats = () => {
   );
 };
 
-const SinceJanuary = () => {
-  const [countUsersQuery, topUsersQuery, outputCountsQuery, sentDailyQuery, eventsDailyQuery] = useQueries({
-    queries: [
-      {
-        ...usersCountQueryOptions,
-        staleTime: Number.POSITIVE_INFINITY,
-      },
-      {
-        ...usersTopQueryOptions,
-        staleTime: Number.POSITIVE_INFINITY,
-      },
-      {
-        ...outputsCountsQueryOptions,
-        staleTime: Number.POSITIVE_INFINITY,
-      },
-      {
-        ...outputsDailyGamesNoGapsQueryOptions,
-        staleTime: Number.POSITIVE_INFINITY,
-      },
-      {
-        ...eventsDailyNoGapsQueryOptions,
-        staleTime: Number.POSITIVE_INFINITY,
-      },
-    ],
-  });
-
-  if (
-    countUsersQuery.isLoading ||
-    topUsersQuery.isLoading ||
-    outputCountsQuery.isLoading ||
-    sentDailyQuery.isLoading ||
-    eventsDailyQuery.isLoading
-  )
-    return <LoadingText />;
-  if (
-    !countUsersQuery.isSuccess ||
-    !topUsersQuery.isSuccess ||
-    !outputCountsQuery.isSuccess ||
-    !sentDailyQuery.isSuccess ||
-    !eventsDailyQuery.isSuccess
-  )
-    return <ErrorFetchingText />;
-
-  const [totalUsers, topUsers, outputsCounts, outputDailyGames, eventsDaily] = [
-    countUsersQuery.data,
-    topUsersQuery.data,
-    outputCountsQuery.data,
-    sentDailyQuery.data,
-    eventsDailyQuery.data,
-  ];
-
+const SinceJanuary = ({
+  totalUsers,
+  topUsers,
+  outputsCounts,
+  outputDailyGames,
+  eventsDaily,
+}: {
+  totalUsers: { totalUsers: number };
+  topUsers: DBUser[];
+  outputsCounts: CountsItem[];
+  outputDailyGames: SentDailyItemGames[];
+  eventsDaily: EventDailyItem[];
+}) => {
   const games = outputsCounts.filter((x) => x.category === "game");
   const segments = outputsCounts.filter((x) => x.category === "segment");
   const languages = outputsCounts.filter((x) => x.category === "language");
@@ -298,18 +293,10 @@ const SinceJanuary = () => {
   );
 };
 
-const Last7Days = () => {
-  const query = useQuery({
-    ...outputsCountsLast7DaysQueryOptions,
-    staleTime: Number.POSITIVE_INFINITY,
-  });
-
-  if (query.isLoading) return <LoadingText />;
-  if (!query.isSuccess) return <ErrorFetchingText />;
-
-  const games = query.data.filter((x) => x.category === "game");
-  const segments = query.data.filter((x) => x.category === "segment");
-  const languages = query.data.filter((x) => x.category === "language");
+const Last7Days = ({ outputsCounts }: { outputsCounts: CountsItem[] }) => {
+  const games = outputsCounts.filter((x) => x.category === "game");
+  const segments = outputsCounts.filter((x) => x.category === "segment");
+  const languages = outputsCounts.filter((x) => x.category === "language");
   const totalSent = games.reduce((a, b) => a + b.sent, 0);
 
   return (
@@ -352,17 +339,7 @@ const Last7Days = () => {
   );
 };
 
-const RecentOutputs = () => {
-  const recentOutputsQuery = useQuery({
-    ...outputsRecentQueryOptions,
-    staleTime: Number.POSITIVE_INFINITY,
-  });
-
-  if (recentOutputsQuery.isLoading) return <LoadingText />;
-  if (!recentOutputsQuery.isSuccess) return <ErrorFetchingText />;
-
-  const outputs = recentOutputsQuery.data;
-
+const RecentOutputs = ({ outputs }: { outputs: DBOutput[] }) => {
   return (
     <div className="flex flex-col">
       <ScrollArea type="always" className="h-[370px] rounded pr-4">
@@ -388,25 +365,7 @@ const RecentOutputs = () => {
   );
 };
 
-const RecentEvents = () => {
-  const [recentEventsQuery, dailyEventsQuery] = useQueries({
-    queries: [
-      {
-        ...eventsRecentQueryOptions,
-        staleTime: Number.POSITIVE_INFINITY,
-      },
-      {
-        ...eventsDailyNoGapsQueryOptions,
-        staleTime: Number.POSITIVE_INFINITY,
-      },
-    ],
-  });
-
-  if (recentEventsQuery.isLoading || dailyEventsQuery.isLoading) return <LoadingText />;
-  if (!recentEventsQuery.isSuccess || !dailyEventsQuery.isSuccess) return <ErrorFetchingText />;
-
-  const events = recentEventsQuery.data;
-
+const RecentEvents = ({ events }: { events: DBEvent[] }) => {
   const renderEventTitle = (eventName: DBEvent["event"]) => {
     switch (eventName) {
       case "appGuildInstall":
