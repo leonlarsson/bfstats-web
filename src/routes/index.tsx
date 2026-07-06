@@ -25,7 +25,7 @@ function HomeComponent() {
           </a>{" "}
           is the biggest Battlefield bot on Discord, delivering stats to thousands of users in thousands of servers. It
           was launched in 2021 and has since sent stats to users over{" "}
-          <span className="tabular-nums">{(query.data?.totalStatsSent.total || 230_000).toLocaleString("en")}</span>{" "}
+          <span className="tabular-nums">{(query.data?.totalStatsSent.total || 365_000).toLocaleString("en")}</span>{" "}
           times.
         </p>
 
