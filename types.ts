@@ -27,34 +27,8 @@ export type BaseStats = {
   totalMembers: number;
   totalStatsSent: {
     total: number;
-    games: {
-      "Battlefield 6": number;
-      "Battlefield 2042": number;
-      "Battlefield V": number;
-      "Battlefield 1": number;
-      "Battlefield Hardline": number;
-      "Battlefield 4": number;
-      "Battlefield 3": number;
-      "Battlefield Bad Company 2": number;
-      "Battlefield 2": number;
-    };
-    languages: {
-      English: number;
-      French: number;
-      Italian: number;
-      German: number;
-      Spanish: number;
-      Russian: number;
-      Polish: number;
-      "Brazilian Portuguese": number;
-      Turkish: number;
-      Swedish: number;
-      Norwegian: number;
-      Finnish: number;
-      Arabic: number;
-      Chinese: number;
-      Dutch: number;
-    };
+    games: Record<Game, number>;
+    languages: Record<Language, number>;
   };
   lastUpdated: {
     date: string;

@@ -1,12 +1,13 @@
 import { useCallback, useMemo, useState } from "react";
 import { Bar, BarChart as BarChartRaw, Brush, CartesianGrid, Rectangle, Tooltip, XAxis, YAxis } from "recharts";
 import type { CartesianChartProps } from "recharts/types/util/types";
-import type { DBEvent, EventDailyItem, Game, SentDailyItemGames } from "types";
+import type { EventDailyItem, SentDailyItemGames } from "types";
+import { ALL_EVENTS, type EventOrAll, EventSelect } from "@/components/EventSelect";
+import { ALL_GAMES, type GameOrAll, GameSelect } from "@/components/GameSelect";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "./ui/chart";
 import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
 type ChartItem = { date: string; value: number; ts: number };
 
@@ -109,21 +110,21 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
   }, [data]);
 
   const [dataSlice, setDataSlice] = useState<DataSliceDays>(-30);
-  const [selectedGame, setSelectedGame] = useState<Game | "All games">("All games");
+  const [selectedGame, setSelectedGame] = useState<GameOrAll>(ALL_GAMES);
   const [selectedData, setSelectedData] = useState(totalData);
   const [useLogScale, setUseLogScale] = useState(false);
   const [useMonthly, setUseMonthly] = useState(false);
 
-  const handleGameChange = (selectValue: Game | "All games") => {
+  const handleGameChange = (selectValue: GameOrAll) => {
     setSelectedGame(selectValue);
-    setSelectedData(selectValue === "All games" ? totalData : data.filter((x) => x.game === selectValue));
+    setSelectedData(selectValue === ALL_GAMES ? totalData : data.filter((x) => x.game === selectValue));
   };
 
   const chartData = useMemo(() => {
     const mapped: ChartItem[] = selectedData.slice(dataSlice || undefined).map((x) => ({
       ts: new Date(x.day).getTime(),
       date: new Date(x.day).toLocaleDateString("en"),
-      value: selectedGame === "All games" ? x.totalSent : x.sent,
+      value: selectedGame === ALL_GAMES ? x.totalSent : x.sent,
     }));
     const aggregated = useMonthly ? aggregateByMonth(mapped) : mapped;
     return useLogScale ? aggregated.filter((d) => d.value > 0) : aggregated;
@@ -134,7 +135,7 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
   const hasFilteredZeros = useMemo(() => {
     if (!useLogScale) return false;
     return selectedData.slice(dataSlice).some((x) => {
-      const value = selectedGame === "All games" ? x.totalSent : x.sent;
+      const value = selectedGame === ALL_GAMES ? x.totalSent : x.sent;
       return value === 0;
     });
   }, [useLogScale, selectedData, dataSlice, selectedGame]);
@@ -154,33 +155,7 @@ export const StatsSentPerDayChartWithFilter = ({ data }: { data: SentDailyItemGa
       />
 
       <div className="flex flex-wrap justify-between gap-2 mb-5">
-        <Select value={selectedGame} onValueChange={(e: Game | "All games") => handleGameChange(e)}>
-          <SelectTrigger className="w-[250px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="All games">All games</SelectItem>
-              {(
-                [
-                  "Battlefield 6",
-                  "Battlefield 2042",
-                  "Battlefield V",
-                  "Battlefield 1",
-                  "Battlefield Hardline",
-                  "Battlefield 4",
-                  "Battlefield 3",
-                  "Battlefield Bad Company 2",
-                  "Battlefield 2",
-                ] satisfies Game[]
-              ).map((game) => (
-                <SelectItem key={game} value={game}>
-                  {game}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        <GameSelect value={selectedGame} onValueChange={handleGameChange} />
 
         <div className="flex items-center gap-4">
           {dataSlice === 0 && (
@@ -290,21 +265,21 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
   }, [data]);
 
   const [dataSlice, setDataSlice] = useState<DataSliceDays>(-30);
-  const [selectedEvent, setSelectedEvent] = useState<DBEvent["event"] | "All events">("All events");
+  const [selectedEvent, setSelectedEvent] = useState<EventOrAll>(ALL_EVENTS);
   const [selectedData, setSelectedData] = useState(totalData);
   const [useLogScale, setUseLogScale] = useState(false);
   const [useMonthly, setUseMonthly] = useState(false);
 
-  const handleEventChange = (selectValue: DBEvent["event"] | "All events") => {
+  const handleEventChange = (selectValue: EventOrAll) => {
     setSelectedEvent(selectValue);
-    setSelectedData(selectValue === "All events" ? totalData : data.filter((x) => x.event === selectValue));
+    setSelectedData(selectValue === ALL_EVENTS ? totalData : data.filter((x) => x.event === selectValue));
   };
 
   const chartData = useMemo(() => {
     const mapped: ChartItem[] = selectedData.slice(dataSlice || undefined).map((x) => ({
       ts: new Date(x.day).getTime(),
       date: new Date(x.day).toLocaleDateString("en"),
-      value: selectedEvent === "All events" ? x.dailyTotal : x.count,
+      value: selectedEvent === ALL_EVENTS ? x.dailyTotal : x.count,
     }));
     const aggregated = useMonthly ? aggregateByMonth(mapped) : mapped;
     return useLogScale ? aggregated.filter((d) => d.value > 0) : aggregated;
@@ -315,12 +290,12 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
   const hasFilteredZeros = useMemo(() => {
     if (!useLogScale) return false;
     return selectedData.slice(dataSlice).some((x) => {
-      const value = selectedEvent === "All events" ? x.dailyTotal : x.count;
+      const value = selectedEvent === ALL_EVENTS ? x.dailyTotal : x.count;
       return value === 0;
     });
   }, [useLogScale, selectedData, dataSlice, selectedEvent]);
 
-  const notesForAllGames = getAllNotesForGame("All games");
+  const notesForAllGames = getAllNotesForGame(ALL_GAMES);
 
   return (
     <div>
@@ -335,30 +310,7 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
       />
 
       <div className="flex flex-wrap justify-between gap-2 mb-5">
-        <Select value={selectedEvent} onValueChange={(e: DBEvent["event"] | "All events") => handleEventChange(e)}>
-          <SelectTrigger className="w-[250px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="All events">All events</SelectItem>
-              {(
-                [
-                  "appGuildInstall",
-                  "appUserInstall",
-                  "appGuildUninstall",
-                  "appUserUninstall",
-                  "bfAccountLink",
-                  "bfAccountUnlink",
-                ] satisfies DBEvent["event"][]
-              ).map((event) => (
-                <SelectItem key={event} value={event}>
-                  {event}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        <EventSelect value={selectedEvent} onValueChange={handleEventChange} />
 
         <div className="flex items-center gap-4">
           {dataSlice === 0 && (
@@ -408,7 +360,7 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
                 indicator="line"
                 labelFormatter={(label, payload) => {
                   const item = payload?.[0]?.payload as ChartItem | undefined;
-                  const notes = item ? getNotesForBucket("All games", item.ts, useMonthly) : [];
+                  const notes = item ? getNotesForBucket(ALL_GAMES, item.ts, useMonthly) : [];
                   return (
                     <div className="flex flex-col gap-1">
                       <span>{selectedEvent}</span>
@@ -432,7 +384,7 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
             // biome-ignore lint/suspicious/noExplicitAny: recharts shape props aren't meaningfully typeable
             shape={(shapeProps: any) => {
               const item = shapeProps.payload as ChartItem;
-              const hasNote = getNotesForBucket("All games", item.ts, useMonthly).length > 0;
+              const hasNote = getNotesForBucket(ALL_GAMES, item.ts, useMonthly).length > 0;
               return <Rectangle {...shapeProps} fill={hasNote ? NOTE_FILL : shapeProps.fill} />;
             }}
           />
@@ -525,8 +477,8 @@ export const BarChart = (props: BarChartProps) => {
   );
 };
 
-const chartDataExtraNotes: Partial<Record<Game | "All games", Record<string, string>>> = {
-  "All games": {
+const chartDataExtraNotes: Partial<Record<GameOrAll, Record<string, string>>> = {
+  [ALL_GAMES]: {
     "2025-10-14": "Battlefield 6 stats are available.",
     "2025-10-10": "Battlefield 6 release.",
     "2025-08-19": "Battlefield 6 Open Beta weekend 2 stats are available.",
@@ -541,12 +493,12 @@ const chartDataExtraNotes: Partial<Record<Game | "All games", Record<string, str
   },
 };
 
-export const getNotesForGameOnDate = (selectedGame: Game | "All games", date: string): string[] => {
+export const getNotesForGameOnDate = (selectedGame: GameOrAll, date: string): string[] => {
   const notes: string[] = [];
 
   // If All games is not selected but it has a note for the date, add it
-  if (selectedGame !== "All games" && chartDataExtraNotes["All games"]?.[date]) {
-    notes.push(chartDataExtraNotes["All games"][date]!);
+  if (selectedGame !== ALL_GAMES && chartDataExtraNotes[ALL_GAMES]?.[date]) {
+    notes.push(chartDataExtraNotes[ALL_GAMES][date]!);
   }
 
   // Add note for selected game
@@ -558,7 +510,7 @@ export const getNotesForGameOnDate = (selectedGame: Game | "All games", date: st
 };
 
 // Notes for a chart bucket's period (a day, or a whole month when aggregated monthly).
-const getNotesForBucket = (selectedGame: Game | "All games", bucketStartMs: number, useMonthly: boolean) => {
+const getNotesForBucket = (selectedGame: GameOrAll, bucketStartMs: number, useMonthly: boolean) => {
   const start = new Date(bucketStartMs);
   const end = useMonthly
     ? new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + 1, 1))
@@ -571,12 +523,12 @@ const getNotesForBucket = (selectedGame: Game | "All games", bucketStartMs: numb
     .map((n) => n.note);
 };
 
-const getAllNotesForGame = (selectedGame: Game | "All games"): { date: string; note: string }[] => {
+const getAllNotesForGame = (selectedGame: GameOrAll): { date: string; note: string }[] => {
   const notes: { date: string; note: string }[] = [];
 
   // Add notes for All games
-  if (selectedGame !== "All games") {
-    for (const noteEntry of Object.entries(chartDataExtraNotes["All games"] ?? {})) {
+  if (selectedGame !== ALL_GAMES) {
+    for (const noteEntry of Object.entries(chartDataExtraNotes[ALL_GAMES] ?? {})) {
       notes.push({ date: noteEntry[0], note: noteEntry[1] });
     }
   }

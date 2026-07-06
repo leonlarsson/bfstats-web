@@ -1,8 +1,8 @@
 import { type MouseEvent, useEffect, useMemo, useRef, useState } from "react";
-import type { Game, SentDailyItemGames } from "types";
+import type { SentDailyItemGames } from "types";
 import { getNotesForGameOnDate } from "@/components/Charts";
+import { ALL_GAMES, type GameOrAll, GameSelect } from "@/components/GameSelect";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
 type HeatmapDay = { day: string; value: number };
@@ -11,18 +11,6 @@ type HoveredCell = { x: number; y: number; date: Date; value: number };
 const DAY_MS = 24 * 60 * 60 * 1000;
 const MIN_OPACITY = 0.12;
 const MAX_OPACITY = 1;
-
-const GAMES = [
-  "Battlefield 6",
-  "Battlefield 2042",
-  "Battlefield V",
-  "Battlefield 1",
-  "Battlefield Hardline",
-  "Battlefield 4",
-  "Battlefield 3",
-  "Battlefield Bad Company 2",
-  "Battlefield 2",
-] satisfies Game[];
 
 // UTC-only: local-time methods here would shift days in timezones behind UTC.
 const toDateOnly = (d: Date) => {
@@ -44,10 +32,10 @@ const percentile = (sorted: number[], p: number) => {
 };
 
 export const ActivityHeatmap = ({ data }: { data: SentDailyItemGames[] }) => {
-  const [selectedGame, setSelectedGame] = useState<Game | "All games">("All games");
+  const [selectedGame, setSelectedGame] = useState<GameOrAll>(ALL_GAMES);
 
   const heatmapData = useMemo<HeatmapDay[]>(() => {
-    if (selectedGame === "All games") {
+    if (selectedGame === ALL_GAMES) {
       const seen = new Set<string>();
       return data
         .filter((d) => (seen.has(d.day) ? false : seen.add(d.day)))
@@ -145,21 +133,7 @@ export const ActivityHeatmap = ({ data }: { data: SentDailyItemGames[] }) => {
 
   return (
     <div className="relative">
-      <Select value={selectedGame} onValueChange={(v: Game | "All games") => setSelectedGame(v)}>
-        <SelectTrigger className="mb-3 w-[250px]">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectItem value="All games">All games</SelectItem>
-            {GAMES.map((game) => (
-              <SelectItem key={game} value={game}>
-                {game}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+      <GameSelect value={selectedGame} onValueChange={setSelectedGame} className="mb-3 w-[250px]" />
 
       {/* fixed, not inside the scroll container, so it never gets clipped */}
       {hovered && (
@@ -176,7 +150,7 @@ export const ActivityHeatmap = ({ data }: { data: SentDailyItemGames[] }) => {
             })}
           </div>
           <div className="text-muted-foreground">
-            {hovered.value.toLocaleString("en")} sent {selectedGame === "All games" ? "" : `(${selectedGame})`}
+            {hovered.value.toLocaleString("en")} sent {selectedGame === ALL_GAMES ? "" : `(${selectedGame})`}
           </div>
           {hoveredNotes.length > 0 && (
             <div className="mt-1 max-w-56 whitespace-normal border-t pt-1 text-muted-foreground">
