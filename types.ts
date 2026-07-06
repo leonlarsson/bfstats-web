@@ -97,7 +97,9 @@ export type Language =
   | "Turkish"
   | "Swedish"
   | "Norwegian"
+  | "Danish"
   | "Finnish"
   | "Arabic"
   | "Chinese"
-  | "Dutch";
+  | "Dutch"
+  | "Japanese";
