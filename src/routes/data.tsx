@@ -395,7 +395,7 @@ const RecentEvents = ({ events }: { events: DBEvent[] }) => {
       case "bfAccountLink":
         return (
           <>
-            <Link2Icon className="inline size-4" /> Someone linked their Battlefield
+            <Link2Icon className="inline size-4" /> Someone linked their Battlefield account
           </>
         );
       case "bfAccountUnlink":
