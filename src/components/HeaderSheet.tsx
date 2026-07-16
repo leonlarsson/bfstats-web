@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { CtaButton } from "./CtaButton";
 import { DISCORD_INVITE_URL, Wordmark } from "./Header";
 import { Icons } from "./icons";
 import { ThemeToggle } from "./ThemeToggle";
@@ -48,15 +49,10 @@ export const HeaderSheet = () => {
           ))}
         </nav>
 
-        <a
-          className="clip-btn inline-flex h-10 w-full items-center justify-center gap-2 bg-primary px-4 text-sm font-bold text-primary-foreground"
-          href={DISCORD_INVITE_URL}
-          rel="noreferrer"
-          target="_blank"
-        >
+        <CtaButton className="w-full" href={DISCORD_INVITE_URL} rel="noreferrer" size="sm" target="_blank">
           <Icons.discord className="size-4" />
           Add to Discord
-        </a>
+        </CtaButton>
 
         <div className="mt-6 flex items-center gap-1">
           <a

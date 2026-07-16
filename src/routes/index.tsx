@@ -4,6 +4,7 @@ import { ArrowRightIcon, HomeIcon, ImageIcon, LockIcon, SendIcon, TerminalIcon, 
 import { type ReactNode, useState } from "react";
 import { BotCommand } from "@/components/BotCommand";
 import { CountUp } from "@/components/CountUp";
+import { CtaButton } from "@/components/CtaButton";
 import type { GalleryImage } from "@/components/Gallery";
 import { GalleryStrip, imageForGame, Lightbox } from "@/components/Gallery";
 import { DISCORD_INVITE_URL } from "@/components/Header";
@@ -18,18 +19,19 @@ export const Route = createFileRoute("/")({
 });
 
 const GAMES = [
-  { name: "Battlefield 6", command: "/bf6", segments: ["Stats", "Leaderboard"] },
+  { name: "Battlefield 6", command: "/bf6", mark: "6", segments: ["Stats", "Leaderboard"] },
   {
     name: "Battlefield 2042",
     command: "/bf2042",
+    mark: "2042",
     segments: ["Stats", "Leaderboard", "Servers", "Experience", "Playercard"],
   },
-  { name: "Battlefield V", command: "/bfv", segments: ["Stats", "Leaderboard"] },
-  { name: "Battlefield 1", command: "/bf1", segments: ["Stats", "Morse"] },
-  { name: "Battlefield Hardline", command: "/bfh", segments: ["Stats"] },
-  { name: "Battlefield 4", command: "/bf4", segments: ["Stats"] },
-  { name: "Battlefield 3", command: "/bf3", segments: ["Stats"] },
-  { name: "Battlefield 2", command: "/bf2", segments: ["Stats"] },
+  { name: "Battlefield V", command: "/bfv", mark: "V", segments: ["Stats", "Leaderboard"] },
+  { name: "Battlefield 1", command: "/bf1", mark: "1", segments: ["Stats", "Morse"] },
+  { name: "Battlefield Hardline", command: "/bfh", mark: "H", segments: ["Stats"] },
+  { name: "Battlefield 4", command: "/bf4", mark: "4", segments: ["Stats"] },
+  { name: "Battlefield 3", command: "/bf3", mark: "3", segments: ["Stats"] },
+  { name: "Battlefield 2", command: "/bf2", mark: "2", segments: ["Stats"] },
 ];
 
 const COMMANDS = [
@@ -87,26 +89,20 @@ function HomeComponent() {
             </p>
 
             <div className="fade-up mt-8 flex flex-wrap items-center gap-3" style={{ animationDelay: "240ms" }}>
-              <a
-                className="clip-btn inline-flex h-12 items-center gap-2 bg-primary px-6 text-base font-bold text-primary-foreground transition-opacity hover:opacity-90"
-                href={DISCORD_INVITE_URL}
-                rel="noreferrer"
-                target="_blank"
-              >
+              <CtaButton className="w-full sm:w-auto" href={DISCORD_INVITE_URL} rel="noreferrer" target="_blank">
                 <Icons.discord className="size-5" />
                 Add to Discord
-              </a>
-              <Link
-                className="clip-btn inline-flex h-12 items-center gap-2 border border-input bg-background/60 px-6 text-base font-semibold backdrop-blur transition-colors hover:bg-accent"
-                to="/data"
-              >
-                Explore live data
-                <ArrowRightIcon className="size-4" />
-              </Link>
+              </CtaButton>
+              <CtaButton asChild className="w-full sm:w-auto" variant="outline">
+                <Link to="/data">
+                  Explore live data
+                  <ArrowRightIcon className="size-4" />
+                </Link>
+              </CtaButton>
             </div>
 
             <dl
-              className="fade-up mt-12 grid grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-4"
+              className="fade-up mt-12 grid grid-cols-2 gap-x-6 gap-y-6 xl:grid-cols-4"
               style={{ animationDelay: "320ms" }}
             >
               <HeroStat
@@ -162,7 +158,7 @@ function HomeComponent() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {GAMES.map((game) => (
             <button
-              className="panel clip-notch-sm group cursor-pointer p-5 text-left transition-colors hover:border-primary/60"
+              className="panel clip-notch-sm group relative cursor-pointer overflow-hidden p-5 text-left transition-colors hover:border-primary/60"
               key={game.name}
               onClick={() => {
                 const image = imageForGame(game.name);
@@ -170,20 +166,39 @@ function HomeComponent() {
               }}
               type="button"
             >
-              <div className="mb-1 flex items-center justify-between font-mono text-xs font-semibold uppercase tracking-widest text-primary">
-                {game.command}
-                <ImageIcon className="size-3.5 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
-              </div>
-              <div className="mb-3 text-lg font-bold">{game.name}</div>
-              <div className="flex flex-wrap gap-1.5">
-                {game.segments.map((segment) => (
-                  <span
-                    className="rounded-sm border bg-muted px-2 py-0.5 font-mono text-[11px] uppercase tracking-wider text-muted-foreground"
-                    key={segment}
-                  >
-                    {segment}
-                  </span>
-                ))}
+              {/* Ghost mark — the game's numeral bleeding off the corner */}
+              <span
+                aria-hidden
+                className="pointer-events-none absolute -right-2 -bottom-6 select-none font-black text-[7.5rem] italic leading-none tracking-tighter text-foreground/[0.07] transition-[color,transform] duration-300 group-hover:-translate-x-1 group-hover:text-primary/25"
+              >
+                {game.mark}
+              </span>
+
+              {/* Corner glow on hover */}
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                style={{
+                  background: "radial-gradient(ellipse 90% 90% at 100% 100%, hsl(var(--primary) / 0.12), transparent 60%)",
+                }}
+              />
+
+              <div className="relative">
+                <div className="mb-1 flex items-center justify-between font-mono text-xs font-semibold uppercase tracking-widest text-primary">
+                  {game.command}
+                  <ImageIcon className="size-3.5 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+                </div>
+                <div className="mb-3 text-lg font-bold">{game.name}</div>
+                <div className="flex flex-wrap gap-1.5">
+                  {game.segments.map((segment) => (
+                    <span
+                      className="rounded-sm border bg-muted px-2 py-0.5 font-mono text-[11px] uppercase tracking-wider text-muted-foreground"
+                      key={segment}
+                    >
+                      {segment}
+                    </span>
+                  ))}
+                </div>
               </div>
             </button>
           ))}
@@ -382,15 +397,10 @@ function HomeComponent() {
               </>
             )}
           </p>
-          <a
-            className="clip-btn mt-8 inline-flex h-12 items-center gap-2 bg-primary px-8 text-base font-bold text-primary-foreground transition-opacity hover:opacity-90"
-            href={DISCORD_INVITE_URL}
-            rel="noreferrer"
-            target="_blank"
-          >
+          <CtaButton className="mt-8 px-8" href={DISCORD_INVITE_URL} rel="noreferrer" target="_blank">
             <Icons.discord className="size-5" />
             Add to Discord
-          </a>
+          </CtaButton>
         </div>
       </section>
     </>

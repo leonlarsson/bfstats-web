@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { CtaButton } from "./CtaButton";
 import { HeaderSheet } from "./HeaderSheet";
 import { Icons } from "./icons";
 import { ThemeToggle } from "./ThemeToggle";
@@ -22,8 +23,8 @@ export const Header = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/85 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between px-4 lg:px-8">
-        <div className="flex items-center gap-8">
-          <Link className="flex items-center gap-3" to="/">
+        <div className="flex min-w-0 items-center gap-3 lg:gap-8">
+          <Link className="flex shrink-0 items-center gap-3" to="/">
             <img
               alt="Battlefield Stats icon"
               className="clip-notch-sm size-9"
@@ -34,11 +35,11 @@ export const Header = () => {
             <Wordmark className="text-lg" />
           </Link>
 
-          <nav className="hidden items-center gap-1 md:flex">
+          <nav className="hidden items-center gap-0.5 md:flex lg:gap-1">
             {NAV_LINKS.map((navLink) => (
               <Link
                 activeProps={{ className: "!text-foreground after:!scale-x-100" }}
-                className="relative px-3 py-2 font-mono text-[13px] font-medium uppercase tracking-widest text-muted-foreground transition-colors after:absolute after:inset-x-3 after:bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-primary after:transition-transform hover:text-foreground hover:after:scale-x-100"
+                className="relative px-2.5 py-2 font-mono text-[13px] font-medium uppercase tracking-widest text-muted-foreground transition-colors after:absolute after:inset-x-2.5 after:bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-primary after:transition-transform hover:text-foreground hover:after:scale-x-100 lg:px-3 lg:after:inset-x-3"
                 key={navLink.to}
                 to={navLink.to}
               >
@@ -48,9 +49,10 @@ export const Header = () => {
           </nav>
         </div>
 
-        <div className="hidden items-center gap-1 md:flex">
+        <div className="hidden shrink-0 items-center gap-1 md:flex">
+          {/* Social icons only get room at lg+ */}
           <a
-            className="rounded p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            className="hidden rounded p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground lg:block"
             href="https://x.com/mozzyfx"
             target="_blank"
             rel="noreferrer"
@@ -60,7 +62,7 @@ export const Header = () => {
           </a>
 
           <a
-            className="rounded p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            className="hidden rounded p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground lg:block"
             href="https://github.com/leonlarsson/bfstats-web"
             target="_blank"
             rel="noreferrer"
@@ -71,15 +73,10 @@ export const Header = () => {
 
           <ThemeToggle />
 
-          <a
-            className="clip-btn ml-2 inline-flex h-9 items-center gap-2 bg-primary px-4 text-sm font-bold text-primary-foreground transition-opacity hover:opacity-90"
-            href={DISCORD_INVITE_URL}
-            rel="noreferrer"
-            target="_blank"
-          >
+          <CtaButton className="ml-2 shrink-0" href={DISCORD_INVITE_URL} rel="noreferrer" size="sm" target="_blank">
             <Icons.discord className="size-4" />
             Add to Discord
-          </a>
+          </CtaButton>
         </div>
 
         <div className="md:hidden">
