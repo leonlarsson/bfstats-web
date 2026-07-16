@@ -1,23 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-  ArrowRightIcon,
-  CheckIcon,
-  CopyIcon,
-  HomeIcon,
-  ImageIcon,
-  LockIcon,
-  SendIcon,
-  TerminalIcon,
-  UsersIcon,
-} from "lucide-react";
+import { ArrowRightIcon, HomeIcon, ImageIcon, LockIcon, SendIcon, TerminalIcon, UsersIcon } from "lucide-react";
 import { type ReactNode, useState } from "react";
+import { BotCommand } from "@/components/BotCommand";
 import { CountUp } from "@/components/CountUp";
 import type { GalleryImage } from "@/components/Gallery";
 import { GalleryStrip, imageForGame, Lightbox } from "@/components/Gallery";
 import { DISCORD_INVITE_URL } from "@/components/Header";
 import { Icons } from "@/components/icons";
 import { LiveFeed } from "@/components/LiveFeed";
+import { Marquee } from "@/components/Marquee";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { baseStatsQueryOptions } from "@/queries";
 
@@ -143,23 +135,18 @@ function HomeComponent() {
       </section>
 
       {/* ============ GAME MARQUEE ============ */}
-      {/* Two identical copies; the track animates -50% of its own width, so the loop is seamless. */}
-      <div className="overflow-hidden border-b bg-card py-3" aria-hidden>
-        <div className="animate-marquee flex w-max">
-          {[0, 1].map((copy) => (
-            <div className="flex shrink-0" key={copy}>
-              {GAMES.map((game) => (
-                <span
-                  className="flex items-center gap-8 whitespace-nowrap pr-8 font-mono text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground"
-                  key={game.name}
-                >
-                  {game.name}
-                  <span className="text-primary">✚</span>
-                </span>
-              ))}
-            </div>
+      <div className="border-b bg-card py-3">
+        <Marquee>
+          {GAMES.map((game) => (
+            <span
+              className="flex items-center gap-8 whitespace-nowrap pr-8 font-mono text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground"
+              key={game.name}
+            >
+              {game.name}
+              <span className="text-primary">✚</span>
+            </span>
           ))}
-        </div>
+        </Marquee>
       </div>
 
       {/* ============ SUPPORTED GAMES ============ */}
@@ -228,8 +215,8 @@ function HomeComponent() {
             title="Run a command"
             description={
               <>
-                Type a game command like <CommandChip command="/bf6 stats" /> or{" "}
-                <CommandChip command="/bf2042 servers" />. Run <CommandChip command="/help" /> for the full arsenal.
+                Type a game command like <BotCommand command="/bf6 stats" /> or <BotCommand command="/bf2042 servers" />
+                . Run <BotCommand command="/help" /> for the full arsenal.
               </>
             }
           />
@@ -250,7 +237,7 @@ function HomeComponent() {
           </div>
           <div className="flex flex-wrap gap-2 p-5">
             {COMMANDS.map((command) => (
-              <CopyCommandChip command={command} key={command} />
+              <BotCommand command={command} key={command} variant="chip" />
             ))}
           </div>
         </div>
@@ -278,10 +265,10 @@ function HomeComponent() {
                 Private — only you can see or use your linked accounts
               </LinkFeature>
               <LinkFeature icon={<TerminalIcon className="size-4" />}>
-                <CommandChip command="/link add" /> links in seconds · <CommandChip command="/link help" /> for details
+                <BotCommand command="/link add" /> links in seconds · <BotCommand command="/link help" /> for details
               </LinkFeature>
               <LinkFeature icon={<TerminalIcon className="size-4" />}>
-                <CommandChip command="/link remove" /> unlinks at any time — no questions asked
+                <BotCommand command="/link remove" /> unlinks at any time — no questions asked
               </LinkFeature>
             </ul>
           </div>
@@ -309,19 +296,19 @@ function HomeComponent() {
             <AccordionContent>
               <div className="mb-3 flex flex-wrap gap-2">
                 {COMMANDS.map((command) => (
-                  <CommandChip command={command} key={command} />
+                  <BotCommand command={command} key={command} variant="chip" />
                 ))}
               </div>
-              Run <CommandChip command="/help" /> in Discord for the full, always-up-to-date list. In addition to stats
-              and leaderboards, some games have extras — like <CommandChip command="/bf2042 experience" /> for Portal
-              Experiences and <CommandChip command="/bf2042 servers" /> to search live servers.
+              Run <BotCommand command="/help" /> in Discord for the full, always-up-to-date list. In addition to stats
+              and leaderboards, some games have extras — like <BotCommand command="/bf2042 experience" /> for Portal
+              Experiences and <BotCommand command="/bf2042 servers" /> to search live servers.
             </AccordionContent>
           </AccordionItem>
 
           <AccordionItem value="usage">
             <AccordionTrigger className="text-lg font-semibold">Can I see my own usage?</AccordionTrigger>
             <AccordionContent>
-              Yes — run <CommandChip command="/usage" /> to see how many times you've used the bot, grouped by game.
+              Yes — run <BotCommand command="/usage" /> to see how many times you've used the bot, grouped by game.
               Global usage is on the{" "}
               <Link className="link" to="/data">
                 Data page
@@ -462,35 +449,3 @@ const LinkFeature = ({ icon, children }: { icon: ReactNode; children: ReactNode 
     <span>{children}</span>
   </li>
 );
-
-const CommandChip = ({ command }: { command: string }) => (
-  <code className="whitespace-nowrap rounded-sm border bg-muted px-1.5 py-0.5 font-mono text-[0.85em] font-medium text-foreground">
-    {command}
-  </code>
-);
-
-const CopyCommandChip = ({ command }: { command: string }) => {
-  const [copied, setCopied] = useState(false);
-
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(command);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } catch {
-      // Clipboard unavailable (permissions/insecure context) — nothing to do.
-    }
-  };
-
-  return (
-    <button
-      className="inline-flex cursor-pointer items-center gap-1.5 rounded-sm border bg-muted px-2.5 py-1 font-mono text-xs font-medium transition-colors hover:border-primary/60"
-      onClick={copy}
-      title={`Copy ${command}`}
-      type="button"
-    >
-      {copied ? <CheckIcon className="size-3 text-primary" /> : <CopyIcon className="size-3 text-muted-foreground" />}
-      {command}
-    </button>
-  );
-};

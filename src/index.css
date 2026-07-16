@@ -91,7 +91,8 @@
     transform: translateX(0);
   }
   to {
-    transform: translateX(-50%);
+    /* Set per-instance by the Marquee component (exactly one copy's width) */
+    transform: translateX(var(--marquee-shift, -50%));
   }
 }
 

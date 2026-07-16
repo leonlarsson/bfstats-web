@@ -15,6 +15,7 @@ import {
 import type { ReactNode } from "react";
 import type { BaseStats, CountsItem, DBEvent, DBOutput, DBUser, EventDailyItem, SentDailyItemGames } from "types";
 import { ActivityHeatmap } from "@/components/ActivityHeatmap";
+import { BotCommand } from "@/components/BotCommand";
 import { BarChart, EventsPerDayChartWithFilter, StatsSentPerDayChartWithFilter } from "@/components/Charts";
 import { CountUp } from "@/components/CountUp";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -88,8 +89,8 @@ function DataComponent() {
         <a className="link" href="https://api.battlefieldstats.com/" rel="noreferrer" target="_blank">
           public API
         </a>
-        . To see your personal usage, run the <Code>/usage</Code> command in Discord — it shows your totals grouped by
-        game.
+        . To see your personal usage, run the <BotCommand command="/usage" /> command in Discord — it shows your totals
+        grouped by game.
       </p>
 
       <div className="mt-10">
@@ -165,12 +166,6 @@ function DataComponent() {
     </div>
   );
 }
-
-const Code = ({ children }: { children: ReactNode }) => (
-  <code className="whitespace-nowrap rounded-sm border bg-muted px-1.5 py-0.5 font-mono text-[0.85em] font-medium text-foreground">
-    {children}
-  </code>
-);
 
 const TileRow = ({ baseStats, totalUsers }: { baseStats: BaseStats; totalUsers: { totalUsers: number } }) => (
   <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">

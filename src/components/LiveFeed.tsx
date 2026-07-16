@@ -1,15 +1,6 @@
 import { useQueries } from "@tanstack/react-query";
 import humanizeDuration from "humanize-duration";
-import {
-  HomeIcon,
-  Link2Icon,
-  Link2OffIcon,
-  type LucideIcon,
-  MinusCircleIcon,
-  RadioIcon,
-  SendIcon,
-  UserIcon,
-} from "lucide-react";
+import { HomeIcon, Link2Icon, type LucideIcon, RadioIcon, SendIcon, UserIcon } from "lucide-react";
 import { useMemo } from "react";
 import type { DBEvent, DBOutput } from "types";
 import { eventsRecentQueryOptions, outputsRecentQueryOptions } from "@/queries";
@@ -24,13 +15,11 @@ const shortAgo = (date: string) =>
     units: ["d", "h", "m"],
   });
 
-const EVENT_META: Record<DBEvent["event"], { icon: LucideIcon; label: string; highlight: boolean }> = {
-  appGuildInstall: { icon: HomeIcon, label: "Added to a server", highlight: true },
-  appUserInstall: { icon: UserIcon, label: "Installed to an account", highlight: true },
-  appGuildUninstall: { icon: MinusCircleIcon, label: "Removed from a server", highlight: false },
-  appUserUninstall: { icon: MinusCircleIcon, label: "Removed from an account", highlight: false },
-  bfAccountLink: { icon: Link2Icon, label: "Battlefield account linked", highlight: true },
-  bfAccountUnlink: { icon: Link2OffIcon, label: "Battlefield account unlinked", highlight: false },
+// Only the positive events belong in the feed — uninstalls/unlinks are noise here.
+const EVENT_META: Partial<Record<DBEvent["event"], { icon: LucideIcon; label: string }>> = {
+  appGuildInstall: { icon: HomeIcon, label: "Added to a server" },
+  appUserInstall: { icon: UserIcon, label: "Installed to an account" },
+  bfAccountLink: { icon: Link2Icon, label: "Battlefield account linked" },
 };
 
 type FeedItem = { kind: "output"; date: string; output: DBOutput } | { kind: "event"; date: string; event: DBEvent };
@@ -51,7 +40,9 @@ export const LiveFeed = () => {
       date: output.date,
       output,
     }));
-    const events: FeedItem[] = (eventsQuery.data ?? []).map((event) => ({ kind: "event", date: event.date, event }));
+    const events: FeedItem[] = (eventsQuery.data ?? [])
+      .filter((event) => event.event in EVENT_META)
+      .map((event) => ({ kind: "event", date: event.date, event }));
     return [...outputs, ...events]
       .sort((a, b) => parseUTCDate(b.date).getTime() - parseUTCDate(a.date).getTime())
       .slice(0, 12);
@@ -125,9 +116,7 @@ const EventRow = ({ event }: { event: DBEvent }) => {
   const Icon = meta.icon;
   return (
     <span className="flex min-w-0 items-baseline gap-2">
-      <Icon
-        className={`size-3.5 shrink-0 translate-y-0.5 ${meta.highlight ? "text-primary" : "text-muted-foreground"}`}
-      />
+      <Icon className="size-3.5 shrink-0 translate-y-0.5 text-primary" />
       <span className="truncate text-muted-foreground">{meta.label}</span>
     </span>
   );
