@@ -1,7 +1,18 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import humanizeDuration from "humanize-duration";
-import { RadioIcon, SendIcon } from "lucide-react";
-import { outputsRecentQueryOptions } from "@/queries";
+import {
+  HomeIcon,
+  Link2Icon,
+  Link2OffIcon,
+  type LucideIcon,
+  MinusCircleIcon,
+  RadioIcon,
+  SendIcon,
+  UserIcon,
+} from "lucide-react";
+import { useMemo } from "react";
+import type { DBEvent, DBOutput } from "types";
+import { eventsRecentQueryOptions, outputsRecentQueryOptions } from "@/queries";
 
 // Fix for mobile
 const parseUTCDate = (date: string) => new Date(`${date.replace(" ", "T")}Z`);
@@ -13,10 +24,38 @@ const shortAgo = (date: string) =>
     units: ["d", "h", "m"],
   });
 
-/** Real-time feed of the bot's most recent deliveries, straight from the public API. */
+const EVENT_META: Record<DBEvent["event"], { icon: LucideIcon; label: string; highlight: boolean }> = {
+  appGuildInstall: { icon: HomeIcon, label: "Added to a server", highlight: true },
+  appUserInstall: { icon: UserIcon, label: "Installed to an account", highlight: true },
+  appGuildUninstall: { icon: MinusCircleIcon, label: "Removed from a server", highlight: false },
+  appUserUninstall: { icon: MinusCircleIcon, label: "Removed from an account", highlight: false },
+  bfAccountLink: { icon: Link2Icon, label: "Battlefield account linked", highlight: true },
+  bfAccountUnlink: { icon: Link2OffIcon, label: "Battlefield account unlinked", highlight: false },
+};
+
+type FeedItem = { kind: "output"; date: string; output: DBOutput } | { kind: "event"; date: string; event: DBEvent };
+
+/** Real-time feed of the bot's recent deliveries and install/link events, straight from the public API. */
 export const LiveFeed = () => {
-  const query = useQuery({ ...outputsRecentQueryOptions, refetchInterval: 30_000 });
-  const outputs = query.data?.slice(0, 12);
+  const [outputsQuery, eventsQuery] = useQueries({
+    queries: [
+      { ...outputsRecentQueryOptions, refetchInterval: 30_000 },
+      { ...eventsRecentQueryOptions, refetchInterval: 30_000 },
+    ],
+  });
+
+  const items = useMemo<FeedItem[] | undefined>(() => {
+    if (!outputsQuery.data && !eventsQuery.data) return undefined;
+    const outputs: FeedItem[] = (outputsQuery.data ?? []).map((output) => ({
+      kind: "output",
+      date: output.date,
+      output,
+    }));
+    const events: FeedItem[] = (eventsQuery.data ?? []).map((event) => ({ kind: "event", date: event.date, event }));
+    return [...outputs, ...events]
+      .sort((a, b) => parseUTCDate(b.date).getTime() - parseUTCDate(a.date).getTime())
+      .slice(0, 12);
+  }, [outputsQuery.data, eventsQuery.data]);
 
   return (
     <div className="panel clip-notch flex h-full flex-col">
@@ -32,24 +71,31 @@ export const LiveFeed = () => {
       </div>
 
       <div className="relative flex-1 overflow-hidden px-4 py-2">
-        {outputs ? (
+        {items ? (
           <ul className="divide-y divide-border/60">
-            {outputs.map((output) => (
-              <li className="flex items-baseline justify-between gap-3 py-2 text-sm" key={output.date}>
-                <span className="flex min-w-0 items-baseline gap-2">
-                  <SendIcon className="size-3.5 shrink-0 translate-y-0.5 text-primary" />
-                  <span className="truncate">
-                    <span className="font-medium">{output.game}</span>{" "}
-                    <span className="text-muted-foreground">
-                      {output.segment} · {output.language}
+            {items.map((item, i) => (
+              <li
+                className="flex items-baseline justify-between gap-3 py-2 text-sm"
+                key={`${item.kind}-${item.date}-${i.toString()}`}
+              >
+                {item.kind === "output" ? (
+                  <span className="flex min-w-0 items-baseline gap-2">
+                    <SendIcon className="size-3.5 shrink-0 translate-y-0.5 text-primary" />
+                    <span className="truncate">
+                      <span className="font-medium">{item.output.game}</span>{" "}
+                      <span className="text-muted-foreground">
+                        {item.output.segment} · {item.output.language}
+                      </span>
                     </span>
                   </span>
-                </span>
+                ) : (
+                  <EventRow event={item.event} />
+                )}
                 <span
                   className="shrink-0 font-mono text-xs text-muted-foreground"
-                  title={parseUTCDate(output.date).toLocaleString()}
+                  title={parseUTCDate(item.date).toLocaleString()}
                 >
-                  {shortAgo(output.date)} ago
+                  {shortAgo(item.date)} ago
                 </span>
               </li>
             ))}
@@ -67,8 +113,22 @@ export const LiveFeed = () => {
       </div>
 
       <div className="border-t px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
-        Latest stats delivered by the bot
+        Latest deliveries & events from the bot
       </div>
     </div>
+  );
+};
+
+const EventRow = ({ event }: { event: DBEvent }) => {
+  const meta = EVENT_META[event.event];
+  if (!meta) return null;
+  const Icon = meta.icon;
+  return (
+    <span className="flex min-w-0 items-baseline gap-2">
+      <Icon
+        className={`size-3.5 shrink-0 translate-y-0.5 ${meta.highlight ? "text-primary" : "text-muted-foreground"}`}
+      />
+      <span className="truncate text-muted-foreground">{meta.label}</span>
+    </span>
   );
 };

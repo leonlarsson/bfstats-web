@@ -1,8 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRightIcon, HomeIcon, SendIcon, TerminalIcon, UsersIcon } from "lucide-react";
-import type { ReactNode } from "react";
+import {
+  ArrowRightIcon,
+  CheckIcon,
+  CopyIcon,
+  HomeIcon,
+  ImageIcon,
+  LockIcon,
+  SendIcon,
+  TerminalIcon,
+  UsersIcon,
+} from "lucide-react";
+import { type ReactNode, useState } from "react";
 import { CountUp } from "@/components/CountUp";
+import type { GalleryImage } from "@/components/Gallery";
+import { GalleryStrip, imageForGame, Lightbox } from "@/components/Gallery";
 import { DISCORD_INVITE_URL } from "@/components/Header";
 import { Icons } from "@/components/icons";
 import { LiveFeed } from "@/components/LiveFeed";
@@ -14,19 +26,18 @@ export const Route = createFileRoute("/")({
 });
 
 const GAMES = [
-  { name: "Battlefield 6", command: "/bf6", segments: ["Stats", "Leaderboard"], featured: true },
+  { name: "Battlefield 6", command: "/bf6", segments: ["Stats", "Leaderboard"] },
   {
     name: "Battlefield 2042",
     command: "/bf2042",
     segments: ["Stats", "Leaderboard", "Servers", "Experience", "Playercard"],
-    featured: true,
   },
-  { name: "Battlefield V", command: "/bfv", segments: ["Stats", "Leaderboard"], featured: false },
-  { name: "Battlefield 1", command: "/bf1", segments: ["Stats", "Morse"], featured: false },
-  { name: "Battlefield Hardline", command: "/bfh", segments: ["Stats"], featured: false },
-  { name: "Battlefield 4", command: "/bf4", segments: ["Stats"], featured: false },
-  { name: "Battlefield 3", command: "/bf3", segments: ["Stats"], featured: false },
-  { name: "Battlefield 2", command: "/bf2", segments: ["Stats"], featured: false },
+  { name: "Battlefield V", command: "/bfv", segments: ["Stats", "Leaderboard"] },
+  { name: "Battlefield 1", command: "/bf1", segments: ["Stats", "Morse"] },
+  { name: "Battlefield Hardline", command: "/bfh", segments: ["Stats"] },
+  { name: "Battlefield 4", command: "/bf4", segments: ["Stats"] },
+  { name: "Battlefield 3", command: "/bf3", segments: ["Stats"] },
+  { name: "Battlefield 2", command: "/bf2", segments: ["Stats"] },
 ];
 
 const COMMANDS = [
@@ -50,8 +61,12 @@ function HomeComponent() {
   const query = useQuery({ ...baseStatsQueryOptions, refetchInterval: 15_000 });
   const baseStats = query.data;
 
+  const [lightboxImage, setLightboxImage] = useState<GalleryImage | null>(null);
+
   return (
     <>
+      <Lightbox image={lightboxImage} onClose={() => setLightboxImage(null)} />
+
       {/* ============ HERO ============ */}
       <section className="relative overflow-hidden border-b">
         <div className="bg-grid absolute inset-0" aria-hidden />
@@ -128,16 +143,21 @@ function HomeComponent() {
       </section>
 
       {/* ============ GAME MARQUEE ============ */}
+      {/* Two identical copies; the track animates -50% of its own width, so the loop is seamless. */}
       <div className="overflow-hidden border-b bg-card py-3" aria-hidden>
-        <div className="animate-marquee flex w-max gap-8">
-          {[...GAMES, ...GAMES].map((game, i) => (
-            <span
-              className="flex items-center gap-8 whitespace-nowrap font-mono text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground"
-              key={`${game.name}-${i.toString()}`}
-            >
-              {game.name}
-              <span className="text-primary">✚</span>
-            </span>
+        <div className="animate-marquee flex w-max">
+          {[0, 1].map((copy) => (
+            <div className="flex shrink-0" key={copy}>
+              {GAMES.map((game) => (
+                <span
+                  className="flex items-center gap-8 whitespace-nowrap pr-8 font-mono text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground"
+                  key={game.name}
+                >
+                  {game.name}
+                  <span className="text-primary">✚</span>
+                </span>
+              ))}
+            </div>
           ))}
         </div>
       </div>
@@ -150,13 +170,22 @@ function HomeComponent() {
             Every major title. <span className="text-primary">One bot.</span>
           </>
         }
-        description="From Battlefield 2 to Battlefield 6 — run the game's command and pick a segment. Click a card to see what each game supports."
+        description="From Battlefield 2 to Battlefield 6 — run the game's command and pick a segment. Click a card to see that game's output."
       >
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {GAMES.map((game) => (
-            <div className="panel clip-notch-sm group p-5 transition-colors hover:border-primary/60" key={game.name}>
-              <div className="mb-1 font-mono text-xs font-semibold uppercase tracking-widest text-primary">
+            <button
+              className="panel clip-notch-sm group cursor-pointer p-5 text-left transition-colors hover:border-primary/60"
+              key={game.name}
+              onClick={() => {
+                const image = imageForGame(game.name);
+                if (image) setLightboxImage(image);
+              }}
+              type="button"
+            >
+              <div className="mb-1 flex items-center justify-between font-mono text-xs font-semibold uppercase tracking-widest text-primary">
                 {game.command}
+                <ImageIcon className="size-3.5 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
               </div>
               <div className="mb-3 text-lg font-bold">{game.name}</div>
               <div className="flex flex-wrap gap-1.5">
@@ -169,7 +198,7 @@ function HomeComponent() {
                   </span>
                 ))}
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </Section>
@@ -211,29 +240,29 @@ function HomeComponent() {
           />
         </div>
 
-        <div className="mt-8 flex flex-wrap gap-2">
-          {COMMANDS.map((command) => (
-            <CommandChip command={command} key={command} />
-          ))}
+        <div className="panel clip-notch-sm mt-8">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-3 border-b px-5 py-3">
+            <span className="flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-widest">
+              <TerminalIcon className="size-4 text-primary" />
+              Command index
+            </span>
+            <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">Click to copy</span>
+          </div>
+          <div className="flex flex-wrap gap-2 p-5">
+            {COMMANDS.map((command) => (
+              <CopyCommandChip command={command} key={command} />
+            ))}
+          </div>
         </div>
       </Section>
 
-      {/* ============ SHOWCASE ============ */}
+      {/* ============ SHOWCASE / GALLERY ============ */}
       <Section
         eyebrow="Field report"
         title="Stats that look like they belong in the game."
-        description="Every response is a rendered image built for the title you asked about — not a wall of text."
+        description="Every response is a rendered image built for the title you asked about — not a wall of text. Browse the gallery; click any card to enlarge."
       >
-        <div className="clip-notch panel p-2 sm:p-3">
-          <img
-            alt="Example of the bot's Battlefield 6 stats output."
-            className="clip-notch-sm w-full"
-            height={750}
-            loading="lazy"
-            src="/images/example_bf6.png"
-            width={1200}
-          />
-        </div>
+        <GalleryStrip onSelect={setLightboxImage} />
 
         <div className="mt-12 grid items-center gap-8 lg:grid-cols-2">
           <div>
@@ -241,14 +270,24 @@ function HomeComponent() {
               Link once. <span className="text-primary">Never type your name again.</span>
             </h3>
             <p className="mt-4 text-muted-foreground">
-              Link your Battlefield account with <CommandChip command="/link add" /> and skip the username-and-platform
-              dance on every command. Linking is private — only you can see or use your linked accounts — and you can
-              unlink at any time with <CommandChip command="/link remove" />.
+              Link your Battlefield account and skip the username-and-platform dance on every command. You'll also find
+              a <b className="text-foreground">Link Account</b> button on every stats reply.
             </p>
+            <ul className="mt-6 space-y-3">
+              <LinkFeature icon={<LockIcon className="size-4" />}>
+                Private — only you can see or use your linked accounts
+              </LinkFeature>
+              <LinkFeature icon={<TerminalIcon className="size-4" />}>
+                <CommandChip command="/link add" /> links in seconds · <CommandChip command="/link help" /> for details
+              </LinkFeature>
+              <LinkFeature icon={<TerminalIcon className="size-4" />}>
+                <CommandChip command="/link remove" /> unlinks at any time — no questions asked
+              </LinkFeature>
+            </ul>
           </div>
           <video
             aria-label="Demonstration of linking a Battlefield account."
-            className="clip-notch w-full border"
+            className="clip-notch w-full max-w-xl border justify-self-center lg:justify-self-end"
             controls
             autoPlay
             loop
@@ -417,8 +456,41 @@ const StepCard = ({ index, title, description }: { index: string; title: string;
   </div>
 );
 
+const LinkFeature = ({ icon, children }: { icon: ReactNode; children: ReactNode }) => (
+  <li className="flex items-baseline gap-3 text-sm text-muted-foreground">
+    <span className="translate-y-0.5 text-primary">{icon}</span>
+    <span>{children}</span>
+  </li>
+);
+
 const CommandChip = ({ command }: { command: string }) => (
   <code className="whitespace-nowrap rounded-sm border bg-muted px-1.5 py-0.5 font-mono text-[0.85em] font-medium text-foreground">
     {command}
   </code>
 );
+
+const CopyCommandChip = ({ command }: { command: string }) => {
+  const [copied, setCopied] = useState(false);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(command);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // Clipboard unavailable (permissions/insecure context) — nothing to do.
+    }
+  };
+
+  return (
+    <button
+      className="inline-flex cursor-pointer items-center gap-1.5 rounded-sm border bg-muted px-2.5 py-1 font-mono text-xs font-medium transition-colors hover:border-primary/60"
+      onClick={copy}
+      title={`Copy ${command}`}
+      type="button"
+    >
+      {copied ? <CheckIcon className="size-3 text-primary" /> : <CopyIcon className="size-3 text-muted-foreground" />}
+      {command}
+    </button>
+  );
+};
