@@ -2,21 +2,21 @@ import { useQueries } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import humanizeDuration from "humanize-duration";
 import {
+  ActivityIcon,
   HomeIcon,
-  HouseIcon,
   Link2Icon,
   Link2OffIcon,
   Loader2Icon,
   MinusCircleIcon,
   SendIcon,
   UserIcon,
+  UsersIcon,
 } from "lucide-react";
 import type { ReactNode } from "react";
 import type { BaseStats, CountsItem, DBEvent, DBOutput, DBUser, EventDailyItem, SentDailyItemGames } from "types";
 import { ActivityHeatmap } from "@/components/ActivityHeatmap";
 import { BarChart, EventsPerDayChartWithFilter, StatsSentPerDayChartWithFilter } from "@/components/Charts";
-import { Icons } from "@/components/icons";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CountUp } from "@/components/CountUp";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   baseStatsQueryOptions,
@@ -78,146 +78,194 @@ function DataComponent() {
   const isError = queries.some((query) => !query.isSuccess);
 
   return (
-    <div>
-      <span className="text-3xl font-bold">Data</span>
-      <br />
-      <span>
-        All data displayed here consumes my public API, which can be browsed{" "}
-        <a className="link" href="https://api.battlefieldstats.com/" target="_blank" rel="noreferrer">
-          here
+    <div className="container px-4 py-12 lg:px-8">
+      <span className="eyebrow mb-4">Command center</span>
+      <h1 className="display text-4xl sm:text-6xl">
+        Data<span className="text-primary">.</span>
+      </h1>
+      <p className="mt-4 max-w-2xl text-muted-foreground">
+        Everything here consumes the{" "}
+        <a className="link" href="https://api.battlefieldstats.com/" rel="noreferrer" target="_blank">
+          public API
         </a>
-        .
-      </span>
+        . To see your personal usage, run the <Code>/usage</Code> command in Discord — it shows your totals grouped by
+        game.
+      </p>
 
-      <br />
-
-      <span>
-        To view your usage statistics, you can use the /usage command. This will show you the number of times you've
-        used the bot, grouped by game.
-      </span>
-
-      <div className="mt-3">
+      <div className="mt-10">
         {isLoading ? (
           <LoadingText />
         ) : isError ? (
           <ErrorFetchingText />
         ) : (
-          <>
-            <div>
-              <h4 className="mb-1 text-lg font-bold">
-                <a
-                  className="inline-flex items-center gap-2 group"
-                  href="https://discord.com/oauth2/authorize?client_id=842768680252997662"
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  <Icons.discord className="inline size-5 transition-[color,transform] group-hover:text-[#5865F2] group-hover:rotate-12" />{" "}
-                  Install count
-                </a>
-              </h4>
-              <InstallCount baseStats={baseStatsQuery.data as BaseStats} />
-            </div>
+          <div className="space-y-16">
+            <TileRow
+              baseStats={baseStatsQuery.data as BaseStats}
+              totalUsers={usersCountQuery.data as { totalUsers: number }}
+            />
 
-            <hr className="my-6 border-2" />
-
-            <div>
-              <h2 className="mb-1 text-2xl font-bold">Total (since May 25, 2021)</h2>
+            <section>
+              <SectionHeader
+                title="All time"
+                description="Since May 25, 2021"
+                extra={
+                  <span>
+                    <b className="tabular-nums">
+                      {(baseStatsQuery.data as BaseStats).totalStatsSent.total.toLocaleString("en")}
+                    </b>{" "}
+                    stats sent
+                  </span>
+                }
+              />
               <TotalStats baseStats={baseStatsQuery.data as BaseStats} />
-            </div>
+            </section>
 
-            <hr className="my-6 border-2" />
-
-            <div>
-              <h2 className="mb-1 text-2xl font-bold">Since January 1, 2023</h2>
+            <section>
+              <SectionHeader
+                title="Extended tracking"
+                description="Since January 1, 2023"
+                extra={
+                  <SinceJanuaryTotals
+                    totalUsers={usersCountQuery.data as { totalUsers: number }}
+                    outputsCounts={outputsCountsQuery.data as CountsItem[]}
+                  />
+                }
+              />
               <SinceJanuary
-                totalUsers={usersCountQuery.data as { totalUsers: number }}
                 topUsers={usersTopQuery.data as DBUser[]}
                 outputsCounts={outputsCountsQuery.data as CountsItem[]}
                 outputDailyGames={outputsDailyGamesNoGapsQuery.data as SentDailyItemGames[]}
                 eventsDaily={eventsDailyNoGapsQuery.data as EventDailyItem[]}
               />
-            </div>
+            </section>
 
-            <hr className="my-6 border-2" />
-
-            <div>
-              <h2 className="mb-1 text-2xl font-bold">Last 7 days</h2>
+            <section>
+              <SectionHeader
+                title="Last 7 days"
+                description="Rolling week"
+                extra={<Last7DaysTotals outputsCounts={outputsCountsLast7DaysQuery.data as CountsItem[]} />}
+              />
               <Last7Days outputsCounts={outputsCountsLast7DaysQuery.data as CountsItem[]} />
-            </div>
+            </section>
 
-            <hr className="my-6 border-2" />
-
-            <div>
-              <h2 className="mb-1 text-2xl font-bold">Last 20 stats sent</h2>
-              <RecentOutputs outputs={outputsRecentQuery.data as DBOutput[]} />
-            </div>
-
-            <hr className="my-6 border-2" />
-
-            <div>
-              <h2 className="mb-1 text-2xl font-bold">Last 40 events</h2>
-              <RecentEvents events={eventsRecentQuery.data as DBEvent[]} />
-            </div>
-          </>
+            <section>
+              <SectionHeader title="Recent activity" description="Straight from the wire" />
+              <div className="grid gap-6 xl:grid-cols-2">
+                <StatCard title="Last 20 stats sent">
+                  <RecentOutputs outputs={outputsRecentQuery.data as DBOutput[]} />
+                </StatCard>
+                <StatCard title="Last 40 events">
+                  <RecentEvents events={eventsRecentQuery.data as DBEvent[]} />
+                </StatCard>
+              </div>
+            </section>
+          </div>
         )}
       </div>
     </div>
   );
 }
 
-const InstallCount = ({ baseStats }: { baseStats: BaseStats }) => (
-  <div className="flex flex-col tabular-nums">
-    <span className="inline-flex items-center gap-2">
-      <HouseIcon className="inline size-5" /> {baseStats.totalGuilds.toLocaleString("en")} Servers
-    </span>
-    <span className="inline-flex items-center gap-2">
-      <UserIcon className="inline size-5" /> {baseStats.totalUserInstalls.toLocaleString("en")} User Installs
-    </span>
+const Code = ({ children }: { children: ReactNode }) => (
+  <code className="whitespace-nowrap rounded-sm border bg-muted px-1.5 py-0.5 font-mono text-[0.85em] font-medium text-foreground">
+    {children}
+  </code>
+);
+
+const TileRow = ({ baseStats, totalUsers }: { baseStats: BaseStats; totalUsers: { totalUsers: number } }) => (
+  <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+    <Tile icon={<SendIcon className="size-4" />} label="Stats sent" value={baseStats.totalStatsSent.total} />
+    <Tile icon={<HomeIcon className="size-4" />} label="Servers" value={baseStats.totalGuilds} />
+    <Tile icon={<UserIcon className="size-4" />} label="User installs" value={baseStats.totalUserInstalls} />
+    <Tile icon={<UsersIcon className="size-4" />} label="Members reached" value={baseStats.totalMembers} />
+    <Tile
+      icon={<ActivityIcon className="size-4" />}
+      label="Unique users"
+      value={totalUsers.totalUsers}
+      note="since 2023"
+    />
+  </div>
+);
+
+const Tile = ({ icon, label, value, note }: { icon: ReactNode; label: string; value: number; note?: string }) => (
+  <div className="panel clip-notch-sm p-4">
+    <div className="flex items-center gap-1.5 font-mono text-[11px] font-medium uppercase tracking-widest text-muted-foreground">
+      <span className="text-primary">{icon}</span>
+      {label}
+      {note && <span className="normal-case tracking-normal opacity-70">· {note}</span>}
+    </div>
+    <div className="mt-2 text-2xl font-black tabular-nums lg:text-3xl">
+      <CountUp value={value} />
+    </div>
+  </div>
+);
+
+const SectionHeader = ({ title, description, extra }: { title: string; description?: string; extra?: ReactNode }) => (
+  <div className="mb-6 flex flex-wrap items-end justify-between gap-3 border-b pb-3">
+    <div>
+      <h2 className="display text-2xl sm:text-3xl">{title}</h2>
+      {description && (
+        <div className="mt-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">{description}</div>
+      )}
+    </div>
+    {extra && <div className="text-right text-sm text-muted-foreground">{extra}</div>}
   </div>
 );
 
 const TotalStats = ({ baseStats }: { baseStats: BaseStats }) => {
   return (
-    <>
-      <div className="mb-3">
-        <b>{baseStats.totalStatsSent.total.toLocaleString("en")}</b> stats sent
-      </div>
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <StatCard title="Per game" description="since May 25, 2021">
+        <ScrollArea type="always" className="h-[330px] pr-4">
+          <BarChart
+            data={Object.entries(baseStats.totalStatsSent.games)
+              .map((x) => ({ name: x[0], value: x[1] }))
+              .sort((a, b) => b.value - a.value)}
+            total={baseStats.totalStatsSent.total}
+          />
+        </ScrollArea>
+      </StatCard>
 
-      <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
-        <StatCard title="Per game" description="since May 25, 2021">
-          <ScrollArea type="always" className="h-[330px] pr-4">
-            <BarChart
-              data={Object.entries(baseStats.totalStatsSent.games)
-                .map((x) => ({ name: x[0], value: x[1] }))
-                .sort((a, b) => b.value - a.value)}
-              total={baseStats.totalStatsSent.total}
-            />
-          </ScrollArea>
-        </StatCard>
+      <StatCard title="Per language" description="since May 25, 2021">
+        <ScrollArea type="always" className="h-[330px] pr-4">
+          <BarChart
+            data={Object.entries(baseStats.totalStatsSent.languages)
+              .map((x) => ({ name: x[0], value: x[1] }))
+              .sort((a, b) => b.value - a.value)}
+            total={baseStats.totalStatsSent.total}
+          />
+        </ScrollArea>
+      </StatCard>
+    </div>
+  );
+};
 
-        <StatCard title="Per language" description="since May 25, 2021">
-          <ScrollArea type="always" className="h-[330px] pr-4">
-            <BarChart
-              data={Object.entries(baseStats.totalStatsSent.languages)
-                .map((x) => ({ name: x[0], value: x[1] }))
-                .sort((a, b) => b.value - a.value)}
-              total={baseStats.totalStatsSent.total}
-            />
-          </ScrollArea>
-        </StatCard>
-      </div>
-    </>
+const SinceJanuaryTotals = ({
+  totalUsers,
+  outputsCounts,
+}: {
+  totalUsers: { totalUsers: number };
+  outputsCounts: CountsItem[];
+}) => {
+  const totalSent = outputsCounts.filter((x) => x.category === "game").reduce((a, b) => a + b.sent, 0);
+  return (
+    <div className="flex flex-col">
+      <span>
+        <b className="tabular-nums">{totalSent.toLocaleString("en")}</b> stats sent
+      </span>
+      <span>
+        <b className="tabular-nums">{totalUsers.totalUsers.toLocaleString("en")}</b> unique users
+      </span>
+    </div>
   );
 };
 
 const SinceJanuary = ({
-  totalUsers,
   topUsers,
   outputsCounts,
   outputDailyGames,
   eventsDaily,
 }: {
-  totalUsers: { totalUsers: number };
   topUsers: DBUser[];
   outputsCounts: CountsItem[];
   outputDailyGames: SentDailyItemGames[];
@@ -230,17 +278,7 @@ const SinceJanuary = ({
 
   return (
     <div className="space-y-6">
-      <div className="mb-3 flex flex-col">
-        <span>
-          <b>{totalSent.toLocaleString("en")}</b> stats sent
-        </span>
-
-        <span>
-          <b>{totalUsers.totalUsers.toLocaleString("en")}</b> unique users
-        </span>
-      </div>
-
-      <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <StatCard title="Per game" description="since Jan 1, 2023">
           <ScrollArea type="always" className="h-[330px] pr-4">
             <BarChart
@@ -293,6 +331,15 @@ const SinceJanuary = ({
   );
 };
 
+const Last7DaysTotals = ({ outputsCounts }: { outputsCounts: CountsItem[] }) => {
+  const totalSent = outputsCounts.filter((x) => x.category === "game").reduce((a, b) => a + b.sent, 0);
+  return (
+    <span>
+      <b className="tabular-nums">{totalSent.toLocaleString("en")}</b> stats sent
+    </span>
+  );
+};
+
 const Last7Days = ({ outputsCounts }: { outputsCounts: CountsItem[] }) => {
   const games = outputsCounts.filter((x) => x.category === "game");
   const segments = outputsCounts.filter((x) => x.category === "segment");
@@ -300,68 +347,66 @@ const Last7Days = ({ outputsCounts }: { outputsCounts: CountsItem[] }) => {
   const totalSent = games.reduce((a, b) => a + b.sent, 0);
 
   return (
-    <div className="space-y-6">
-      <div className="mb-3 flex flex-col">
-        <span>
-          <b>{totalSent.toLocaleString("en")}</b> stats sent
-        </span>
-      </div>
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <StatCard title="Per game" description="last 7 days">
+        <ScrollArea type="always" className="h-[330px] pr-4">
+          <BarChart
+            data={games.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
+            total={totalSent}
+          />
+        </ScrollArea>
+      </StatCard>
 
-      <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
-        <StatCard title="Per game" description="last 7 days">
-          <ScrollArea type="always" className="h-[330px] pr-4">
-            <BarChart
-              data={games.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
-              total={totalSent}
-            />
-          </ScrollArea>
-        </StatCard>
+      <StatCard title="Per segment" description="last 7 days">
+        <ScrollArea type="always" className="h-[330px] pr-4">
+          <BarChart
+            data={segments.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
+            total={totalSent}
+          />
+        </ScrollArea>
+      </StatCard>
 
-        <StatCard title="Per segment" description="last 7 days">
-          <ScrollArea type="always" className="h-[330px] pr-4">
-            <BarChart
-              data={segments.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
-              total={totalSent}
-            />
-          </ScrollArea>
-        </StatCard>
-
-        <StatCard title="Per language" description="last 7 days" cardClassName="col-span-full">
-          <ScrollArea type="always" className="h-[330px] pr-4">
-            <BarChart
-              data={languages.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
-              total={totalSent}
-            />
-          </ScrollArea>
-        </StatCard>
-      </div>
+      <StatCard title="Per language" description="last 7 days" cardClassName="col-span-full">
+        <ScrollArea type="always" className="h-[330px] pr-4">
+          <BarChart
+            data={languages.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
+            total={totalSent}
+          />
+        </ScrollArea>
+      </StatCard>
     </div>
   );
 };
 
 const RecentOutputs = ({ outputs }: { outputs: DBOutput[] }) => {
   return (
-    <div className="flex flex-col">
-      <ScrollArea type="always" className="h-[370px] rounded pr-4">
+    <ScrollArea type="always" className="h-[370px] pr-4">
+      <ul className="divide-y divide-border/60">
         {outputs.map((output) => (
-          <div
-            key={output.date}
-            className="flex flex-wrap justify-between rounded p-1 even:bg-neutral-200 dark:even:bg-neutral-900"
-          >
-            <span className="flex items-center gap-2">
-              <SendIcon className="inline size-4" /> {output.game} {output.segment} - {output.language}
+          <li key={output.date} className="flex flex-wrap items-baseline justify-between gap-x-3 py-2 text-sm">
+            <span className="flex min-w-0 items-baseline gap-2">
+              <SendIcon className="size-3.5 shrink-0 translate-y-0.5 text-primary" />
+              <span>
+                <span className="font-medium">{output.game}</span>{" "}
+                <span className="text-muted-foreground">
+                  {output.segment} · {output.language}
+                </span>
+              </span>
             </span>
-            <span title={parseUTCDate(output.date).toLocaleString()}>
+            <span
+              className="shrink-0 font-mono text-xs text-muted-foreground"
+              title={parseUTCDate(output.date).toLocaleString()}
+            >
               {humanizeDuration(parseUTCDate(output.date).getTime() - Date.now(), {
                 round: true,
                 units: ["d", "h", "m"],
               })}{" "}
               ago
             </span>
-          </div>
+          </li>
         ))}
-      </ScrollArea>
-    </div>
+      </ul>
+    </ScrollArea>
   );
 };
 
@@ -371,37 +416,41 @@ const RecentEvents = ({ events }: { events: DBEvent[] }) => {
       case "appGuildInstall":
         return (
           <>
-            <HomeIcon className="inline size-4" /> Bot was added to a server
+            <HomeIcon className="size-3.5 shrink-0 translate-y-0.5 text-primary" /> Bot was added to a server
           </>
         );
       case "appUserInstall":
         return (
           <>
-            <UserIcon className="inline size-4" /> Bot was installed to an account
+            <UserIcon className="size-3.5 shrink-0 translate-y-0.5 text-primary" /> Bot was installed to an account
           </>
         );
       case "appGuildUninstall":
         return (
           <>
-            <MinusCircleIcon className="inline size-4" /> Bot was removed from a server
+            <MinusCircleIcon className="size-3.5 shrink-0 translate-y-0.5 text-muted-foreground" /> Bot was removed from
+            a server
           </>
         );
       case "appUserUninstall":
         return (
           <>
-            <MinusCircleIcon className="inline size-4" /> Bot was removed from an account
+            <MinusCircleIcon className="size-3.5 shrink-0 translate-y-0.5 text-muted-foreground" /> Bot was removed from
+            an account
           </>
         );
       case "bfAccountLink":
         return (
           <>
-            <Link2Icon className="inline size-4" /> Someone linked their Battlefield account
+            <Link2Icon className="size-3.5 shrink-0 translate-y-0.5 text-primary" /> Someone linked their Battlefield
+            account
           </>
         );
       case "bfAccountUnlink":
         return (
           <>
-            <Link2OffIcon className="inline size-4" /> Someone unlinked their Battlefield account
+            <Link2OffIcon className="size-3.5 shrink-0 translate-y-0.5 text-muted-foreground" /> Someone unlinked their
+            Battlefield account
           </>
         );
       default:
@@ -410,36 +459,38 @@ const RecentEvents = ({ events }: { events: DBEvent[] }) => {
   };
 
   return (
-    <div className="flex flex-col">
-      <ScrollArea type="always" className="h-[370px] rounded pr-4">
+    <ScrollArea type="always" className="h-[370px] pr-4">
+      <ul className="divide-y divide-border/60">
         {events.map((event) => (
-          <div
-            key={event.date}
-            className="flex flex-wrap justify-between rounded p-1 even:bg-neutral-200 dark:even:bg-neutral-900"
-          >
-            <span className="flex items-center gap-2">{renderEventTitle(event.event)}</span>
-            <span title={parseUTCDate(event.date).toLocaleString()}>
+          <li key={event.date} className="flex flex-wrap items-baseline justify-between gap-x-3 py-2 text-sm">
+            <span className="flex items-baseline gap-2">{renderEventTitle(event.event)}</span>
+            <span
+              className="shrink-0 font-mono text-xs text-muted-foreground"
+              title={parseUTCDate(event.date).toLocaleString()}
+            >
               {humanizeDuration(parseUTCDate(event.date).getTime() - Date.now(), {
                 round: true,
                 units: ["d", "h", "m"],
               })}{" "}
               ago
             </span>
-          </div>
+          </li>
         ))}
-      </ScrollArea>
-    </div>
+      </ul>
+    </ScrollArea>
   );
 };
 
 const LoadingText = () => (
-  <span className="flex items-center gap-2 text-xl font-semibold">
-    <Loader2Icon className="inline animate-spin" /> Fetching data... This might take a while.
-  </span>
+  <div className="panel clip-notch flex items-center gap-3 p-6 font-mono text-sm uppercase tracking-widest text-muted-foreground">
+    <Loader2Icon className="size-5 animate-spin text-primary" /> Fetching data... this might take a while.
+  </div>
 );
 
 const ErrorFetchingText = () => (
-  <span className="text-lg font-semibold text-red-600 dark:text-red-500">Error fetching.</span>
+  <div className="panel clip-notch border-destructive/50 p-6 font-mono text-sm uppercase tracking-widest text-destructive">
+    Error fetching data.
+  </div>
 );
 
 const StatCard = ({
@@ -453,11 +504,13 @@ const StatCard = ({
   cardClassName?: string;
   children: ReactNode;
 }) => (
-  <Card className={cardClassName}>
-    <CardHeader>
-      <CardTitle className="text-xl">{title}</CardTitle>
-      {description && <CardDescription>{description}</CardDescription>}
-    </CardHeader>
-    <CardContent>{children}</CardContent>
-  </Card>
+  <div className={`panel clip-notch-sm ${cardClassName ?? ""}`}>
+    <div className="flex flex-wrap items-baseline justify-between gap-x-3 border-b px-5 py-3">
+      <span className="font-bold">{title}</span>
+      {description && (
+        <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">{description}</span>
+      )}
+    </div>
+    <div className="p-5">{children}</div>
+  </div>
 );
