@@ -8,6 +8,10 @@ import { buildImageUrl, DEMO_GAMES, friendlyError, getDemoGame } from "@/lib/ima
 
 type DemoStatus = "idle" | "loading" | "success" | "error";
 
+// Client-side cooldown between generations. Not a security boundary (the API
+// enforces its own limits) — just a courtesy guard against casual spam.
+const COOLDOWN_SECONDS = 10;
+
 /**
  * Home-page demo: pick a game/segment/platform, enter a username, and preview
  * the exact image the bot would render. Talks to the image API (see IMAGE_API_BASE).
@@ -24,10 +28,14 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
   const [status, setStatus] = useState<DemoStatus>("idle");
   const [result, setResult] = useState<GalleryImage | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
+  const [cooldown, setCooldown] = useState(0);
 
   // Track the created object URL + any in-flight request so we can clean up.
   const objectUrlRef = useRef<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+  // Timestamp guard (checked synchronously in the handler) + its display ticker.
+  const cooldownUntilRef = useRef(0);
+  const cooldownTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const revokeCurrent = useCallback(() => {
     if (objectUrlRef.current) {
@@ -36,11 +44,29 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
     }
   }, []);
 
-  // Clean up the object URL / pending request on unmount.
+  // Start the cooldown: set the timestamp guard and tick the visible countdown.
+  const startCooldown = useCallback(() => {
+    cooldownUntilRef.current = Date.now() + COOLDOWN_SECONDS * 1000;
+    setCooldown(COOLDOWN_SECONDS);
+    if (cooldownTimerRef.current) clearInterval(cooldownTimerRef.current);
+    cooldownTimerRef.current = setInterval(() => {
+      const remaining = Math.ceil((cooldownUntilRef.current - Date.now()) / 1000);
+      if (remaining <= 0) {
+        if (cooldownTimerRef.current) clearInterval(cooldownTimerRef.current);
+        cooldownTimerRef.current = null;
+        setCooldown(0);
+      } else {
+        setCooldown(remaining);
+      }
+    }, 250);
+  }, []);
+
+  // Clean up the object URL / pending request / ticker on unmount.
   useEffect(() => {
     return () => {
       revokeCurrent();
       abortRef.current?.abort();
+      if (cooldownTimerRef.current) clearInterval(cooldownTimerRef.current);
     };
   }, [revokeCurrent]);
 
@@ -56,6 +82,8 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
     e.preventDefault();
     const trimmed = username.trim();
     if (!trimmed) return;
+    // Deeper guard: block even if something bypasses the disabled button.
+    if (status === "loading" || Date.now() < cooldownUntilRef.current) return;
 
     abortRef.current?.abort();
     const controller = new AbortController();
@@ -63,6 +91,8 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
 
     setStatus("loading");
     setErrorMsg("");
+    // Cooldown starts the moment we fire — throttles requests regardless of outcome.
+    startCooldown();
 
     try {
       const res = await fetch(buildImageUrl(gameKey, segment, platform, trimmed), { signal: controller.signal });
@@ -155,11 +185,17 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
           />
         </Field>
 
-        <Button className="clip-btn mt-1" disabled={status === "loading" || !username.trim()} type="submit">
+        <Button
+          className="clip-btn mt-1"
+          disabled={status === "loading" || cooldown > 0 || !username.trim()}
+          type="submit"
+        >
           {status === "loading" ? (
             <>
               <Loader2Icon className="animate-spin" /> Generating…
             </>
+          ) : cooldown > 0 ? (
+            <>Wait {cooldown}s…</>
           ) : (
             <>
               <SparklesIcon /> Generate image
