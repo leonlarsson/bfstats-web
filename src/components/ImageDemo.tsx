@@ -1,10 +1,14 @@
-import { AlertTriangleIcon, ImageIcon, Loader2Icon, SparklesIcon } from "lucide-react";
+import { AlertTriangleIcon, ImageIcon, Loader2Icon, LockIcon, SparklesIcon } from "lucide-react";
 import { type ReactNode, type SyntheticEvent, useCallback, useEffect, useRef, useState } from "react";
 import type { GalleryImage } from "@/components/Gallery";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { buildImageUrl, DEMO_GAMES, friendlyError, getDemoGame } from "@/lib/imageDemo";
+
+// Only Overview is free to preview here — other segments upsell the bot.
+const DEMO_SEGMENT = "overview";
 
 type DemoStatus = "idle" | "loading" | "success" | "error";
 
@@ -124,113 +128,143 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
   };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(0,340px)_1fr] lg:gap-8">
-      {/* ---- Controls ---- */}
-      <form className="panel clip-notch-sm flex flex-col gap-5 p-5" onSubmit={handleSubmit}>
-        <Field label="Game">
-          <Select value={gameKey} onValueChange={handleGameChange}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {DEMO_GAMES.map((g) => (
-                <SelectItem key={g.key} value={g.key}>
-                  {g.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </Field>
-
-        <div className="grid grid-cols-2 gap-4">
-          <Field label="Segment">
-            <Select value={segment} onValueChange={setSegment}>
+    <TooltipProvider>
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,340px)_1fr] lg:gap-8">
+        {/* ---- Controls ---- */}
+        <form className="panel clip-notch-sm flex flex-col gap-5 p-5" onSubmit={handleSubmit}>
+          <Field label="Game">
+            <Select value={gameKey} onValueChange={handleGameChange}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {game.segments.map((s) => (
-                  <SelectItem key={s.key} value={s.key}>
-                    {s.label}
+                {DEMO_GAMES.map((g) => (
+                  <SelectItem key={g.key} value={g.key}>
+                    {g.name}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </Field>
 
-          <Field label="Platform">
-            <Select value={platform} onValueChange={setPlatform}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {game.platforms.map((p) => (
-                  <SelectItem key={p.value} value={p.value}>
-                    {p.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Segment">
+              <Select value={segment} onValueChange={setSegment}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {game.segments.map((s) =>
+                    s.key === DEMO_SEGMENT ? (
+                      <SelectItem key={s.key} value={s.key}>
+                        {s.label}
+                      </SelectItem>
+                    ) : (
+                      <Tooltip key={s.key} delayDuration={150}>
+                        <TooltipTrigger asChild>
+                          {/* pointerEvents override lets the tooltip fire on the disabled item */}
+                          <SelectItem
+                            className="cursor-not-allowed"
+                            disabled
+                            style={{ pointerEvents: "auto" }}
+                            value={s.key}
+                          >
+                            <span className="flex items-center gap-1.5">
+                              {s.label}
+                              <LockIcon className="size-3 opacity-70" />
+                            </span>
+                          </SelectItem>
+                        </TooltipTrigger>
+                        <TooltipContent side="right">Add the bot to use this segment</TooltipContent>
+                      </Tooltip>
+                    ),
+                  )}
+                </SelectContent>
+              </Select>
+            </Field>
+
+            <Field label="Platform">
+              <Select value={platform} onValueChange={setPlatform}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {game.platforms.map((p) => (
+                    <SelectItem key={p.value} value={p.value}>
+                      {p.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+          </div>
+
+          <Field label="Username">
+            <Input
+              aria-label="Username"
+              autoComplete="off"
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="e.g. MozzyFX"
+              spellCheck={false}
+              value={username}
+            />
           </Field>
-        </div>
 
-        <Field label="Username">
-          <Input
-            aria-label="Username"
-            autoComplete="off"
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="e.g. MozzyFX"
-            spellCheck={false}
-            value={username}
-          />
-        </Field>
-
-        <Button
-          className="clip-btn mt-1"
-          disabled={status === "loading" || cooldown > 0 || !username.trim()}
-          type="submit"
-        >
-          {status === "loading" ? (
-            <>
-              <Loader2Icon className="animate-spin" /> Generating…
-            </>
-          ) : cooldown > 0 ? (
-            <>Wait {cooldown}s…</>
-          ) : (
-            <>
-              <SparklesIcon /> Generate image
-            </>
-          )}
-        </Button>
-
-        <p className="font-mono text-[11px] leading-relaxed text-muted-foreground">
-          Live from the bot's image renderer — the same output you'd get in Discord.
-        </p>
-      </form>
-
-      {/* ---- Preview ---- */}
-      <div className="panel clip-notch-sm relative flex aspect-[1200/750] items-center justify-center overflow-hidden bg-muted/30">
-        {status === "success" && result ? (
-          <button
-            aria-label="Expand generated image"
-            className="block size-full cursor-zoom-in"
-            onClick={() => onExpand(result)}
-            type="button"
+          <Button
+            className="clip-btn mt-1"
+            disabled={status === "loading" || cooldown > 0 || !username.trim()}
+            type="submit"
           >
-            <img alt={`${result.game} ${result.segment} stats`} className="size-full object-contain" src={result.src} />
-          </button>
-        ) : status === "loading" ? (
-          <PreviewState icon={<Loader2Icon className="size-6 animate-spin text-primary" />} text="Rendering image…" />
-        ) : status === "error" ? (
-          <PreviewState icon={<AlertTriangleIcon className="size-6 text-destructive" />} text={errorMsg} tone="error" />
-        ) : (
-          <PreviewState
-            icon={<ImageIcon className="size-6 text-muted-foreground" />}
-            text="Your generated stat card will appear here."
-          />
-        )}
+            {status === "loading" ? (
+              <>
+                <Loader2Icon className="animate-spin" /> Generating…
+              </>
+            ) : cooldown > 0 ? (
+              <>Wait {cooldown}s…</>
+            ) : (
+              <>
+                <SparklesIcon /> Generate image
+              </>
+            )}
+          </Button>
+
+          <p className="font-mono text-[11px] leading-relaxed text-muted-foreground">
+            Live from the bot's image renderer — the same output you'd get in Discord.
+          </p>
+        </form>
+
+        {/* ---- Preview ---- */}
+        <div className="panel clip-notch-sm relative flex aspect-[1200/750] items-center justify-center overflow-hidden bg-muted/30">
+          {status === "success" && result ? (
+            <button
+              aria-label="Expand generated image"
+              className="block size-full cursor-zoom-in"
+              onClick={() => onExpand(result)}
+              type="button"
+            >
+              <img
+                alt={`${result.game} ${result.segment} stats`}
+                className="size-full object-contain"
+                src={result.src}
+              />
+            </button>
+          ) : status === "loading" ? (
+            <PreviewState icon={<Loader2Icon className="size-6 animate-spin text-primary" />} text="Rendering image…" />
+          ) : status === "error" ? (
+            <PreviewState
+              icon={<AlertTriangleIcon className="size-6 text-destructive" />}
+              text={errorMsg}
+              tone="error"
+            />
+          ) : (
+            <PreviewState
+              icon={<ImageIcon className="size-6 text-muted-foreground" />}
+              text="Your generated stat card will appear here."
+            />
+          )}
+        </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 };
 
