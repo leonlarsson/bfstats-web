@@ -78,8 +78,12 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
   const handleGameChange = (nextKey: string) => {
     const nextGame = getDemoGame(nextKey);
     setGameKey(nextKey);
-    setSegment(nextGame.segments[0].key);
-    setPlatform(nextGame.platforms[0].value);
+
+    // To allow loading the options first
+    requestAnimationFrame(() => {
+      setSegment(nextGame.segments[0].key);
+      setPlatform(nextGame.platforms[0].value);
+    });
   };
 
   const handleSubmit = async (e: SyntheticEvent) => {
