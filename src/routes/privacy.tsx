@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { BotCommand } from "@/components/BotCommand";
 
 export const Route = createFileRoute("/privacy")({
   component: PrivacyComponent,
@@ -55,7 +56,7 @@ function PrivacyComponent() {
             account. This stores the user's Discord ID along the chosen platform and username. This is used to allow
             users to quickly search for their stats without having to type in their username and platform every time.
             This data is only stored if the user explicitly chooses to link their account, and can be deleted/unlinked
-            at any time by running /link remove.
+            at any time by running <BotCommand command="/link remove" />.
           </p>
         </PolicySection>
 
@@ -107,8 +108,9 @@ function PrivacyComponent() {
 
         <PolicySection title="Viewing your usage statistics">
           <p>
-            To view your usage statistics, you can use the /usage command. This will show you the number of times you've
-            used the bot, grouped by game. This is only visible to you unless specified otherwise.
+            To view your usage statistics, you can use the <BotCommand command="/usage" /> command. This will show you
+            the number of times you've used the bot, grouped by game. This is only visible to you unless specified
+            otherwise.
           </p>
         </PolicySection>
 
