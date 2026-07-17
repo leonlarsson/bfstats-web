@@ -1,6 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRightIcon, HomeIcon, ImageIcon, LockIcon, SendIcon, TerminalIcon, UsersIcon } from "lucide-react";
+import {
+  ArrowDownIcon,
+  ArrowRightIcon,
+  HomeIcon,
+  ImageIcon,
+  LockIcon,
+  SendIcon,
+  TerminalIcon,
+  UsersIcon,
+} from "lucide-react";
 import { type ReactNode, useState } from "react";
 import { BotCommand } from "@/components/BotCommand";
 import { CountUp } from "@/components/CountUp";
@@ -95,6 +104,14 @@ function HomeComponent() {
                 <Icons.discord className="size-5" />
                 Add to Discord
               </CtaButton>
+
+              <CtaButton asChild className="w-full sm:w-auto" variant="outline">
+                <Link to="/" hash="demo">
+                  Try it
+                  <ArrowDownIcon className="size-4" />
+                </Link>
+              </CtaButton>
+
               <CtaButton asChild className="w-full sm:w-auto" variant="outline">
                 <Link to="/data">
                   Explore live data
@@ -313,6 +330,7 @@ function HomeComponent() {
 
       {/* ============ LIVE IMAGE DEMO ============ */}
       <Section
+        id="demo"
         className="border-t bg-card/50"
         eyebrow="Live bot demo"
         title={
@@ -454,15 +472,17 @@ const Section = ({
   title,
   description,
   className,
+  id,
   children,
 }: {
   eyebrow: string;
   title: ReactNode;
   description?: string;
   className?: string;
+  id?: string;
   children: ReactNode;
 }) => (
-  <section className={className}>
+  <section id={id} className={className}>
     <div className="container px-4 py-16 lg:px-8 lg:py-24">
       <span className="eyebrow mb-4">{eyebrow}</span>
       <h2 className="display max-w-3xl text-3xl sm:text-5xl">{title}</h2>
