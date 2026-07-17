@@ -12,6 +12,7 @@ import { Icons } from "@/components/icons";
 import { LiveFeed } from "@/components/LiveFeed";
 import { Marquee } from "@/components/Marquee";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { cn } from "@/lib/utils";
 import { baseStatsQueryOptions } from "@/queries";
 
 export const Route = createFileRoute("/")({
@@ -73,11 +74,11 @@ function HomeComponent() {
           }}
         />
 
-        <div className="container relative grid gap-12 px-4 py-16 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16 lg:px-8 lg:py-24">
+        <div className="container relative grid gap-12 px-4 py-16 lg:px-8 lg:py-24 xl:grid-cols-[1.2fr_0.85fr] xl:gap-16">
           <div className="flex flex-col justify-center">
             <span className="eyebrow fade-up mb-6">The biggest Battlefield bot on Discord · Est. 2021</span>
 
-            <h1 className="display fade-up text-5xl sm:text-7xl lg:text-8xl" style={{ animationDelay: "80ms" }}>
+            <h1 className="display fade-up text-5xl sm:text-7xl xl:text-8xl" style={{ animationDelay: "80ms" }}>
               Know your
               <br />
               <span className="text-primary">Battlefield.</span>
@@ -166,10 +167,15 @@ function HomeComponent() {
               }}
               type="button"
             >
-              {/* Ghost mark — the game's numeral bleeding off the corner */}
+              {/* Ghost mark — the game's numeral bleeding off the corner.
+                  Long marks (e.g. "2042") get a smaller size so they stay a corner
+                  accent instead of spanning the whole card on narrow screens. */}
               <span
                 aria-hidden
-                className="pointer-events-none absolute -right-2 -bottom-6 select-none font-black text-[7.5rem] italic leading-none tracking-tighter text-foreground/[0.07] transition-[color,transform] duration-300 group-hover:-translate-x-1 group-hover:text-primary/25"
+                className={cn(
+                  "pointer-events-none absolute -right-2 -bottom-5 max-w-full select-none overflow-hidden font-black italic leading-none tracking-tighter text-foreground/[0.07] transition-[color,transform] duration-300 group-hover:-translate-x-1 group-hover:text-primary/25",
+                  game.mark.length > 2 ? "text-6xl -bottom-3" : "text-[7.5rem]",
+                )}
               >
                 {game.mark}
               </span>
@@ -179,7 +185,8 @@ function HomeComponent() {
                 aria-hidden
                 className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                 style={{
-                  background: "radial-gradient(ellipse 90% 90% at 100% 100%, hsl(var(--primary) / 0.12), transparent 60%)",
+                  background:
+                    "radial-gradient(ellipse 90% 90% at 100% 100%, hsl(var(--primary) / 0.12), transparent 60%)",
                 }}
               />
 

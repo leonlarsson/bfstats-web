@@ -185,7 +185,8 @@ export const Lightbox = ({ image, onClose }: { image: GalleryImage | null; onClo
       <Dialog.Overlay className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm" />
       <Dialog.Content
         className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-3 p-4 outline-none sm:p-8"
-        onClick={onClose}
+        // Close only when the backdrop itself is clicked, not the image or caption.
+        onClick={(e) => e.target === e.currentTarget && onClose()}
       >
         <Dialog.Title className="sr-only">
           {image ? `${image.game} ${image.segment} example output` : "Example output"}
@@ -196,7 +197,6 @@ export const Lightbox = ({ image, onClose }: { image: GalleryImage | null; onClo
               alt={`${image.game} ${image.segment} example output`}
               className="clip-notch max-h-[80vh] max-w-full border object-contain"
               height={750}
-              onClick={(e) => e.stopPropagation()}
               src={image.src}
               width={1200}
             />

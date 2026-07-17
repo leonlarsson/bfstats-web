@@ -42,6 +42,7 @@ export const Marquee = ({ children, speed = 55 }: { children: ReactNode; speed?:
         }
       >
         {Array.from({ length: copies }, (_, i) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: identical repeated copies
           <div className="flex shrink-0" key={i} ref={i === 0 ? copyRef : undefined}>
             {children}
           </div>
