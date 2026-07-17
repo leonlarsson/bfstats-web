@@ -10,20 +10,14 @@ export type GalleryImage = {
 
 export const GALLERY_IMAGES: GalleryImage[] = [
   { src: "/images/example_bf6.png", game: "Battlefield 6", segment: "Overview" },
+  { src: "/images/example_bf6w.png", game: "Battlefield 6", segment: "Weapons" },
+  { src: "/images/example_bf6v.gif", game: "Battlefield 6", segment: "Vehicles (GIF)" },
   { src: "/images/example_bf2042.png", game: "Battlefield 2042", segment: "Overview" },
-  { src: "/images/example_bf2042w.png", game: "Battlefield 2042", segment: "Weapons" },
-  { src: "/images/example_bf2042v.png", game: "Battlefield 2042", segment: "Vehicles" },
-  { src: "/images/example_bf2042g.png", game: "Battlefield 2042", segment: "Gadgets" },
   { src: "/images/example_bfv.png", game: "Battlefield V", segment: "Overview" },
-  { src: "/images/example_bfvw.png", game: "Battlefield V", segment: "Weapons" },
-  { src: "/images/example_bfvv.png", game: "Battlefield V", segment: "Vehicles" },
   { src: "/images/example_bf1.png", game: "Battlefield 1", segment: "Overview" },
-  { src: "/images/example_bf1w.png", game: "Battlefield 1", segment: "Weapons" },
-  { src: "/images/example_bf1v.png", game: "Battlefield 1", segment: "Vehicles" },
   { src: "/images/example_bfh.png", game: "Battlefield Hardline", segment: "Overview" },
   { src: "/images/example_bf4.png", game: "Battlefield 4", segment: "Overview" },
   { src: "/images/example_bf3.png", game: "Battlefield 3", segment: "Overview" },
-  { src: "/images/example_bfbc2.png", game: "Battlefield Bad Company 2", segment: "Overview" },
   { src: "/images/example_bf2.png", game: "Battlefield 2", segment: "Overview" },
 ];
 
