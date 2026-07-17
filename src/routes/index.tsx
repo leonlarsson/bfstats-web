@@ -8,6 +8,7 @@ import { CtaButton } from "@/components/CtaButton";
 import type { GalleryImage } from "@/components/Gallery";
 import { GalleryStrip, imageForGame, Lightbox } from "@/components/Gallery";
 import { DISCORD_INVITE_URL } from "@/components/Header";
+import { ImageDemo } from "@/components/ImageDemo";
 import { Icons } from "@/components/icons";
 import { LiveFeed } from "@/components/LiveFeed";
 import { Marquee } from "@/components/Marquee";
@@ -307,6 +308,28 @@ function HomeComponent() {
             <source src="/images/linking.mp4" type="video/mp4" />
             Your browser does not support embedded videos.
           </video>
+        </div>
+      </Section>
+
+      {/* ============ LIVE IMAGE DEMO ============ */}
+      <Section
+        className="border-t bg-card/50"
+        eyebrow="Live bot demo"
+        title={
+          <>
+            See the bot <span className="text-primary">in action.</span>
+          </>
+        }
+        description="This is the exact image renderer behind the Discord bot. Pick a game, segment, and platform, drop in a username, and preview a real stat card — then add the bot to pull your own, plus leaderboards, account linking, and every command."
+      >
+        <ImageDemo onExpand={setLightboxImage} />
+
+        <div className="mt-10 flex flex-col items-center gap-3 text-center">
+          <p className="text-sm text-muted-foreground">Like what you see? Get it in your own server.</p>
+          <CtaButton href={DISCORD_INVITE_URL} rel="noreferrer" target="_blank">
+            <Icons.discord className="size-5" />
+            Add to Discord
+          </CtaButton>
         </div>
       </Section>
 
