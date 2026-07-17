@@ -3,7 +3,15 @@ import humanizeDuration from "humanize-duration";
 import { HomeIcon, Link2Icon, type LucideIcon, RadioIcon, SendIcon, UserIcon } from "lucide-react";
 import { useMemo } from "react";
 import type { DBEvent, DBOutput } from "types";
+import { cn } from "@/lib/utils";
 import { eventsRecentQueryOptions, outputsRecentQueryOptions } from "@/queries";
+
+// Status shown in the feed header. Content (skeleton / rows) is unaffected by this.
+const FEED_STATUS = {
+  live: { label: "Transmitting", dot: "bg-primary animate-blink", text: "text-muted-foreground" },
+  connecting: { label: "Connecting", dot: "bg-muted-foreground animate-pulse", text: "text-muted-foreground" },
+  offline: { label: "Offline", dot: "bg-destructive", text: "text-destructive" },
+} as const;
 
 // Fix for mobile
 const parseUTCDate = (date: string) => new Date(`${date.replace(" ", "T")}Z`);
@@ -48,6 +56,11 @@ export const LiveFeed = () => {
       .slice(0, 12);
   }, [outputsQuery.data, eventsQuery.data]);
 
+  // Both feeds failed (retries exhausted) → offline; otherwise live if we have data, else still connecting.
+  const status: keyof typeof FEED_STATUS =
+    outputsQuery.isError && eventsQuery.isError ? "offline" : items !== undefined ? "live" : "connecting";
+  const statusMeta = FEED_STATUS[status];
+
   return (
     <div className="panel clip-notch flex h-full flex-col">
       <div className="flex items-center justify-between border-b px-4 py-3">
@@ -55,9 +68,14 @@ export const LiveFeed = () => {
           <RadioIcon className="size-4 text-primary" />
           Live feed
         </span>
-        <span className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
-          <span className="size-1.5 animate-blink rounded-full bg-primary" />
-          Transmitting
+        <span
+          className={cn(
+            "flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-widest transition-colors",
+            statusMeta.text,
+          )}
+        >
+          <span className={cn("size-1.5 rounded-full", statusMeta.dot)} />
+          {statusMeta.label}
         </span>
       </div>
 
