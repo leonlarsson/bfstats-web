@@ -168,7 +168,7 @@ function DataComponent() {
 }
 
 const TileRow = ({ baseStats, totalUsers }: { baseStats: BaseStats; totalUsers: { totalUsers: number } }) => (
-  <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5">
     <Tile icon={<SendIcon className="size-4" />} label="Stats sent" value={baseStats.totalStatsSent.total} />
     <Tile icon={<HomeIcon className="size-4" />} label="Servers" value={baseStats.totalGuilds} />
     <Tile icon={<UserIcon className="size-4" />} label="User installs" value={baseStats.totalUserInstalls} />
@@ -183,14 +183,16 @@ const TileRow = ({ baseStats, totalUsers }: { baseStats: BaseStats; totalUsers: 
 );
 
 const Tile = ({ icon, label, value, note }: { icon: ReactNode; label: string; value: number; note?: string }) => (
-  <div className="panel clip-notch-sm p-4">
+  <div className="panel clip-notch-sm flex flex-col p-4">
     <div className="flex items-center gap-1.5 font-mono text-[11px] font-medium uppercase tracking-widest text-muted-foreground">
       <span className="text-primary">{icon}</span>
-      {label}
-      {note && <span className="normal-case tracking-normal opacity-70">· {note}</span>}
+      <span className="truncate">{label}</span>
     </div>
-    <div className="mt-2 text-2xl font-black tabular-nums lg:text-3xl">
-      <CountUp value={value} />
+    <div className="mt-auto flex items-baseline gap-1.5 pt-2">
+      <span className="text-2xl font-black tabular-nums lg:text-3xl">
+        <CountUp value={value} />
+      </span>
+      {note && <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground/70">{note}</span>}
     </div>
   </div>
 );
