@@ -135,7 +135,17 @@ export const Footer = () => {
             Not endorsed by or affiliated with EA or DICE. Battlefield imagery is property of EA/DICE. Stats powered by
             Tracker Network and Community Network.
           </span>
-          <span className="shrink-0 font-mono uppercase tracking-widest">Built by Mozzy</span>
+          <span className="shrink-0 font-mono uppercase tracking-widest">
+            Built by{" "}
+            <a
+              className="text-foreground transition-colors hover:text-primary"
+              href="https://x.com/mozzyfx"
+              rel="noreferrer"
+              target="_blank"
+            >
+              Mozzy
+            </a>
+          </span>
         </div>
       </div>
     </footer>
