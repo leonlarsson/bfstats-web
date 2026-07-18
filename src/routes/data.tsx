@@ -5,6 +5,7 @@ import {
   ActivityIcon,
   CircleHelpIcon,
   HomeIcon,
+  ImagePlusIcon,
   Link2Icon,
   Link2OffIcon,
   Loader2Icon,
@@ -449,6 +450,12 @@ const RecentEvents = ({ events }: { events: DBEvent[] }) => {
           <>
             <Link2OffIcon className="size-3.5 shrink-0 translate-y-0.5 text-muted-foreground" /> Someone unlinked their
             Battlefield account
+          </>
+        );
+      case "apiImageGenerated":
+        return (
+          <>
+            <ImagePlusIcon className="size-3.5 shrink-0 translate-y-0.5 text-primary" /> Image generated via API
           </>
         );
       default:

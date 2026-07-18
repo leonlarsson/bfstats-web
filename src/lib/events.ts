@@ -7,4 +7,5 @@ export const EVENTS = [
   "appUserUninstall",
   "bfAccountLink",
   "bfAccountUnlink",
+  "apiImageGenerated",
 ] satisfies DBEvent["event"][];
