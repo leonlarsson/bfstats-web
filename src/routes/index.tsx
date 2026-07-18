@@ -292,7 +292,7 @@ function HomeComponent() {
       {/* ============ SHOWCASE / GALLERY ============ */}
       <Section
         eyebrow="Field report"
-        title="Stats that look like they belong in the game."
+        title="Stats in image format."
         description="Every response is a rendered image built for the title you asked about. Browse the gallery; click any card to enlarge."
       >
         <GalleryStrip onSelect={setLightboxImage} />
