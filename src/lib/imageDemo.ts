@@ -1,6 +1,6 @@
 export const IMAGE_API_BASE = "https://api.battlefieldstats.com/images";
 
-export type DemoSegment = { key: string; label: string };
+export type DemoSegment = { key: string; label: string; textOnly?: true };
 export type DemoPlatform = { value: string; label: string };
 
 export type DemoGame = {
@@ -14,9 +14,14 @@ const SEG = {
   overview: { key: "overview", label: "Overview" },
   weapons: { key: "weapons", label: "Weapons" },
   vehicles: { key: "vehicles", label: "Vehicles" },
+  classes: { key: "classes", label: "Classes", textOnly: true },
   gadgets: { key: "gadgets", label: "Gadgets" },
+  maps: { key: "maps", label: "Maps", textOnly: true },
+  modes: { key: "modes", label: "Modes", textOnly: true },
+  matches: { key: "matches", label: "Matches", textOnly: true },
   firestorm: { key: "firestorm", label: "Firestorm" },
   hazardzone: { key: "hazardzone", label: "Hazard Zone" },
+  progression: { key: "progression", label: "Progression", textOnly: true },
 } satisfies Record<string, DemoSegment>;
 
 const p = (label: string, value: string): DemoPlatform => ({ label, value });
@@ -48,31 +53,51 @@ export const DEMO_GAMES: DemoGame[] = [
   {
     key: "bf6",
     name: "Battlefield 6",
-    segments: [SEG.overview, SEG.weapons, SEG.vehicles, SEG.gadgets],
+    segments: [SEG.overview, SEG.weapons, SEG.vehicles, SEG.classes, SEG.gadgets, SEG.maps, SEG.modes],
     platforms: PLATFORMS.bf6,
   },
   {
     key: "bf2042",
     name: "Battlefield 2042",
-    segments: [SEG.overview, SEG.weapons, SEG.vehicles, SEG.gadgets, SEG.hazardzone],
+    segments: [SEG.overview, SEG.weapons, SEG.vehicles, SEG.classes, SEG.gadgets, SEG.maps, SEG.modes, SEG.hazardzone],
     platforms: PLATFORMS.bf2042,
   },
   {
     key: "bfv",
     name: "Battlefield V",
-    segments: [SEG.overview, SEG.weapons, SEG.vehicles, SEG.firestorm],
+    segments: [SEG.overview, SEG.weapons, SEG.vehicles, SEG.classes, SEG.modes, SEG.matches, SEG.firestorm],
     platforms: PLATFORMS.bfv,
   },
-  { key: "bf1", name: "Battlefield 1", segments: [SEG.overview, SEG.weapons, SEG.vehicles], platforms: PLATFORMS.bf1 },
+  {
+    key: "bf1",
+    name: "Battlefield 1",
+    segments: [SEG.overview, SEG.weapons, SEG.vehicles, SEG.classes, SEG.modes, SEG.matches, SEG.progression],
+    platforms: PLATFORMS.bf1,
+  },
   {
     key: "bfh",
     name: "Battlefield Hardline",
-    segments: [SEG.overview, SEG.weapons, SEG.vehicles],
+    segments: [SEG.overview, SEG.weapons, SEG.vehicles, SEG.classes],
     platforms: PLATFORMS.bfh,
   },
-  { key: "bf4", name: "Battlefield 4", segments: [SEG.overview, SEG.weapons, SEG.vehicles], platforms: PLATFORMS.bf4 },
-  { key: "bf3", name: "Battlefield 3", segments: [SEG.overview, SEG.weapons, SEG.vehicles], platforms: PLATFORMS.bf3 },
-  { key: "bf2", name: "Battlefield 2", segments: [SEG.overview, SEG.weapons], platforms: PLATFORMS.bf2 },
+  {
+    key: "bf4",
+    name: "Battlefield 4",
+    segments: [SEG.overview, SEG.weapons, SEG.vehicles, SEG.classes],
+    platforms: PLATFORMS.bf4,
+  },
+  {
+    key: "bf3",
+    name: "Battlefield 3",
+    segments: [SEG.overview, SEG.weapons, SEG.vehicles, SEG.classes],
+    platforms: PLATFORMS.bf3,
+  },
+  {
+    key: "bf2",
+    name: "Battlefield 2",
+    segments: [SEG.overview, SEG.weapons, SEG.vehicles, SEG.classes],
+    platforms: PLATFORMS.bf2,
+  },
 ];
 
 export const getDemoGame = (key: string): DemoGame => DEMO_GAMES.find((g) => g.key === key) ?? DEMO_GAMES[0];
