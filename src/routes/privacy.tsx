@@ -128,7 +128,7 @@ function PrivacyComponent() {
             Each successful stats output this bot sends (after March 21, 2024) has a unique identifier. For images, in
             the top right corner. For embeds, in the footer. These identifers are randomly generated Nano IDs and can be
             used to look up non-identifiable metadata for that specific output in the API. You can perform a partial
-            search in the API and it will return the first match.
+            search in the API and it will return the first match. Images through the API will not include this.
           </p>
           <p>
             <a
