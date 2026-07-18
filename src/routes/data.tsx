@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import humanizeDuration from "humanize-duration";
 import {
   ActivityIcon,
+  CircleHelpIcon,
   HomeIcon,
   Link2Icon,
   Link2OffIcon,
@@ -451,7 +452,12 @@ const RecentEvents = ({ events }: { events: DBEvent[] }) => {
           </>
         );
       default:
-        return null;
+        return (
+          <>
+            <CircleHelpIcon className="size-3.5 shrink-0 translate-y-0.5 text-muted-foreground" /> Unknown event
+            <span className="font-mono text-xs text-muted-foreground">({eventName})</span>
+          </>
+        );
     }
   };
 
