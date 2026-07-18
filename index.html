@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
 
 <head>
   <meta charset="UTF-8" />
@@ -8,6 +8,7 @@
   <!-- TODO: Update image links™ -->
   <title>Battlefield Stats Discord Bot</title>
   <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+  <link rel="preload" href="/fonts/Geist[wght].ttf" as="font" type="font/ttf" crossorigin />
   <meta name="description"
   content="Supercharge your Discord with real-time Battlefield game stats - Battlefield 6, 2042, V, 1, and more. Add the bot now!">
   <meta property="og:title" content="Battlefield Stats Discord Bot">
@@ -29,6 +30,13 @@
   <meta name="twitter:image:width" content="1200">
   <meta name="twitter:image:height" content="750">
   <meta name="twitter:image" content="https://battlefieldstats.com/images/example_bf6.png">
+
+  <!-- Apply stored theme before first paint to avoid a flash -->
+  <script>
+    try {
+      if (localStorage.getItem("ui-theme") === "light") document.documentElement.classList.remove("dark");
+    } catch { }
+  </script>
 </head>
 
 <body class="min-h-screen overflow-y-scroll bg-background">

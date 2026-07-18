@@ -1,9 +1,17 @@
 import { Link } from "@tanstack/react-router";
-import { cn } from "@/lib/utils";
+import { CtaButton } from "./CtaButton";
+import { DISCORD_INVITE_URL, Wordmark } from "./Header";
 import { Icons } from "./icons";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "./ui/button";
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
+
+const NAV_LINKS = [
+  { name: "Home", to: "/" },
+  { name: "Data", to: "/data" },
+  { name: "Privacy Policy", to: "/privacy" },
+  { name: "Terms of Service", to: "/tos" },
+] as const;
 
 export const HeaderSheet = () => {
   return (
@@ -18,83 +26,54 @@ export const HeaderSheet = () => {
           <SheetTitle className="flex items-center gap-3">
             <img
               alt="Battlefield Stats icon"
-              className="size-10 rounded"
+              className="clip-notch-sm size-9"
               height={100}
               src="/images/avatar.png"
               width={100}
             />
-            <span>Battlefield Stats</span>
+            <Wordmark />
           </SheetTitle>
         </SheetHeader>
 
-        <div className="my-3 flex flex-col">
-          {[
-            {
-              name: "Home",
-              to: "/",
-            },
-            {
-              name: "Privacy Policy",
-              to: "/privacy",
-            },
-            {
-              name: "Terms of Service",
-              to: "/tos",
-            },
-            {
-              name: "Data",
-              to: "/data",
-            },
-          ].map((navLink) => (
+        <nav className="my-6 flex flex-col gap-1">
+          {NAV_LINKS.map((navLink) => (
             <SheetClose asChild key={navLink.to}>
-              <Link className={cn("p-2 hover:bg-neutral-200 dark:hover:bg-neutral-800")} to={navLink.to}>
+              <Link
+                activeProps={{ className: "!text-foreground !border-primary" }}
+                className="border-l-2 border-transparent px-3 py-2 font-mono text-sm font-medium uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground"
+                to={navLink.to}
+              >
                 {navLink.name}
               </Link>
             </SheetClose>
           ))}
+        </nav>
 
+        <CtaButton className="w-full" href={DISCORD_INVITE_URL} rel="noreferrer" size="sm" target="_blank">
+          <Icons.discord className="size-4" />
+          Add to Discord
+        </CtaButton>
+
+        <div className="mt-6 flex items-center gap-1">
           <a
-            className={cn("group flex items-center gap-1 p-2 hover:bg-neutral-200 dark:hover:bg-neutral-800")}
-            href="https://discord.com/oauth2/authorize?client_id=842768680252997662"
+            className="rounded p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            href="https://x.com/MozzyFX"
             rel="noreferrer"
             target="_blank"
+            title="Twitter"
           >
-            <Icons.discord className="size-6 group-hover:text-[#5865F2]" /> Add to Discord
+            <Icons.twitterX className="size-5" />
           </a>
-        </div>
 
-        <div className="flex flex-col gap-2">
-          <div className="flex gap-1">
-            <a
-              className="rounded p-2 opacity-80 hover:bg-neutral-200 dark:hover:bg-neutral-800"
-              href="https://x.com/MozzyFX"
-              rel="noreferrer"
-              target="_blank"
-              title="Twitter"
-            >
-              <Icons.twitterX className="size-6" />
-            </a>
-
-            {/* <a
-              className="rounded p-2 opacity-80 hover:bg-neutral-200 dark:hover:bg-neutral-800"
-              href="https://bsky.app/profile/leon.ms"
-              rel="noreferrer"
-              target="_blank"
-              title="Bluesky"
-            >
-              <Icons.bluesky className="size-6" />
-            </a> */}
-
-            <a
-              className="rounded p-2 opacity-80 hover:bg-neutral-200 dark:hover:bg-neutral-800"
-              href="https://github.com/leonlarsson/bfstats-web"
-              rel="noreferrer"
-              target="_blank"
-              title="GitHub"
-            >
-              <Icons.gitHub className="size-6" />
-            </a>
-          </div>
+          <a
+            className="rounded p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            href="https://github.com/leonlarsson/bfstats-web"
+            rel="noreferrer"
+            target="_blank"
+            title="GitHub"
+          >
+            <Icons.gitHub className="size-5" />
+          </a>
 
           <ThemeToggle />
         </div>

@@ -1,7 +1,7 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { lazy } from "react";
+import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { HeaderStats } from "@/components/HeaderStats";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 const TanStackRouterDevtools =
@@ -20,15 +20,15 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <div className="container relative flex min-h-screen flex-col px-4 lg:px-8">
-      <ThemeProvider defaultTheme="light" storageKey="ui-theme">
+    <ThemeProvider defaultTheme="dark" storageKey="ui-theme">
+      <div className="relative flex min-h-screen flex-col">
         <Header />
-        <div className="flex-1 pb-10">
-          <HeaderStats />
+        <main className="flex-1">
           <Outlet />
-          <TanStackRouterDevtools position="bottom-right" />
-        </div>
-      </ThemeProvider>
-    </div>
+        </main>
+        <Footer />
+        <TanStackRouterDevtools position="bottom-right" />
+      </div>
+    </ThemeProvider>
   );
 }

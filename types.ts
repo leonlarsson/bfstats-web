@@ -16,7 +16,8 @@ export type DBEvent = {
     | "appGuildUninstall"
     | "appUserUninstall"
     | "bfAccountLink"
-    | "bfAccountUnlink";
+    | "bfAccountUnlink"
+    | "apiImageGenerated";
   date: string;
 };
 
