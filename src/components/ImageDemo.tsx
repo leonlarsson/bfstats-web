@@ -1,4 +1,4 @@
-import { AlertTriangleIcon, ImageIcon, Loader2Icon, LockIcon, SparklesIcon } from "lucide-react";
+import { AlertTriangleIcon, DownloadIcon, ImageIcon, Loader2Icon, LockIcon, SparklesIcon } from "lucide-react";
 import { type ReactNode, type SyntheticEvent, useCallback, useEffect, useRef, useState } from "react";
 import type { GalleryImage } from "@/components/Gallery";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,7 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
 
   const [status, setStatus] = useState<DemoStatus>("idle");
   const [result, setResult] = useState<GalleryImage | null>(null);
+  const [downloadName, setDownloadName] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [cooldown, setCooldown] = useState(0);
 
@@ -74,8 +75,8 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const trimmed = username.trim();
-    if (!trimmed) return;
+    const trimmedUsername = username.trim();
+    if (!trimmedUsername) return;
     if (status === "loading" || Date.now() < cooldownUntilRef.current) return;
 
     abortRef.current?.abort();
@@ -87,7 +88,9 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
     startCooldown();
 
     try {
-      const res = await fetch(buildImageUrl(gameKey, segment, platform, trimmed), { signal: controller.signal });
+      const res = await fetch(buildImageUrl(gameKey, segment, platform, trimmedUsername), {
+        signal: controller.signal,
+      });
 
       if (!res.ok) {
         let code: string | undefined;
@@ -106,7 +109,9 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
       const url = URL.createObjectURL(blob);
       objectUrlRef.current = url;
       const segmentLabel = game.segments.find((s) => s.key === segment)?.label ?? segment;
+      const extension = blob.type === "image/gif" ? "gif" : "png";
       setResult({ src: url, game: game.name, segment: segmentLabel });
+      setDownloadName(`battlefield-stats-${gameKey}-${segment}-${encodeURIComponent(trimmedUsername)}.${extension}`);
       setStatus("success");
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") return;
@@ -224,18 +229,29 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
         {/* ---- Preview ---- */}
         <div className="panel clip-notch-sm relative flex aspect-[1200/750] items-center justify-center overflow-hidden bg-muted/30">
           {status === "success" && result ? (
-            <button
-              aria-label="Expand generated image"
-              className="block size-full cursor-zoom-in"
-              onClick={() => onExpand(result)}
-              type="button"
-            >
-              <img
-                alt={`${result.game} ${result.segment} stats`}
-                className="size-full object-contain"
-                src={result.src}
-              />
-            </button>
+            <>
+              <button
+                aria-label="Expand generated image"
+                className="block size-full cursor-zoom-in"
+                onClick={() => onExpand(result)}
+                type="button"
+              >
+                <img
+                  alt={`${result.game} ${result.segment} stats`}
+                  className="size-full object-contain"
+                  src={result.src}
+                />
+              </button>
+              <a
+                aria-label="Download image"
+                className="absolute top-2 right-2 flex items-center gap-1.5 rounded-md border bg-background/80 px-2.5 py-1.5 font-mono text-[11px] uppercase tracking-widest text-muted-foreground backdrop-blur transition-colors hover:border-primary/60 hover:text-foreground"
+                download={downloadName}
+                href={result.src}
+              >
+                <DownloadIcon className="size-3.5" />
+                Save
+              </a>
+            </>
           ) : status === "loading" ? (
             <PreviewState icon={<Loader2Icon className="size-6 animate-spin text-primary" />} text="Rendering image…" />
           ) : status === "error" ? (
