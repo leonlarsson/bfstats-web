@@ -1,9 +1,10 @@
 import { useQueries } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, useLocation } from "@tanstack/react-router";
 import humanizeDuration from "humanize-duration";
 import {
   ActivityIcon,
   CircleHelpIcon,
+  HashIcon,
   HomeIcon,
   ImagePlusIcon,
   Link2Icon,
@@ -14,13 +15,14 @@ import {
   UserIcon,
   UsersIcon,
 } from "lucide-react";
-import type { ReactNode } from "react";
+import { type ReactNode, useEffect, useRef } from "react";
 import type { BaseStats, CountsItem, DBEvent, DBOutput, DBUser, EventDailyItem, SentDailyItemGames } from "types";
 import { ActivityHeatmap } from "@/components/ActivityHeatmap";
 import { BotCommand } from "@/components/BotCommand";
 import { BarChart, EventsPerDayChartWithFilter, StatsSentPerDayChartWithFilter } from "@/components/Charts";
 import { CountUp } from "@/components/CountUp";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 import {
   baseStatsQueryOptions,
   eventsDailyNoGapsQueryOptions,
@@ -79,6 +81,17 @@ function DataComponent() {
 
   const isLoading = queries.some((query) => query.isLoading);
   const isError = queries.some((query) => !query.isSuccess);
+
+  const hasScrolledToHashRef = useRef(false);
+  useEffect(() => {
+    if (isLoading || hasScrolledToHashRef.current) return;
+    hasScrolledToHashRef.current = true;
+    const hash = window.location.hash.slice(1);
+    if (!hash) return;
+    requestAnimationFrame(() => {
+      document.getElementById(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [isLoading]);
 
   return (
     <div className="container px-4 py-12 lg:px-8">
@@ -154,10 +167,10 @@ function DataComponent() {
             <section>
               <SectionHeader title="Recent activity" description="Straight from the wire" />
               <div className="grid gap-6 xl:grid-cols-2">
-                <StatCard title="Last 20 stats sent">
+                <StatCard id="recent-outputs" title="Last 20 stats sent">
                   <RecentOutputs outputs={outputsRecentQuery.data as DBOutput[]} />
                 </StatCard>
-                <StatCard title="Last 40 events">
+                <StatCard id="recent-events" title="Last 40 events">
                   <RecentEvents events={eventsRecentQuery.data as DBEvent[]} />
                 </StatCard>
               </div>
@@ -214,7 +227,7 @@ const SectionHeader = ({ title, description, extra }: { title: string; descripti
 const TotalStats = ({ baseStats }: { baseStats: BaseStats }) => {
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-      <StatCard title="Per game" description="since May 25, 2021">
+      <StatCard description="since May 25, 2021" id="all-time-per-game" title="Per game">
         <ScrollArea type="always" className="h-[330px] pr-4">
           <BarChart
             data={Object.entries(baseStats.totalStatsSent.games)
@@ -225,7 +238,7 @@ const TotalStats = ({ baseStats }: { baseStats: BaseStats }) => {
         </ScrollArea>
       </StatCard>
 
-      <StatCard title="Per language" description="since May 25, 2021">
+      <StatCard description="since May 25, 2021" id="all-time-per-language" title="Per language">
         <ScrollArea type="always" className="h-[330px] pr-4">
           <BarChart
             data={Object.entries(baseStats.totalStatsSent.languages)
@@ -278,7 +291,7 @@ const SinceJanuary = ({
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <StatCard title="Per game" description="since Jan 1, 2023">
+        <StatCard description="since Jan 1, 2023" id="since-2023-per-game" title="Per game">
           <ScrollArea type="always" className="h-[330px] pr-4">
             <BarChart
               data={games.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
@@ -287,7 +300,7 @@ const SinceJanuary = ({
           </ScrollArea>
         </StatCard>
 
-        <StatCard title="Per segment" description="since Jan 1, 2023">
+        <StatCard description="since Jan 1, 2023" id="since-2023-per-segment" title="Per segment">
           <ScrollArea type="always" className="h-[330px] pr-4">
             <BarChart
               data={segments.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
@@ -296,7 +309,7 @@ const SinceJanuary = ({
           </ScrollArea>
         </StatCard>
 
-        <StatCard title="Per language" description="since Jan 1, 2023">
+        <StatCard description="since Jan 1, 2023" id="since-2023-per-language" title="Per language">
           <ScrollArea type="always" className="h-[330px] pr-4">
             <BarChart
               data={languages.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
@@ -305,7 +318,7 @@ const SinceJanuary = ({
           </ScrollArea>
         </StatCard>
 
-        <StatCard title="Top users" description="since Jan 1, 2023">
+        <StatCard description="since Jan 1, 2023" id="since-2023-top-users" title="Top users">
           <ScrollArea type="always" className="h-[330px] pr-4">
             <BarChart
               data={topUsers.map((sent, i) => ({ name: `User #${i + 1}`, value: sent.totalStatsSent }))}
@@ -315,15 +328,19 @@ const SinceJanuary = ({
         </StatCard>
       </div>
 
-      <StatCard title="Activity heatmap" description="stats sent per day, since Jan 1, 2023">
+      <StatCard
+        description="stats sent per day, since Jan 1, 2023"
+        id="since-2023-activity-heatmap"
+        title="Activity heatmap"
+      >
         <ActivityHeatmap data={outputDailyGames} />
       </StatCard>
 
-      <StatCard title="Stats sent per day">
+      <StatCard id="since-2023-stats-per-day" title="Stats sent per day">
         <StatsSentPerDayChartWithFilter data={outputDailyGames} />
       </StatCard>
 
-      <StatCard title="Events per day">
+      <StatCard id="since-2023-events-per-day" title="Events per day">
         <EventsPerDayChartWithFilter data={eventsDaily} />
       </StatCard>
     </div>
@@ -347,7 +364,7 @@ const Last7Days = ({ outputsCounts }: { outputsCounts: CountsItem[] }) => {
 
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-      <StatCard title="Per game" description="last 7 days">
+      <StatCard description="last 7 days" id="last-7-days-per-game" title="Per game">
         <ScrollArea type="always" className="h-[330px] pr-4">
           <BarChart
             data={games.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
@@ -356,7 +373,7 @@ const Last7Days = ({ outputsCounts }: { outputsCounts: CountsItem[] }) => {
         </ScrollArea>
       </StatCard>
 
-      <StatCard title="Per segment" description="last 7 days">
+      <StatCard description="last 7 days" id="last-7-days-per-segment" title="Per segment">
         <ScrollArea type="always" className="h-[330px] pr-4">
           <BarChart
             data={segments.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
@@ -365,7 +382,12 @@ const Last7Days = ({ outputsCounts }: { outputsCounts: CountsItem[] }) => {
         </ScrollArea>
       </StatCard>
 
-      <StatCard title="Per language" description="last 7 days" cardClassName="col-span-full">
+      <StatCard
+        cardClassName="col-span-full"
+        description="last 7 days"
+        id="last-7-days-per-language"
+        title="Per language"
+      >
         <ScrollArea type="always" className="h-[330px] pr-4">
           <BarChart
             data={languages.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
@@ -504,23 +526,51 @@ const ErrorFetchingText = () => (
 );
 
 const StatCard = ({
+  id,
   title,
   description,
   cardClassName,
   children,
 }: {
+  id?: string;
   title: string;
   description?: string;
   cardClassName?: string;
   children: ReactNode;
-}) => (
-  <div className={`panel clip-notch-sm ${cardClassName ?? ""}`}>
-    <div className="flex flex-wrap items-baseline justify-between gap-x-3 border-b px-5 py-3">
-      <span className="font-bold">{title}</span>
-      {description && (
-        <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">{description}</span>
+}) => {
+  const currentHash = useLocation({ select: (location) => location.hash });
+  const isActive = !!id && currentHash === id;
+
+  return (
+    <div
+      className={cn(
+        "panel clip-notch-sm transition-colors",
+        id && "scroll-mt-24",
+        isActive && "border-primary bg-primary/5",
+        cardClassName,
       )}
+      id={id}
+    >
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 border-b px-5 py-3">
+        {id ? (
+          <Link
+            className="group flex items-center gap-1.5 font-bold transition-colors hover:text-primary"
+            hash={id}
+            hashScrollIntoView={{ behavior: "smooth", block: "start" }}
+            replace
+            to="/data"
+          >
+            {title}
+            <HashIcon className="size-3.5 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+          </Link>
+        ) : (
+          <span className="font-bold">{title}</span>
+        )}
+        {description && (
+          <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">{description}</span>
+        )}
+      </div>
+      <div className="p-5">{children}</div>
     </div>
-    <div className="p-5">{children}</div>
-  </div>
-);
+  );
+};
