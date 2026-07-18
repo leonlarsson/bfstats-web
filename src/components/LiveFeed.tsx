@@ -1,6 +1,6 @@
 import { useQueries } from "@tanstack/react-query";
 import humanizeDuration from "humanize-duration";
-import { HomeIcon, Link2Icon, type LucideIcon, RadioIcon, SendIcon, UserIcon } from "lucide-react";
+import { HomeIcon, ImagePlusIcon, Link2Icon, type LucideIcon, RadioIcon, SendIcon, UserIcon } from "lucide-react";
 import { useMemo } from "react";
 import type { DBEvent, DBOutput } from "types";
 import { cn } from "@/lib/utils";
@@ -28,6 +28,7 @@ const EVENT_META: Partial<Record<DBEvent["event"], { icon: LucideIcon; label: st
   appGuildInstall: { icon: HomeIcon, label: "Added to a server" },
   appUserInstall: { icon: UserIcon, label: "Installed to an account" },
   bfAccountLink: { icon: Link2Icon, label: "Battlefield account linked" },
+  apiImageGenerated: { icon: ImagePlusIcon, label: "API image generated" },
 };
 
 type FeedItem = { kind: "output"; date: string; output: DBOutput } | { kind: "event"; date: string; event: DBEvent };
