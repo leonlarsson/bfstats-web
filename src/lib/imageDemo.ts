@@ -1,21 +1,15 @@
-// Config + helpers for the home-page "generate an image" demo.
-//
-// Requests resolve to `${IMAGE_API_BASE}/:game/:segment?username=&platform=`.
 export const IMAGE_API_BASE = "https://api.battlefieldstats.com/images";
 
 export type DemoSegment = { key: string; label: string };
 export type DemoPlatform = { value: string; label: string };
 
 export type DemoGame = {
-  /** Path key used by the API, e.g. "bf6" → /images/bf6/overview */
   key: string;
   name: string;
   segments: DemoSegment[];
   platforms: DemoPlatform[];
 };
 
-// Segment keys come from the image API's handler map; labels mirror the
-// `Segment` union in types.ts.
 const SEG = {
   overview: { key: "overview", label: "Overview" },
   weapons: { key: "weapons", label: "Weapons" },
@@ -25,9 +19,6 @@ const SEG = {
   hazardzone: { key: "hazardzone", label: "Hazard Zone" },
 } satisfies Record<string, DemoSegment>;
 
-// Platform values per game, mirroring the bot's own GamePlatforms map.
-// Note the sets differ per game (bf6 has Steam + EA; Battlelog-era games carry
-// console generations; bf2 uses community master servers).
 const p = (label: string, value: string): DemoPlatform => ({ label, value });
 
 const PLATFORMS: Record<string, DemoPlatform[]> = {
@@ -53,9 +44,6 @@ const PLATFORMS: Record<string, DemoPlatform[]> = {
   bf2: [p("BF2Hub", "bf2hub"), p("PlayBF2", "playbf2")],
 };
 
-// Segments are limited to those the image API actually renders (per its handler
-// map). The Discord command offers more (classes/maps/modes/…), but those have
-// no image pipeline, so they'd 404 here. BFBC2 has no handler at all → omitted.
 export const DEMO_GAMES: DemoGame[] = [
   {
     key: "bf6",
@@ -94,7 +82,6 @@ export const buildImageUrl = (game: string, segment: string, platform: string, u
   return `${IMAGE_API_BASE}/${game}/${segment}?${params.toString()}`;
 };
 
-// Maps the API's error codes to friendly, user-facing copy.
 export const friendlyError = (code: string | undefined): string => {
   switch (code) {
     case "PLAYER_NOT_FOUND":

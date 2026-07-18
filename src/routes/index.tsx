@@ -45,6 +45,8 @@ const GAMES = [
   { name: "Battlefield 2", command: "/bf2", mark: "2", segments: ["Stats"] },
 ];
 
+const FALLBACK_STATS_SENT = 360_000;
+
 const COMMANDS = [
   "/bf6",
   "/bf2042",
@@ -106,7 +108,7 @@ function HomeComponent() {
               </CtaButton>
 
               <CtaButton asChild className="w-full sm:w-auto" variant="outline">
-                <Link to="/" hash="demo">
+                <Link hash="demo" hashScrollIntoView={{ behavior: "instant", block: "start" }} to="/">
                   Try it
                   <ArrowDownIcon className="size-4" />
                 </Link>
@@ -314,13 +316,15 @@ function HomeComponent() {
           </div>
           <video
             aria-label="Demonstration of linking a Battlefield account."
-            className="clip-notch w-full max-w-xl border justify-self-center lg:justify-self-end"
+            className="clip-notch aspect-[794/696] w-full max-w-xl border justify-self-center lg:justify-self-end"
             controls
             autoPlay
+            height={696}
             loop
             muted
             playsInline
             preload="metadata"
+            width={794}
           >
             <source src="/images/linking.mp4" type="video/mp4" />
             Your browser does not support embedded videos.
@@ -434,16 +438,11 @@ function HomeComponent() {
             Ready to <span className="text-primary">deploy?</span>
           </h2>
           <p className="mt-4 max-w-md text-muted-foreground">
-            Join thousands of servers already using Battlefield Stats.
-            {baseStats && (
-              <>
-                {" "}
-                <span className="font-semibold text-foreground tabular-nums">
-                  {baseStats.totalStatsSent.total.toLocaleString("en")}
-                </span>{" "}
-                stats sent and counting.
-              </>
-            )}
+            Join thousands of servers already using Battlefield Stats.{" "}
+            <span className="font-semibold text-foreground tabular-nums">
+              {(baseStats?.totalStatsSent.total ?? FALLBACK_STATS_SENT).toLocaleString("en")}
+            </span>{" "}
+            stats sent and counting.
           </p>
           <CtaButton className="mt-8 px-8" href={DISCORD_INVITE_URL} rel="noreferrer" target="_blank">
             <Icons.discord className="size-5" />

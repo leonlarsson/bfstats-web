@@ -7,20 +7,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { buildImageUrl, DEMO_GAMES, friendlyError, getDemoGame } from "@/lib/imageDemo";
 
-// Only Overview is free to preview here — other segments upsell the bot.
 const DEMO_SEGMENT = "overview";
 
 type DemoStatus = "idle" | "loading" | "success" | "error";
 
-// Client-side cooldown between generations. Not a security boundary (the API
-// enforces its own limits) — just a courtesy guard against casual spam.
 const COOLDOWN_SECONDS = 10;
 
-/**
- * Home-page demo: pick a game/segment/platform, enter a username, and preview
- * the exact image the bot would render. Talks to the image API (see IMAGE_API_BASE).
- * `onExpand` opens the rendered image in the shared lightbox.
- */
 export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => void }) => {
   const [gameKey, setGameKey] = useState(DEMO_GAMES[0].key);
   const game = getDemoGame(gameKey);
@@ -34,10 +26,8 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
   const [errorMsg, setErrorMsg] = useState("");
   const [cooldown, setCooldown] = useState(0);
 
-  // Track the created object URL + any in-flight request so we can clean up.
   const objectUrlRef = useRef<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
-  // Timestamp guard (checked synchronously in the handler) + its display ticker.
   const cooldownUntilRef = useRef(0);
   const cooldownTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -48,7 +38,6 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
     }
   }, []);
 
-  // Start the cooldown: set the timestamp guard and tick the visible countdown.
   const startCooldown = useCallback(() => {
     cooldownUntilRef.current = Date.now() + COOLDOWN_SECONDS * 1000;
     setCooldown(COOLDOWN_SECONDS);
@@ -65,7 +54,6 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
     }, 250);
   }, []);
 
-  // Clean up the object URL / pending request / ticker on unmount.
   useEffect(() => {
     return () => {
       revokeCurrent();
@@ -74,12 +62,10 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
     };
   }, [revokeCurrent]);
 
-  // Changing game may invalidate the selected segment/platform — reset both.
   const handleGameChange = (nextKey: string) => {
     const nextGame = getDemoGame(nextKey);
     setGameKey(nextKey);
 
-    // To allow loading the options first
     requestAnimationFrame(() => {
       setSegment(nextGame.segments[0].key);
       setPlatform(nextGame.platforms[0].value);
@@ -90,7 +76,6 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
     e.preventDefault();
     const trimmed = username.trim();
     if (!trimmed) return;
-    // Deeper guard: block even if something bypasses the disabled button.
     if (status === "loading" || Date.now() < cooldownUntilRef.current) return;
 
     abortRef.current?.abort();
@@ -99,7 +84,6 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
 
     setStatus("loading");
     setErrorMsg("");
-    // Cooldown starts the moment we fire — throttles requests regardless of outcome.
     startCooldown();
 
     try {

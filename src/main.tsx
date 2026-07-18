@@ -5,11 +5,12 @@ import { routeTree } from "./routeTree.gen";
 
 import "./index.css";
 
+if (typeof history !== "undefined") history.scrollRestoration = "manual";
+
 // Set up a Router instance
 const router = createRouter({
   routeTree,
   defaultPreload: "intent",
-  scrollRestoration: true,
 });
 
 // Register things for typesafety

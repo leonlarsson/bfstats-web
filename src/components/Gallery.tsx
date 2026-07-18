@@ -56,7 +56,7 @@ export const GalleryStrip = ({ onSelect }: { onSelect: (image: GalleryImage) => 
     const el = scrollerRef.current;
     if (!el) return;
     const card = el.querySelector("button");
-    el.scrollBy({ left: direction * ((card?.clientWidth ?? 400) + 16), behavior: "smooth" });
+    el.scrollBy({ left: direction * ((card?.clientWidth ?? 400) + 16), behavior: "instant" });
   };
 
   // Drag-to-scroll for mouse users. Touch keeps native scrolling + snap.

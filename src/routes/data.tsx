@@ -89,7 +89,7 @@ function DataComponent() {
     const hash = window.location.hash.slice(1);
     if (!hash) return;
     requestAnimationFrame(() => {
-      document.getElementById(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      document.getElementById(hash)?.scrollIntoView({ behavior: "instant", block: "start" });
     });
   }, [isLoading]);
 
@@ -556,7 +556,7 @@ const StatCard = ({
           <Link
             className="group flex items-center gap-1.5 font-bold transition-colors hover:text-primary"
             hash={id}
-            hashScrollIntoView={{ behavior: "smooth", block: "start" }}
+            hashScrollIntoView={{ behavior: "instant", block: "start" }}
             replace
             to="/data"
           >

@@ -24,7 +24,11 @@ export const Header = () => {
     <header className="sticky top-0 z-50 w-full border-b bg-background/85 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between px-4 lg:px-8">
         <div className="flex min-w-0 items-center gap-3 lg:gap-8">
-          <Link className="flex shrink-0 items-center gap-3" to="/">
+          <Link
+            className="flex shrink-0 items-center gap-3"
+            onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "instant" })}
+            to="/"
+          >
             <img
               alt="Battlefield Stats icon"
               className="clip-notch-sm size-9"
