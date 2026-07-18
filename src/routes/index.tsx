@@ -45,7 +45,8 @@ const GAMES = [
   { name: "Battlefield 2", command: "/bf2", mark: "2", segments: ["Stats"] },
 ];
 
-const FALLBACK_STATS_SENT = 360_000;
+const FALLBACK_SERVER_COUNT = 10_000;
+const FALLBACK_USER_INSTALLS = 14_000;
 
 const COMMANDS = [
   "/bf6",
@@ -56,12 +57,12 @@ const COMMANDS = [
   "/bf4",
   "/bf3",
   "/bf2",
-  "/usage",
+  "/link",
   "/about",
   "/help",
   "/feedback",
   "/invite",
-  "/link",
+  "/usage",
 ];
 
 function HomeComponent() {
@@ -96,9 +97,12 @@ function HomeComponent() {
               <span className="text-primary">Battlefield.</span>
             </h1>
 
-            <p className="fade-up mt-6 max-w-xl text-lg text-muted-foreground" style={{ animationDelay: "160ms" }}>
-              Real-time stats, leaderboards, and server intel for every major Battlefield title — delivered straight to
-              your Discord server. One slash command. Zero friction.
+            <p
+              className="fade-up mt-6 max-w-xl text-lg text-muted-foreground text-balance"
+              style={{ animationDelay: "160ms" }}
+            >
+              Real-time stats, leaderboards, and more for every major Battlefield title — delivered straight to your
+              Discord.
             </p>
 
             <div className="fade-up mt-8 flex flex-wrap items-center gap-3" style={{ animationDelay: "240ms" }}>
@@ -174,7 +178,7 @@ function HomeComponent() {
             Every major title. <span className="text-primary">One bot.</span>
           </>
         }
-        description="From Battlefield 2 to Battlefield 6 — run the game's command and pick a segment. Click a card to see that game's output."
+        description="From Battlefield 2 to Battlefield 6. Click a card to see that game's output."
       >
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {GAMES.map((game) => (
@@ -237,7 +241,7 @@ function HomeComponent() {
         className="border-y bg-card/50"
         eyebrow="Deployment"
         title="In the fight in under a minute."
-        description="No setup, no configuration, no dashboard. Add the bot and start pulling stats immediately."
+        description="No setup, no configuration. Add the bot and start pulling stats immediately."
       >
         <div className="grid gap-4 md:grid-cols-3">
           <StepCard
@@ -289,7 +293,7 @@ function HomeComponent() {
       <Section
         eyebrow="Field report"
         title="Stats that look like they belong in the game."
-        description="Every response is a rendered image built for the title you asked about — not a wall of text. Browse the gallery; click any card to enlarge."
+        description="Every response is a rendered image built for the title you asked about. Browse the gallery; click any card to enlarge."
       >
         <GalleryStrip onSelect={setLightboxImage} />
 
@@ -311,6 +315,9 @@ function HomeComponent() {
               </LinkFeature>
               <LinkFeature icon={<TerminalIcon className="size-4" />}>
                 <BotCommand command="/link remove" /> unlinks at any time — no questions asked
+              </LinkFeature>
+              <LinkFeature icon={<TerminalIcon className="size-4" />}>
+                <BotCommand command="/<game> mystats" /> to use the linked account
               </LinkFeature>
             </ul>
           </div>
@@ -339,10 +346,10 @@ function HomeComponent() {
         eyebrow="Live bot demo"
         title={
           <>
-            See the bot <span className="text-primary">in action.</span>
+            Not convinced? <span className="text-primary">Try it.</span>
           </>
         }
-        description="This is the exact image renderer behind the Discord bot. Pick a game, segment, and platform, drop in a username, and preview a real stat card — then add the bot to pull your own, plus leaderboards, account linking, and every command."
+        description="This is the exact image renderer behind the Discord bot. Pick a game, segment, and platform, drop in a username, and preview a real stat card. Add the bot for more."
       >
         <ImageDemo onExpand={setLightboxImage} />
 
@@ -437,12 +444,16 @@ function HomeComponent() {
           <h2 className="display text-4xl sm:text-6xl">
             Ready to <span className="text-primary">deploy?</span>
           </h2>
-          <p className="mt-4 max-w-md text-muted-foreground">
-            Join thousands of servers already using Battlefield Stats.{" "}
+          <p className="mt-4 max-w-lg text-muted-foreground text-balance">
+            Join{" "}
             <span className="font-semibold text-foreground tabular-nums">
-              {(baseStats?.totalStatsSent.total ?? FALLBACK_STATS_SENT).toLocaleString("en")}
+              {(baseStats?.totalGuilds ?? FALLBACK_SERVER_COUNT).toLocaleString("en")}
             </span>{" "}
-            stats sent and counting.
+            servers and{" "}
+            <span className="font-semibold text-foreground tabular-nums">
+              {(baseStats?.totalUserInstalls ?? FALLBACK_USER_INSTALLS).toLocaleString("en")}
+            </span>{" "}
+            accounts already using Battlefield Stats.
           </p>
           <CtaButton className="mt-8 px-8" href={DISCORD_INVITE_URL} rel="noreferrer" target="_blank">
             <Icons.discord className="size-5" />

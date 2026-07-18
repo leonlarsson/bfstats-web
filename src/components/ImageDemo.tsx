@@ -11,7 +11,7 @@ const DEMO_SEGMENT = "overview";
 
 type DemoStatus = "idle" | "loading" | "success" | "error";
 
-const COOLDOWN_SECONDS = 10;
+const COOLDOWN_SECONDS = 5;
 
 export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => void }) => {
   const [gameKey, setGameKey] = useState(DEMO_GAMES[0].key);
