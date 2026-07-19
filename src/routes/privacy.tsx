@@ -20,7 +20,9 @@ function PrivacyComponent() {
       <h1 className="display text-4xl sm:text-6xl">
         Privacy Policy<span className="text-primary">.</span>
       </h1>
-      <div className="mt-2 font-mono text-xs uppercase tracking-widest text-muted-foreground">Updated July 4, 2026</div>
+      <div className="mt-2 font-mono text-xs uppercase tracking-widest text-muted-foreground">
+        Updated July 19, 2026
+      </div>
 
       <div className="mt-10 max-w-3xl space-y-10">
         <PolicySection title="User Data handling and usage">
@@ -109,8 +111,8 @@ function PrivacyComponent() {
         <PolicySection title="Viewing your usage statistics">
           <p>
             To view your usage statistics, you can use the <BotCommand command="/usage" /> command. This will show you
-            the number of times you've used the bot, grouped by game. This is only visible to you unless specified
-            otherwise.
+            the number of times you've used the bot, grouped by game, and also your linked accounts. This is only
+            visible to you unless specified otherwise.
           </p>
         </PolicySection>
 
