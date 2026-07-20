@@ -94,7 +94,8 @@ export const LiveFeed = () => {
                     <span className="truncate">
                       <span className="font-medium">{item.output.game}</span>{" "}
                       <span className="text-muted-foreground">
-                        {item.output.segment} · {item.output.language}
+                        {item.output.segment}
+                        {item.output.paginationPage ? ` [#${item.output.paginationPage}]` : ""} · {item.output.language}
                       </span>
                     </span>
                   </span>

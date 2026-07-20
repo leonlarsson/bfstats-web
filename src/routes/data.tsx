@@ -410,7 +410,8 @@ const RecentOutputs = ({ outputs }: { outputs: DBOutput[] }) => {
               <span>
                 <span className="font-medium">{output.game}</span>{" "}
                 <span className="text-muted-foreground">
-                  {output.segment} · {output.language}
+                  {output.segment}
+                  {output.paginationPage ? ` [#${output.paginationPage}]` : ""} · {output.language}
                 </span>
               </span>
             </span>

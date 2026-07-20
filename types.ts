@@ -7,6 +7,7 @@ export type DBOutput = {
   segment: string;
   language: string;
   date: string;
+  paginationPage?: number;
 };
 
 export type DBEvent = {
