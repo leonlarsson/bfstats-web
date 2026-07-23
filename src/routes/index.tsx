@@ -91,7 +91,10 @@ function HomeComponent() {
           <div className="flex flex-col justify-center">
             <span className="eyebrow fade-up mb-6">The biggest Battlefield bot on Discord · Est. 2021</span>
 
-            <h1 className="display fade-up text-5xl sm:text-7xl xl:text-8xl" style={{ animationDelay: "80ms" }}>
+            <h1
+              className="display fade-up text-[clamp(2.25rem,11vw,3rem)] sm:text-7xl xl:text-8xl"
+              style={{ animationDelay: "80ms" }}
+            >
               Know your
               <br />
               <span className="text-primary">Battlefield.</span>
@@ -149,7 +152,7 @@ function HomeComponent() {
             </dl>
           </div>
 
-          <div className="fade-up min-h-[420px]" style={{ animationDelay: "300ms" }}>
+          <div className="fade-up min-w-0 min-h-[420px]" style={{ animationDelay: "300ms" }}>
             <LiveFeed />
           </div>
         </div>
