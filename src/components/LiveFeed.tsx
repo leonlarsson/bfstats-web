@@ -1,6 +1,5 @@
 import { useQueries } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import humanizeDuration from "humanize-duration";
 import {
   ArrowRightIcon,
   HomeIcon,
@@ -13,6 +12,7 @@ import {
 } from "lucide-react";
 import { useMemo } from "react";
 import type { DBEvent, DBOutput } from "types";
+import { parseUTCDate, TimeAgo } from "@/components/TimeAgo";
 import { cn } from "@/lib/utils";
 import { eventsRecentQueryOptions, outputsRecentQueryOptions } from "@/queries";
 
@@ -22,16 +22,6 @@ const FEED_STATUS = {
   connecting: { label: "Connecting", dot: "bg-muted-foreground animate-pulse", text: "text-muted-foreground" },
   offline: { label: "Offline", dot: "bg-destructive", text: "text-destructive" },
 } as const;
-
-// Fix for mobile
-const parseUTCDate = (date: string) => new Date(`${date.replace(" ", "T")}Z`);
-
-const shortAgo = (date: string) =>
-  humanizeDuration(parseUTCDate(date).getTime() - Date.now(), {
-    round: true,
-    largest: 1,
-    units: ["d", "h", "m"],
-  });
 
 // Only the positive events belong in the feed — uninstalls/unlinks are noise here.
 const EVENT_META: Partial<Record<DBEvent["event"], { icon: LucideIcon; label: string }>> = {
@@ -90,7 +80,7 @@ export const LiveFeed = () => {
         </span>
       </div>
 
-      <div className="relative flex-1 overflow-hidden px-4 py-2">
+      <div className="@container relative flex-1 overflow-hidden px-4 py-2">
         {items ? (
           <ul className="divide-y divide-border/60">
             {items.map((item, i) => (
@@ -112,12 +102,7 @@ export const LiveFeed = () => {
                 ) : (
                   <EventRow event={item.event} />
                 )}
-                <span
-                  className="shrink-0 font-mono text-xs text-muted-foreground"
-                  title={parseUTCDate(item.date).toLocaleString()}
-                >
-                  {shortAgo(item.date)} ago
-                </span>
+                <TimeAgo date={item.date} responsive />
               </li>
             ))}
           </ul>

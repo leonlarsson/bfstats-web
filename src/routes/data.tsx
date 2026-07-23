@@ -1,6 +1,5 @@
 import { useQueries } from "@tanstack/react-query";
 import { createFileRoute, Link, useLocation } from "@tanstack/react-router";
-import humanizeDuration from "humanize-duration";
 import {
   ActivityIcon,
   CircleHelpIcon,
@@ -21,6 +20,7 @@ import { ActivityHeatmap } from "@/components/ActivityHeatmap";
 import { BotCommand } from "@/components/BotCommand";
 import { BarChart, EventsPerDayChartWithFilter, StatsSentPerDayChartWithFilter } from "@/components/Charts";
 import { CountUp } from "@/components/CountUp";
+import { TimeAgo } from "@/components/TimeAgo";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import {
@@ -38,9 +38,6 @@ import {
 export const Route = createFileRoute("/data")({
   component: DataComponent,
 });
-
-// Fix for mobile
-const parseUTCDate = (date: string) => new Date(`${date.replace(" ", "T")}Z`);
 
 function DataComponent() {
   const [
@@ -399,38 +396,43 @@ const Last7Days = ({ outputsCounts }: { outputsCounts: CountsItem[] }) => {
   );
 };
 
-const RecentOutputs = ({ outputs }: { outputs: DBOutput[] }) => {
-  return (
-    <ScrollArea type="always" className="h-[370px] pr-4">
-      <ul className="divide-y divide-border/60">
-        {outputs.map((output) => (
-          <li key={output.date} className="flex flex-wrap items-baseline justify-between gap-x-3 py-2 text-sm">
-            <span className="flex min-w-0 items-baseline gap-2">
-              <SendIcon className="size-3.5 shrink-0 translate-y-0.5 text-primary" />
-              <span>
-                <span className="font-medium">{output.game}</span>{" "}
-                <span className="text-muted-foreground">
-                  {output.segment}
-                  {output.paginationPage ? ` [#${output.paginationPage}]` : ""} · {output.language}
-                </span>
-              </span>
-            </span>
-            <span
-              className="shrink-0 font-mono text-xs text-muted-foreground"
-              title={parseUTCDate(output.date).toLocaleString()}
-            >
-              {humanizeDuration(parseUTCDate(output.date).getTime() - Date.now(), {
-                round: true,
-                units: ["d", "h", "m"],
-              })}{" "}
-              ago
-            </span>
-          </li>
-        ))}
-      </ul>
-    </ScrollArea>
-  );
-};
+/** Scrollable "straight from the wire" list: one row per item, timestamp on the right. */
+const ActivityList = <T extends { date: string }>({
+  items,
+  renderItem,
+}: {
+  items: T[];
+  renderItem: (item: T) => ReactNode;
+}) => (
+  <ScrollArea type="always" className="h-[370px] pr-4">
+    <ul className="divide-y divide-border/60">
+      {items.map((item) => (
+        <li key={item.date} className="flex flex-wrap items-baseline justify-between gap-x-3 py-2 text-sm">
+          <span className="flex min-w-0 items-baseline gap-2">{renderItem(item)}</span>
+          <TimeAgo date={item.date} />
+        </li>
+      ))}
+    </ul>
+  </ScrollArea>
+);
+
+const RecentOutputs = ({ outputs }: { outputs: DBOutput[] }) => (
+  <ActivityList
+    items={outputs}
+    renderItem={(output) => (
+      <>
+        <SendIcon className="size-3.5 shrink-0 translate-y-0.5 text-primary" />
+        <span>
+          <span className="font-medium">{output.game}</span>{" "}
+          <span className="text-muted-foreground">
+            {output.segment}
+            {output.paginationPage ? ` [#${output.paginationPage}]` : ""} · {output.language}
+          </span>
+        </span>
+      </>
+    )}
+  />
+);
 
 const RecentEvents = ({ events }: { events: DBEvent[] }) => {
   const renderEventTitle = (eventName: DBEvent["event"]) => {
@@ -491,27 +493,7 @@ const RecentEvents = ({ events }: { events: DBEvent[] }) => {
     }
   };
 
-  return (
-    <ScrollArea type="always" className="h-[370px] pr-4">
-      <ul className="divide-y divide-border/60">
-        {events.map((event) => (
-          <li key={event.date} className="flex flex-wrap items-baseline justify-between gap-x-3 py-2 text-sm">
-            <span className="flex items-baseline gap-2">{renderEventTitle(event.event)}</span>
-            <span
-              className="shrink-0 font-mono text-xs text-muted-foreground"
-              title={parseUTCDate(event.date).toLocaleString()}
-            >
-              {humanizeDuration(parseUTCDate(event.date).getTime() - Date.now(), {
-                round: true,
-                units: ["d", "h", "m"],
-              })}{" "}
-              ago
-            </span>
-          </li>
-        ))}
-      </ul>
-    </ScrollArea>
-  );
+  return <ActivityList items={events} renderItem={(event) => renderEventTitle(event.event)} />;
 };
 
 const LoadingText = () => (
