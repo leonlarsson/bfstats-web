@@ -1,6 +1,16 @@
 import { useQueries } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 import humanizeDuration from "humanize-duration";
-import { HomeIcon, ImagePlusIcon, Link2Icon, type LucideIcon, RadioIcon, SendIcon, UserIcon } from "lucide-react";
+import {
+  ArrowRightIcon,
+  HomeIcon,
+  ImagePlusIcon,
+  Link2Icon,
+  type LucideIcon,
+  RadioIcon,
+  SendIcon,
+  UserIcon,
+} from "lucide-react";
 import { useMemo } from "react";
 import type { DBEvent, DBOutput } from "types";
 import { cn } from "@/lib/utils";
@@ -123,8 +133,17 @@ export const LiveFeed = () => {
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-linear-to-t from-card to-transparent" />
       </div>
 
-      <div className="border-t px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
-        Latest deliveries & events from the bot
+      <div className="flex items-baseline justify-between gap-3 border-t px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+        <span className="truncate">Latest deliveries & events</span>
+        <Link
+          className="group flex shrink-0 items-center gap-1 transition-colors hover:text-primary"
+          hash="recent-outputs"
+          hashScrollIntoView={{ behavior: "instant", block: "start" }}
+          to="/data"
+        >
+          See all
+          <ArrowRightIcon className="size-3 transition-transform group-hover:translate-x-0.5" />
+        </Link>
       </div>
     </div>
   );
