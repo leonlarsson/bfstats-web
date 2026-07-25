@@ -1,10 +1,8 @@
 import humanizeDuration from "humanize-duration";
-import { cn } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn, parseUTCDate } from "@/lib/utils";
 
 const AGO_OPTIONS: humanizeDuration.Options = { round: true, largest: 1, units: ["d", "h", "m"] };
-
-// Fix for mobile
-export const parseUTCDate = (date: string) => new Date(`${date.replace(" ", "T")}Z`);
 
 const longAgo = humanizeDuration.humanizer(AGO_OPTIONS);
 
@@ -26,9 +24,14 @@ export const TimeAgo = ({ date, responsive = false }: { date: string; responsive
   const elapsed = parsed.getTime() - Date.now();
 
   return (
-    <span className="shrink-0 font-mono text-xs text-muted-foreground" title={parsed.toLocaleString()}>
-      {responsive && <span className="@[24rem]:hidden">{compactAgo(elapsed)}</span>}
-      <span className={cn(responsive && "hidden @[24rem]:inline")}>{longAgo(elapsed)} ago</span>
-    </span>
+    <Tooltip delayDuration={0}>
+      <TooltipTrigger asChild>
+        <span className="shrink-0 font-mono text-xs text-muted-foreground">
+          {responsive && <span className="@[24rem]:hidden">{compactAgo(elapsed)}</span>}
+          <span className={cn(responsive && "hidden @[24rem]:inline")}>{longAgo(elapsed)} ago</span>
+        </span>
+      </TooltipTrigger>
+      <TooltipContent className="font-mono text-[11px]">{parsed.toLocaleString()}</TooltipContent>
+    </Tooltip>
   );
 };

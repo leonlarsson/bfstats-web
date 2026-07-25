@@ -23,7 +23,6 @@ import { CountUp } from "@/components/CountUp";
 import { OutputEntry } from "@/components/OutputEntry";
 import { TimeAgo } from "@/components/TimeAgo";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { groupOutputs } from "@/lib/outputs";
 import { cn } from "@/lib/utils";
 import {
@@ -421,9 +420,7 @@ const ActivityList = <T extends { date: string }>({
 
 const RecentOutputs = ({ outputs }: { outputs: DBOutput[] }) => (
   // Outputs from one pagination chain collapse into a single row; its pages and sorts are in the chip's tooltip.
-  <TooltipProvider>
-    <ActivityList items={groupOutputs(outputs)} renderItem={(group) => <OutputEntry group={group} />} />
-  </TooltipProvider>
+  <ActivityList items={groupOutputs(outputs)} renderItem={(group) => <OutputEntry group={group} />} />
 );
 
 const RecentEvents = ({ events }: { events: DBEvent[] }) => {

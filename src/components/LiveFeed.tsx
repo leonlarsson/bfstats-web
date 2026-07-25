@@ -4,10 +4,9 @@ import { ArrowRightIcon, HomeIcon, ImagePlusIcon, Link2Icon, type LucideIcon, Ra
 import { useMemo } from "react";
 import type { DBEvent } from "types";
 import { OutputEntry } from "@/components/OutputEntry";
-import { parseUTCDate, TimeAgo } from "@/components/TimeAgo";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { TimeAgo } from "@/components/TimeAgo";
 import { groupOutputs, type OutputGroup } from "@/lib/outputs";
-import { cn } from "@/lib/utils";
+import { cn, parseUTCDate } from "@/lib/utils";
 import { eventsRecentQueryOptions, outputsRecentQueryOptions } from "@/queries";
 
 // Status shown in the feed header. Content (skeleton / rows) is unaffected by this.
@@ -77,25 +76,23 @@ export const LiveFeed = () => {
 
       <div className="@container relative flex-1 overflow-hidden px-4 py-2">
         {items ? (
-          <TooltipProvider>
-            <ul className="divide-y divide-border/60">
-              {items.map((item, i) => (
-                <li
-                  className="flex items-baseline justify-between gap-3 py-2 text-sm"
-                  key={`${item.kind}-${item.date}-${i.toString()}`}
-                >
-                  {item.kind === "output" ? (
-                    <span className="flex min-w-0 items-baseline gap-2">
-                      <OutputEntry group={item.group} />
-                    </span>
-                  ) : (
-                    <EventRow event={item.event} />
-                  )}
-                  <TimeAgo date={item.date} responsive />
-                </li>
-              ))}
-            </ul>
-          </TooltipProvider>
+          <ul className="divide-y divide-border/60">
+            {items.map((item, i) => (
+              <li
+                className="flex items-baseline justify-between gap-3 py-2 text-sm"
+                key={`${item.kind}-${item.date}-${i.toString()}`}
+              >
+                {item.kind === "output" ? (
+                  <span className="flex min-w-0 items-baseline gap-2">
+                    <OutputEntry group={item.group} />
+                  </span>
+                ) : (
+                  <EventRow event={item.event} />
+                )}
+                <TimeAgo date={item.date} responsive />
+              </li>
+            ))}
+          </ul>
         ) : (
           <ul className="divide-y divide-border/60">
             {Array.from({ length: 12 }, (_, i) => i).map((i) => (

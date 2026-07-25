@@ -3,6 +3,7 @@ import { lazy } from "react";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const TanStackRouterDevtools =
   process.env.NODE_ENV === "production"
@@ -21,14 +22,16 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="ui-theme">
-      <div className="relative flex min-h-screen flex-col">
-        <Header />
-        <main className="flex-1">
-          <Outlet />
-        </main>
-        <Footer />
-        <TanStackRouterDevtools position="bottom-right" />
-      </div>
+      <TooltipProvider>
+        <div className="relative flex min-h-screen flex-col">
+          <Header />
+          <main className="flex-1">
+            <Outlet />
+          </main>
+          <Footer />
+          <TanStackRouterDevtools position="bottom-right" />
+        </div>
+      </TooltipProvider>
     </ThemeProvider>
   );
 }

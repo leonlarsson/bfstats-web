@@ -1,9 +1,9 @@
 import humanizeDuration from "humanize-duration";
 import { SendIcon, SortAscIcon, SortDescIcon } from "lucide-react";
 import { Fragment } from "react";
-import { parseUTCDate } from "@/components/TimeAgo";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { chainChip, type OutputGroup, pageDepth } from "@/lib/outputs";
+import { cn, parseUTCDate } from "@/lib/utils";
 
 const humanizeSpan = humanizeDuration.humanizer({ round: true, largest: 1, units: ["d", "h", "m", "s"] });
 
@@ -37,6 +37,8 @@ const ChainChip = ({ group }: { group: OutputGroup }) => {
   if (!sorts.length) return badge;
 
   const span = parseUTCDate(group.date).getTime() - parseUTCDate(group.firstDate).getTime();
+  // A lone output's page is already the chip, so there is no depth column to show beside its sort.
+  const showDepths = group.count > 1;
 
   return (
     <Tooltip delayDuration={0}>
@@ -48,7 +50,7 @@ const ChainChip = ({ group }: { group: OutputGroup }) => {
           </div>
         )}
         {/* One row per sort, in the order applied. Each sort restarts at page 1, so the depth is per sort. */}
-        <div className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-0.5 text-muted-foreground">
+        <div className={cn("grid gap-y-0.5 text-muted-foreground", showDepths && "grid-cols-[1fr_auto] gap-x-4")}>
           {sorts.map((sort) => (
             <Fragment key={`${sort.key}-${sort.ascending}`}>
               <span className="flex items-center gap-1.5">
@@ -62,7 +64,7 @@ const ChainChip = ({ group }: { group: OutputGroup }) => {
                 )}
               </span>
               {/* Kept as a cell even when empty so the columns stay aligned across rows. */}
-              {group.count > 1 && <span className="justify-self-end">{formatDepth(pageDepth(sort))}</span>}
+              {showDepths && <span className="justify-self-end">{formatDepth(pageDepth(sort))}</span>}
             </Fragment>
           ))}
         </div>
