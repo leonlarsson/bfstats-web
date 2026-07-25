@@ -1,18 +1,12 @@
 import { useQueries } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import {
-  ArrowRightIcon,
-  HomeIcon,
-  ImagePlusIcon,
-  Link2Icon,
-  type LucideIcon,
-  RadioIcon,
-  SendIcon,
-  UserIcon,
-} from "lucide-react";
+import { ArrowRightIcon, HomeIcon, ImagePlusIcon, Link2Icon, type LucideIcon, RadioIcon, UserIcon } from "lucide-react";
 import { useMemo } from "react";
-import type { DBEvent, DBOutput } from "types";
+import type { DBEvent } from "types";
+import { OutputEntry } from "@/components/OutputEntry";
 import { parseUTCDate, TimeAgo } from "@/components/TimeAgo";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { groupOutputs, type OutputGroup } from "@/lib/outputs";
 import { cn } from "@/lib/utils";
 import { eventsRecentQueryOptions, outputsRecentQueryOptions } from "@/queries";
 
@@ -31,7 +25,7 @@ const EVENT_META: Partial<Record<DBEvent["event"], { icon: LucideIcon; label: st
   apiImageGenerated: { icon: ImagePlusIcon, label: "API image generated" },
 };
 
-type FeedItem = { kind: "output"; date: string; output: DBOutput } | { kind: "event"; date: string; event: DBEvent };
+type FeedItem = { kind: "output"; date: string; group: OutputGroup } | { kind: "event"; date: string; event: DBEvent };
 
 /** Real-time feed of the bot's recent deliveries and install/link events, straight from the public API. */
 export const LiveFeed = () => {
@@ -44,10 +38,11 @@ export const LiveFeed = () => {
 
   const items = useMemo<FeedItem[] | undefined>(() => {
     if (!outputsQuery.data && !eventsQuery.data) return undefined;
-    const outputs: FeedItem[] = (outputsQuery.data ?? []).map((output) => ({
+    // Pagination chains collapse into one row, so a single user paging through weapons can't flood the feed.
+    const outputs: FeedItem[] = groupOutputs(outputsQuery.data ?? []).map((group) => ({
       kind: "output",
-      date: output.date,
-      output,
+      date: group.date,
+      group,
     }));
     const events: FeedItem[] = (eventsQuery.data ?? [])
       .filter((event) => event.event in EVENT_META)
@@ -82,30 +77,25 @@ export const LiveFeed = () => {
 
       <div className="@container relative flex-1 overflow-hidden px-4 py-2">
         {items ? (
-          <ul className="divide-y divide-border/60">
-            {items.map((item, i) => (
-              <li
-                className="flex items-baseline justify-between gap-3 py-2 text-sm"
-                key={`${item.kind}-${item.date}-${i.toString()}`}
-              >
-                {item.kind === "output" ? (
-                  <span className="flex min-w-0 items-baseline gap-2">
-                    <SendIcon className="size-3.5 shrink-0 translate-y-0.5 text-primary" />
-                    <span className="truncate">
-                      <span className="font-medium">{item.output.game}</span>{" "}
-                      <span className="text-muted-foreground">
-                        {item.output.segment}
-                        {item.output.paginationPage ? ` [#${item.output.paginationPage}]` : ""} · {item.output.language}
-                      </span>
+          <TooltipProvider>
+            <ul className="divide-y divide-border/60">
+              {items.map((item, i) => (
+                <li
+                  className="flex items-baseline justify-between gap-3 py-2 text-sm"
+                  key={`${item.kind}-${item.date}-${i.toString()}`}
+                >
+                  {item.kind === "output" ? (
+                    <span className="flex min-w-0 items-baseline gap-2">
+                      <OutputEntry group={item.group} />
                     </span>
-                  </span>
-                ) : (
-                  <EventRow event={item.event} />
-                )}
-                <TimeAgo date={item.date} responsive />
-              </li>
-            ))}
-          </ul>
+                  ) : (
+                    <EventRow event={item.event} />
+                  )}
+                  <TimeAgo date={item.date} responsive />
+                </li>
+              ))}
+            </ul>
+          </TooltipProvider>
         ) : (
           <ul className="divide-y divide-border/60">
             {Array.from({ length: 12 }, (_, i) => i).map((i) => (

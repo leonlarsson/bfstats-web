@@ -20,8 +20,11 @@ import { ActivityHeatmap } from "@/components/ActivityHeatmap";
 import { BotCommand } from "@/components/BotCommand";
 import { BarChart, EventsPerDayChartWithFilter, StatsSentPerDayChartWithFilter } from "@/components/Charts";
 import { CountUp } from "@/components/CountUp";
+import { OutputEntry } from "@/components/OutputEntry";
 import { TimeAgo } from "@/components/TimeAgo";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { groupOutputs } from "@/lib/outputs";
 import { cn } from "@/lib/utils";
 import {
   baseStatsQueryOptions,
@@ -417,21 +420,10 @@ const ActivityList = <T extends { date: string }>({
 );
 
 const RecentOutputs = ({ outputs }: { outputs: DBOutput[] }) => (
-  <ActivityList
-    items={outputs}
-    renderItem={(output) => (
-      <>
-        <SendIcon className="size-3.5 shrink-0 translate-y-0.5 text-primary" />
-        <span>
-          <span className="font-medium">{output.game}</span>{" "}
-          <span className="text-muted-foreground">
-            {output.segment}
-            {output.paginationPage ? ` [#${output.paginationPage}]` : ""} · {output.language}
-          </span>
-        </span>
-      </>
-    )}
-  />
+  // Outputs from one pagination chain collapse into a single row; its pages and sorts are in the chip's tooltip.
+  <TooltipProvider>
+    <ActivityList items={groupOutputs(outputs)} renderItem={(group) => <OutputEntry group={group} />} />
+  </TooltipProvider>
 );
 
 const RecentEvents = ({ events }: { events: DBEvent[] }) => {

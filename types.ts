@@ -7,7 +7,12 @@ export type DBOutput = {
   segment: string;
   language: string;
   date: string;
-  paginationPage?: number;
+  identifier?: string | null;
+  paginationPage: number | null;
+  /** Identifier for the command pagination chain. Groups outputs across pagination and sort key changes. */
+  chainIdentifier: string | null;
+  /** Sort applied to the data, e.g. "kpm", "kills", "accuracy-asc". An "-asc" suffix means ascending. */
+  sortKey: string | null;
 };
 
 export type DBEvent = {
