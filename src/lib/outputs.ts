@@ -3,7 +3,18 @@ import type { DBOutput } from "types";
 /** One sort, with the pages viewed under it. `key` is null when nothing was sorted. */
 export type ChainSort = { key: string | null; ascending: boolean; pages: number[] };
 
-/** One row: a single output, or one segment of a chain collapsed together. */
+/** One command session: everything sharing a chain identifier, split into runs. */
+export type OutputSession = {
+  latest: DBOutput;
+  date: string;
+  firstDate: string;
+  /** Total outputs across every run. */
+  count: number;
+  /** One entry per uninterrupted stay in a segment, newest first. Revisiting a segment starts a new run. */
+  segments: OutputGroup[];
+};
+
+/** One uninterrupted run in a segment: its pages and sorts collapsed together. */
 export type OutputGroup = {
   /** Newest output — supplies the game/segment/language shown on the row. */
   latest: DBOutput;
@@ -22,24 +33,33 @@ export const parseSortKey = (sortKey: string) =>
   sortKey.endsWith("-asc") ? { key: sortKey.slice(0, -4), ascending: true } : { key: sortKey, ascending: false };
 
 /**
- * Groups outputs by chain and segment, anchored at each run's newest output.
+ * Groups outputs into sessions by chain, and each session into runs of one segment.
  * Expects the API's newest-first ordering and preserves it.
  */
-export const groupOutputs = (outputs: DBOutput[]): OutputGroup[] => {
-  const groups: OutputGroup[] = [];
-  const byChain = new Map<string, OutputGroup>();
-  const chainKey = (output: DBOutput) => `${output.chainIdentifier}\n${output.segment}`;
+export const groupOutputs = (outputs: DBOutput[]): OutputSession[] => {
+  const sessions: OutputSession[] = [];
+  const byChain = new Map<string, OutputSession>();
 
   for (const output of outputs) {
-    const existing = output.chainIdentifier ? byChain.get(chainKey(output)) : undefined;
-    const group: OutputGroup = existing ?? {
+    const existing = output.chainIdentifier ? byChain.get(output.chainIdentifier) : undefined;
+    const session: OutputSession = existing ?? {
       latest: output,
       date: output.date,
       firstDate: output.date,
       count: 0,
-      pages: [],
-      sorts: [],
+      segments: [],
     };
+
+    session.count++;
+    session.firstDate = output.date;
+
+    // Only the run being extended can absorb this output — going back to a segment later is a new run.
+    const open = session.segments.at(-1);
+    let group = open?.latest.segment === output.segment ? open : undefined;
+    if (!group) {
+      group = { latest: output, date: output.date, firstDate: output.date, count: 0, pages: [], sorts: [] };
+      session.segments.push(group);
+    }
 
     group.count++;
     group.firstDate = output.date;
@@ -58,17 +78,45 @@ export const groupOutputs = (outputs: DBOutput[]): OutputGroup[] => {
     }
 
     if (!existing) {
-      groups.push(group);
-      if (output.chainIdentifier) byChain.set(chainKey(output), group);
+      sessions.push(session);
+      if (output.chainIdentifier) byChain.set(output.chainIdentifier, session);
     }
   }
 
-  for (const group of groups) {
-    group.pages.sort((a, b) => a - b);
-    for (const sort of group.sorts) sort.pages.sort((a, b) => a - b);
+  for (const session of sessions) {
+    for (const group of session.segments) {
+      group.pages.sort((a, b) => a - b);
+      for (const sort of group.sorts) sort.pages.sort((a, b) => a - b);
+    }
   }
-  return groups;
+  return sessions;
 };
+
+/** One rendered row: a session's segment, plus where it sits in the session. */
+export type OutputRow = {
+  group: OutputGroup;
+  date: string;
+  /** True when the session has more than one segment, so the row gets a connector rail. */
+  chained: boolean;
+  first: boolean;
+  last: boolean;
+};
+
+/** Flattens sessions to rows, keeping each session's segments adjacent. */
+export const toRows = (sessions: OutputSession[]): OutputRow[] =>
+  sessions.flatMap((session) => {
+    // Oldest first within a session, so a chain reads top-down in the order the user ran it.
+    const segments = [...session.segments].reverse();
+
+    return segments.map((group, i) => ({
+      group,
+      // When the run started, so timestamps move forward down the block like the rows do.
+      date: group.firstDate,
+      chained: segments.length > 1,
+      first: i === 0,
+      last: i === segments.length - 1,
+    }));
+  });
 
 /** The row's badge: a collapsed run's output count, or a single output's page. */
 export const chainChip = (group: OutputGroup): string | null => {

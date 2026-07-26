@@ -1,11 +1,12 @@
 import { useQueries } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { ArrowRightIcon, HomeIcon, ImagePlusIcon, Link2Icon, type LucideIcon, RadioIcon, UserIcon } from "lucide-react";
-import { useMemo } from "react";
+import { type ReactNode, useMemo } from "react";
 import type { DBEvent } from "types";
-import { OutputEntry } from "@/components/OutputEntry";
+import { ActivityLegend } from "@/components/ActivityLegend";
+import { chainRowClass, OutputEntry } from "@/components/OutputEntry";
 import { TimeAgo } from "@/components/TimeAgo";
-import { groupOutputs, type OutputGroup } from "@/lib/outputs";
+import { groupOutputs, type OutputSession, toRows } from "@/lib/outputs";
 import { cn, parseUTCDate } from "@/lib/utils";
 import { eventsRecentQueryOptions, outputsRecentQueryOptions } from "@/queries";
 
@@ -24,7 +25,11 @@ const EVENT_META: Partial<Record<DBEvent["event"], { icon: LucideIcon; label: st
   apiImageGenerated: { icon: ImagePlusIcon, label: "API image generated" },
 };
 
-type FeedItem = { kind: "output"; date: string; group: OutputGroup } | { kind: "event"; date: string; event: DBEvent };
+type FeedItem =
+  | { kind: "output"; date: string; session: OutputSession }
+  | { kind: "event"; date: string; event: DBEvent };
+
+const FEED_ROWS = 12;
 
 /** Real-time feed of the bot's recent deliveries and install/link events, straight from the public API. */
 export const LiveFeed = () => {
@@ -38,17 +43,29 @@ export const LiveFeed = () => {
   const items = useMemo<FeedItem[] | undefined>(() => {
     if (!outputsQuery.data && !eventsQuery.data) return undefined;
     // Group so one user's paging doesn't flood the feed.
-    const outputs: FeedItem[] = groupOutputs(outputsQuery.data ?? []).map((group) => ({
+    const outputs: FeedItem[] = groupOutputs(outputsQuery.data ?? []).map((session) => ({
       kind: "output",
-      date: group.date,
-      group,
+      date: session.date,
+      session,
     }));
     const events: FeedItem[] = (eventsQuery.data ?? [])
       .filter((event) => event.event in EVENT_META)
       .map((event) => ({ kind: "event", date: event.date, event }));
-    return [...outputs, ...events]
-      .sort((a, b) => parseUTCDate(b.date).getTime() - parseUTCDate(a.date).getTime())
-      .slice(0, 12);
+
+    const sorted = [...outputs, ...events].sort(
+      (a, b) => parseUTCDate(b.date).getTime() - parseUTCDate(a.date).getTime(),
+    );
+
+    // Budget by rows, not items — a session renders one row per segment. The item that crosses the
+    // budget is kept, so the panel always fills and clips under the fade.
+    const shown: FeedItem[] = [];
+    let rows = 0;
+    for (const item of sorted) {
+      shown.push(item);
+      rows += item.kind === "output" ? item.session.segments.length : 1;
+      if (rows >= FEED_ROWS) break;
+    }
+    return shown;
   }, [outputsQuery.data, eventsQuery.data]);
 
   // Both feeds failed (retries exhausted) → offline; otherwise live if we have data, else still connecting.
@@ -62,6 +79,7 @@ export const LiveFeed = () => {
         <span className="flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-widest">
           <RadioIcon className="size-4 text-primary" />
           Live feed
+          <ActivityLegend />
         </span>
         <span
           className={cn(
@@ -77,21 +95,23 @@ export const LiveFeed = () => {
       <div className="@container relative flex-1 overflow-hidden px-4 py-2">
         {items ? (
           <ul className="divide-y divide-border/60">
-            {items.map((item, i) => (
-              <li
-                className="flex items-baseline justify-between gap-3 py-2 text-sm"
-                key={`${item.kind}-${item.date}-${i.toString()}`}
-              >
-                {item.kind === "output" ? (
-                  <span className="flex min-w-0 items-baseline gap-2">
-                    <OutputEntry group={item.group} />
-                  </span>
-                ) : (
+            {items.map((item, i) =>
+              item.kind === "output" ? (
+                toRows([item.session]).map((row) => (
+                  <FeedRow className={chainRowClass(row)} key={`output-${row.date}`}>
+                    <span className="flex min-w-0 items-baseline gap-2">
+                      <OutputEntry row={row} />
+                    </span>
+                    <TimeAgo date={row.date} responsive />
+                  </FeedRow>
+                ))
+              ) : (
+                <FeedRow key={`event-${item.date}-${i.toString()}`}>
                   <EventRow event={item.event} />
-                )}
-                <TimeAgo date={item.date} responsive />
-              </li>
-            ))}
+                  <TimeAgo date={item.date} responsive />
+                </FeedRow>
+              ),
+            )}
           </ul>
         ) : (
           <ul className="divide-y divide-border/60">
@@ -120,6 +140,10 @@ export const LiveFeed = () => {
     </div>
   );
 };
+
+const FeedRow = ({ children, className }: { children: ReactNode; className?: string }) => (
+  <li className={cn("relative flex items-baseline justify-between gap-3 py-2 text-sm", className)}>{children}</li>
+);
 
 const EventRow = ({ event }: { event: DBEvent }) => {
   const meta = EVENT_META[event.event];

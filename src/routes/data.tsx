@@ -17,13 +17,14 @@ import {
 import { type ReactNode, useEffect, useRef } from "react";
 import type { BaseStats, CountsItem, DBEvent, DBOutput, DBUser, EventDailyItem, SentDailyItemGames } from "types";
 import { ActivityHeatmap } from "@/components/ActivityHeatmap";
+import { ActivityLegend } from "@/components/ActivityLegend";
 import { BotCommand } from "@/components/BotCommand";
 import { BarChart, EventsPerDayChartWithFilter, StatsSentPerDayChartWithFilter } from "@/components/Charts";
 import { CountUp } from "@/components/CountUp";
-import { OutputEntry } from "@/components/OutputEntry";
+import { chainRowClass, OutputEntry } from "@/components/OutputEntry";
 import { TimeAgo } from "@/components/TimeAgo";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { groupOutputs } from "@/lib/outputs";
+import { groupOutputs, toRows } from "@/lib/outputs";
 import { cn } from "@/lib/utils";
 import {
   baseStatsQueryOptions,
@@ -166,7 +167,7 @@ function DataComponent() {
             <section>
               <SectionHeader title="Recent activity" description="Straight from the wire" />
               <div className="grid gap-6 xl:grid-cols-2">
-                <StatCard id="recent-outputs" title="Last 20 stats sent">
+                <StatCard extra={<ActivityLegend />} id="recent-outputs" title="Last 20 stats sent">
                   <RecentOutputs outputs={outputsRecentQuery.data as DBOutput[]} />
                 </StatCard>
                 <StatCard id="recent-events" title="Last 40 events">
@@ -402,14 +403,22 @@ const Last7Days = ({ outputsCounts }: { outputsCounts: CountsItem[] }) => {
 const ActivityList = <T extends { date: string }>({
   items,
   renderItem,
+  itemClassName,
 }: {
   items: T[];
   renderItem: (item: T) => ReactNode;
+  itemClassName?: (item: T) => string;
 }) => (
   <ScrollArea type="always" className="h-[370px] pr-4">
     <ul className="divide-y divide-border/60">
       {items.map((item) => (
-        <li key={item.date} className="flex flex-wrap items-baseline justify-between gap-x-3 py-2 text-sm">
+        <li
+          key={item.date}
+          className={cn(
+            "relative flex flex-wrap items-baseline justify-between gap-x-3 py-2 text-sm",
+            itemClassName?.(item),
+          )}
+        >
           <span className="flex min-w-0 items-baseline gap-2">{renderItem(item)}</span>
           <TimeAgo date={item.date} />
         </li>
@@ -419,7 +428,11 @@ const ActivityList = <T extends { date: string }>({
 );
 
 const RecentOutputs = ({ outputs }: { outputs: DBOutput[] }) => (
-  <ActivityList items={groupOutputs(outputs)} renderItem={(group) => <OutputEntry group={group} />} />
+  <ActivityList
+    items={toRows(groupOutputs(outputs))}
+    itemClassName={chainRowClass}
+    renderItem={(row) => <OutputEntry row={row} />}
+  />
 );
 
 const RecentEvents = ({ events }: { events: DBEvent[] }) => {
@@ -500,12 +513,14 @@ const StatCard = ({
   id,
   title,
   description,
+  extra,
   cardClassName,
   children,
 }: {
   id?: string;
   title: string;
   description?: string;
+  extra?: ReactNode;
   cardClassName?: string;
   children: ReactNode;
 }) => {
@@ -537,8 +552,16 @@ const StatCard = ({
         ) : (
           <span className="font-bold">{title}</span>
         )}
-        {description && (
-          <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">{description}</span>
+        {(description || extra) && (
+          // Self-centred: an icon-only span has no text baseline, so it sits high in a baseline row.
+          <span className="flex items-center gap-2 self-center">
+            {description && (
+              <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+                {description}
+              </span>
+            )}
+            {extra}
+          </span>
         )}
       </div>
       <div className="p-5">{children}</div>
