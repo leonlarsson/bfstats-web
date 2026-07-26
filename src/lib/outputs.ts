@@ -45,11 +45,11 @@ export const groupOutputs = (outputs: DBOutput[]): OutputGroup[] => {
     group.firstDate = output.date;
     if (output.paginationPage && !group.pages.includes(output.paginationPage)) group.pages.push(output.paginationPage);
 
-    // Plain one-off outputs get no breakdown at all — there is nothing to say about them.
+    // Nothing to break down for a plain unsorted, unpaginated output.
     if (output.sortKey || output.paginationPage) {
       const parsed = output.sortKey ? parseSortKey(output.sortKey) : { key: null, ascending: false };
       let sort = group.sorts.find((s) => s.key === parsed.key && s.ascending === parsed.ascending);
-      // Iterating newest-first, so unshifting leaves the sorts in the order they were actually applied.
+      // We iterate newest-first, so unshift to get the order the sorts were applied.
       if (!sort) {
         sort = { ...parsed, pages: [] };
         group.sorts.unshift(sort);
@@ -70,15 +70,11 @@ export const groupOutputs = (outputs: DBOutput[]): OutputGroup[] => {
   return groups;
 };
 
-/** The one short token on the row: how many outputs a chain collapsed into it, or a lone output's page. */
+/** The row's badge: a collapsed run's output count, or a single output's page. */
 export const chainChip = (group: OutputGroup): string | null => {
   if (group.count > 1) return `×${group.count}`;
   return group.pages.length === 1 ? `#${group.pages[0]}` : null;
 };
 
-/**
- * How deep the user paged under one sort. Counts pages actually seen rather than using the highest
- * page number: changing sort in the bot resets to page 1, but a chain can still be cut off by the
- * end of the window we fetched, and then the run doesn't start at 1.
- */
+/** How deep the user paged under one sort. Counts pages seen, since a run can be cut off by the window we fetch. */
 export const pageDepth = (sort: ChainSort) => sort.pages.length;

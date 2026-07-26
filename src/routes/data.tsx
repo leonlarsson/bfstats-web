@@ -419,7 +419,6 @@ const ActivityList = <T extends { date: string }>({
 );
 
 const RecentOutputs = ({ outputs }: { outputs: DBOutput[] }) => (
-  // Outputs from one pagination chain collapse into a single row; its pages and sorts are in the chip's tooltip.
   <ActivityList items={groupOutputs(outputs)} renderItem={(group) => <OutputEntry group={group} />} />
 );
 

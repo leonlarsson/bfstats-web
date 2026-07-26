@@ -37,7 +37,7 @@ export const LiveFeed = () => {
 
   const items = useMemo<FeedItem[] | undefined>(() => {
     if (!outputsQuery.data && !eventsQuery.data) return undefined;
-    // Pagination chains collapse into one row, so a single user paging through weapons can't flood the feed.
+    // Group so one user's paging doesn't flood the feed.
     const outputs: FeedItem[] = groupOutputs(outputsQuery.data ?? []).map((group) => ({
       kind: "output",
       date: group.date,
