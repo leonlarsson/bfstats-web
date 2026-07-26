@@ -1,40 +1,37 @@
 import type { DBOutput } from "types";
 
-/**
- * One sort the chain ran under, with the pages viewed while it was applied.
- * `key` is null for outputs sent before any sort — a segment paginated without sorting.
- */
+/** One sort, with the pages viewed under it. `key` is null when nothing was sorted. */
 export type ChainSort = { key: string | null; ascending: boolean; pages: number[] };
 
-/** One activity row: a standalone output, or a whole pagination chain collapsed into a single entry. */
+/** One row: a single output, or one segment of a chain collapsed together. */
 export type OutputGroup = {
-  /** Newest output of the chain — supplies the game/segment/language and the row's timestamp. */
+  /** Newest output — supplies the game/segment/language shown on the row. */
   latest: DBOutput;
   date: string;
-  /** Date of the chain's oldest output — with `date`, the span the chain ran over. */
+  /** Oldest output's date, for the span. */
   firstDate: string;
-  /** How many outputs the chain contributed to the list. */
   count: number;
-  /** Every page the chain covered, ascending, across all sorts. */
+  /** All pages seen, ascending. */
   pages: number[];
-  /** Pages broken down per sort, in the order the sorts were applied. */
+  /** Pages per sort, in the order the sorts were applied. */
   sorts: ChainSort[];
 };
 
-/** "accuracy-asc" → ascending accuracy, "kpm" → descending kpm (no suffix means descending). */
+/** "accuracy-asc" → ascending accuracy, "kpm" → descending kpm. */
 export const parseSortKey = (sortKey: string) =>
   sortKey.endsWith("-asc") ? { key: sortKey.slice(0, -4), ascending: true } : { key: sortKey, ascending: false };
 
 /**
- * Collapses outputs sharing a chainIdentifier into one group, anchored at the chain's newest output.
+ * Groups outputs by chain and segment, anchored at each run's newest output.
  * Expects the API's newest-first ordering and preserves it.
  */
 export const groupOutputs = (outputs: DBOutput[]): OutputGroup[] => {
   const groups: OutputGroup[] = [];
   const byChain = new Map<string, OutputGroup>();
+  const chainKey = (output: DBOutput) => `${output.chainIdentifier}\n${output.segment}`;
 
   for (const output of outputs) {
-    const existing = output.chainIdentifier ? byChain.get(output.chainIdentifier) : undefined;
+    const existing = output.chainIdentifier ? byChain.get(chainKey(output)) : undefined;
     const group: OutputGroup = existing ?? {
       latest: output,
       date: output.date,
@@ -62,7 +59,7 @@ export const groupOutputs = (outputs: DBOutput[]): OutputGroup[] => {
 
     if (!existing) {
       groups.push(group);
-      if (output.chainIdentifier) byChain.set(output.chainIdentifier, group);
+      if (output.chainIdentifier) byChain.set(chainKey(output), group);
     }
   }
 
