@@ -167,7 +167,7 @@ function DataComponent() {
             <section>
               <SectionHeader title="Recent activity" description="Straight from the wire" />
               <div className="grid gap-6 xl:grid-cols-2">
-                <StatCard extra={<ActivityLegend />} id="recent-outputs" title="Last 20 stats sent">
+                <StatCard extra={<ActivityLegend />} id="recent-outputs" title="Last 40 stats sent">
                   <RecentOutputs outputs={outputsRecentQuery.data as DBOutput[]} />
                 </StatCard>
                 <StatCard id="recent-events" title="Last 40 events">

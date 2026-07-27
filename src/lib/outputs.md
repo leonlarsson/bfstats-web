@@ -48,6 +48,6 @@ because the alternative splits a session apart.
 
 ## One gotcha
 
-The API only returns the last 20 images, so a run can be cut off at the edge. That is why page
+The API only returns the last 40 images, so a run can be cut off at the edge. That is why page
 counts count the pages we actually saw instead of reading the highest page number. If pages 1 and 2
 fell off the end, saying "3 pages" would be wrong.
