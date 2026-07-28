@@ -2,7 +2,6 @@ import { useQueries } from "@tanstack/react-query";
 import { createFileRoute, Link, useLocation } from "@tanstack/react-router";
 import {
   ActivityIcon,
-  CircleHelpIcon,
   HashIcon,
   HomeIcon,
   ImagePlusIcon,
@@ -167,10 +166,10 @@ function DataComponent() {
             <section>
               <SectionHeader title="Recent activity" description="Straight from the wire" />
               <div className="grid gap-6 xl:grid-cols-2">
-                <StatCard extra={<ActivityLegend />} id="recent-outputs" title="Last 40 stats sent">
+                <StatCard extra={<ActivityLegend />} id="recent-outputs" title="Recent stats sent">
                   <RecentOutputs outputs={outputsRecentQuery.data as DBOutput[]} />
                 </StatCard>
-                <StatCard id="recent-events" title="Last 40 events">
+                <StatCard id="recent-events" title="Recent events">
                   <RecentEvents events={eventsRecentQuery.data as DBEvent[]} />
                 </StatCard>
               </div>
@@ -411,18 +410,23 @@ const ActivityList = <T extends { date: string }>({
 }) => (
   <ScrollArea type="always" className="h-[370px] pr-4">
     <ul className="divide-y divide-border/60">
-      {items.map((item) => (
-        <li
-          key={item.date}
-          className={cn(
-            "relative flex flex-wrap items-baseline justify-between gap-x-3 py-2 text-sm",
-            itemClassName?.(item),
-          )}
-        >
-          <span className="flex min-w-0 items-baseline gap-2">{renderItem(item)}</span>
-          <TimeAgo date={item.date} />
-        </li>
-      ))}
+      {items.map((item) => {
+        const renderedItem = renderItem(item);
+        if (!renderedItem) return null;
+
+        return (
+          <li
+            key={item.date}
+            className={cn(
+              "relative flex flex-wrap items-baseline justify-between gap-x-3 py-2 text-sm",
+              itemClassName?.(item),
+            )}
+          >
+            <span className="flex min-w-0 items-baseline gap-2">{renderedItem}</span>
+            <TimeAgo date={item.date} />
+          </li>
+        );
+      })}
     </ul>
   </ScrollArea>
 );
@@ -485,12 +489,7 @@ const RecentEvents = ({ events }: { events: DBEvent[] }) => {
           </>
         );
       default:
-        return (
-          <>
-            <CircleHelpIcon className="size-3.5 shrink-0 translate-y-0.5 text-muted-foreground" /> Unknown event
-            <span className="font-mono text-xs text-muted-foreground">({eventName})</span>
-          </>
-        );
+        return null;
     }
   };
 
