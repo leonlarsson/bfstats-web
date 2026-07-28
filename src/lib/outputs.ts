@@ -118,10 +118,11 @@ export const toRows = (sessions: OutputSession[]): OutputRow[] =>
     }));
   });
 
-/** The row's badge: a collapsed run's output count, or a single output's page. */
+/** The row's badge: a run's output count, or a page number when it isn't the default page 1. */
 export const chainChip = (group: OutputGroup): string | null => {
   if (group.count > 1) return `×${group.count}`;
-  return group.pages.length === 1 ? `#${group.pages[0]}` : null;
+  const page = group.pages[0];
+  return page > 1 ? `#${page}` : null;
 };
 
 /** How deep the user paged under one sort. Counts pages seen, since a run can be cut off by the window we fetch. */

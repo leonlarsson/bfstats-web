@@ -61,15 +61,19 @@ const ChainRail = ({ row }: { row: OutputRow }) =>
 /** Indents the whole row so wrapped lines clear the rail, and drops the dividers that would cut it. */
 export const chainRowClass = (row: OutputRow) => cn(row.chained && "pl-4", row.chained && !row.last && "border-b-0");
 
+const SortIcon = ({ ascending }: { ascending: boolean }) =>
+  ascending ? <SortAscIcon className="size-3" /> : <SortDescIcon className="size-3" />;
+
 /** One segment's badge, with its sorts and page depths in a tooltip. */
 const ChainChip = ({ group }: { group: OutputGroup }) => {
-  const chip = chainChip(group);
-  if (!chip) return null;
-
-  const badge = <Badge className="ml-1.5">{chip}</Badge>;
-
-  // A lone output is only worth a tooltip if it was sorted — its page is already the chip.
+  // A lone output is only worth a tooltip if it was sorted. Its page is either the chip or the default.
   const sorts = group.count > 1 ? group.sorts : group.sorts.filter((sort) => sort.key);
+  const chip = chainChip(group);
+  // Page 1 says nothing, so a single sorted output shows what it was sorted by instead.
+  const content = chip ?? (sorts[0] ? <SortIcon ascending={sorts[0].ascending} /> : null);
+  if (!content) return null;
+
+  const badge = <Badge className="ml-1.5 inline-flex translate-y-px items-center">{content}</Badge>;
   if (!sorts.length) return badge;
 
   const span = spanOf(group.firstDate, group.date);
@@ -84,6 +88,7 @@ const ChainChip = ({ group }: { group: OutputGroup }) => {
             {group.count} outputs{span >= 1000 && ` over ${humanizeSpan(span)}`}
           </div>
         )}
+        {sorts.some((sort) => sort.key) && <div className="mb-1">Sorted by</div>}
         {/* One row per sort. Second column only when it has depths — an empty track still costs its gap. */}
         <div className={cn("grid gap-y-0.5 text-muted-foreground", showDepths && "grid-cols-[1fr_auto] gap-x-4")}>
           {sorts.map((sort) => (
@@ -91,7 +96,7 @@ const ChainChip = ({ group }: { group: OutputGroup }) => {
               <span className="flex items-center gap-1.5">
                 {sort.key ? (
                   <>
-                    {sort.ascending ? <SortAscIcon className="size-3" /> : <SortDescIcon className="size-3" />}
+                    <SortIcon ascending={sort.ascending} />
                     {sort.key}
                   </>
                 ) : (

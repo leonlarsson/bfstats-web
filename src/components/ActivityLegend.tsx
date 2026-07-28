@@ -1,4 +1,4 @@
-import { CircleHelpIcon } from "lucide-react";
+import { CircleHelpIcon, SortDescIcon } from "lucide-react";
 import { Badge } from "@/components/OutputEntry";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
@@ -22,7 +22,7 @@ export const ActivityLegend = () => (
     </PopoverTrigger>
     <PopoverContent align="end" className="w-80 space-y-3 text-xs">
       <p className="font-mono text-[11px] font-semibold uppercase tracking-widest">Reading this list</p>
-      <p className="text-muted-foreground">Every row is one stats image the bot delivered.</p>
+      <p className="text-muted-foreground">Every row is one stats response the bot delivered.</p>
       <dl className="grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-2 text-muted-foreground">
         <dt className="justify-self-center">
           <RailGlyph />
@@ -32,12 +32,19 @@ export const ActivityLegend = () => (
         <dt className="justify-self-center">
           <Badge>×2</Badge>
         </dt>
-        <dd>How many images that segment sent.</dd>
+        <dd>How many responses that segment sent.</dd>
 
         <dt className="justify-self-center">
-          <Badge>#3</Badge>
+          <Badge className="inline-flex items-center">
+            <SortDescIcon className="size-3" />
+          </Badge>
         </dt>
-        <dd>Which page it was on.</dd>
+        <dd>A single response, and the sort it used.</dd>
+
+        <dt className="justify-self-center">
+          <Badge>#2</Badge>
+        </dt>
+        <dd>Which page it was on, otherwise page 1.</dd>
       </dl>
       <p className="text-muted-foreground">Hover a badge for the sorts used and how far they paged.</p>
     </PopoverContent>

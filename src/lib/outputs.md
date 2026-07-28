@@ -42,8 +42,9 @@ because the alternative splits a session apart.
 ## What the badges mean
 
 - `×3` means the run sent 3 images.
-- `#2` means the run sent a single image and it was on page 2. In practice you almost always see
-  `#1`, because everything resets to page 1.
+- A sort arrow means the run sent a single image, and shows whether it was sorted up or down.
+- `#2` means a single image that was on page 2. This is rare, because everything resets to page 1.
+  We do not show `#1` at all, since page 1 is the default and tells you nothing.
 - Hovering a badge shows the sorts that were used and how many pages under each.
 
 ## One gotcha
