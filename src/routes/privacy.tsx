@@ -21,7 +21,7 @@ function PrivacyComponent() {
         Privacy Policy<span className="text-primary">.</span>
       </h1>
       <div className="mt-2 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-        Updated July 19, 2026
+        Updated July 29, 2026
       </div>
 
       <div className="mt-10 max-w-3xl space-y-10">
@@ -118,11 +118,12 @@ function PrivacyComponent() {
 
         <PolicySection title="Requesting data redaction">
           <p>
-            If you want your data (user ID and username) to be redacted in the private database, you need to reach out
-            to me on Discord. My username is <q>mozzy</q>. Since I don't store (or have access to) any emails, emailing
-            me does not work as verification. If you have your data redacted and then continue to use the bot, your data
-            will once again be stored. Do not use the bot in this case.
+            If you want your identifiable Discord data (like username and user ID) to be redacted in the private
+            database, you need to reach out to me on Discord. My username is <q>mozzy</q>. If you have your data
+            redacted and then continue to use the bot, any new data will be stored as usual.
           </p>
+
+          <p>Do note that no identifiable information is ever used in any public APIs.</p>
         </PolicySection>
 
         <PolicySection title="Output identifiers">
