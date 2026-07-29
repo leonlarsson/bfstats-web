@@ -6,9 +6,9 @@
 
 @font-face {
   font-family: "Geist";
-  src: url("/fonts/Geist[wght].ttf");
+  src: url("/fonts/Geist-Variable.ttf");
   font-weight: 1 999;
-  font-display: optional;
+  font-display: swap;
 }
 
 @theme {
