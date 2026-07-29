@@ -38,7 +38,7 @@ const GAMES = [
     segments: ["Stats", "Leaderboard", "Servers", "Experience", "Playercard"],
   },
   { name: "Battlefield V", command: "/bfv", mark: "V", segments: ["Stats", "Leaderboard"] },
-  { name: "Battlefield 1", command: "/bf1", mark: "1", segments: ["Stats", "Morse"] },
+  { name: "Battlefield 1", command: "/bf1", mark: "1", segments: ["Stats"] },
   { name: "Battlefield Hardline", command: "/bfh", mark: "H", segments: ["Stats"] },
   { name: "Battlefield 4", command: "/bf4", mark: "4", segments: ["Stats"] },
   { name: "Battlefield 3", command: "/bf3", mark: "3", segments: ["Stats"] },
