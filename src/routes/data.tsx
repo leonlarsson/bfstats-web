@@ -172,10 +172,15 @@ function DataComponent() {
             <section>
               <SectionHeader title="Recent activity" description="Straight from the wire" />
               <div className="grid gap-6 xl:grid-cols-2">
-                <StatCard extra={<ActivityLegend />} id="recent-outputs" title="Recent stats sent">
+                <StatCard
+                  extra={<ActivityLegend />}
+                  id="recent-outputs"
+                  title="Recent stats sent"
+                  childWrapperClassName="px-5 pt-1 py-3"
+                >
                   <RecentOutputs outputs={outputsRecentQuery.data as DBOutput[]} />
                 </StatCard>
-                <StatCard id="recent-events" title="Recent events">
+                <StatCard id="recent-events" title="Recent events" childWrapperClassName="px-5 pt-1 py-3">
                   <RecentEvents events={eventsRecentQuery.data as DBEvent[]} />
                 </StatCard>
               </div>
@@ -578,6 +583,7 @@ const StatCard = ({
   extra,
   cardClassName,
   children,
+  childWrapperClassName = "p-5",
 }: {
   id?: string;
   title: string;
@@ -585,6 +591,7 @@ const StatCard = ({
   extra?: ReactNode;
   cardClassName?: string;
   children: ReactNode;
+  childWrapperClassName?: string;
 }) => {
   const currentHash = useLocation({ select: (location) => location.hash });
   const isActive = !!id && currentHash === id;
@@ -626,7 +633,7 @@ const StatCard = ({
           </span>
         )}
       </div>
-      <div className="p-5">{children}</div>
+      <div className={childWrapperClassName}>{children}</div>
     </div>
   );
 };
