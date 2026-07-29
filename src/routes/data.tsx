@@ -1,4 +1,4 @@
-import { useQueries } from "@tanstack/react-query";
+import { keepPreviousData, useQueries, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useLocation } from "@tanstack/react-router";
 import {
   ActivityIcon,
@@ -13,7 +13,7 @@ import {
   UserIcon,
   UsersIcon,
 } from "lucide-react";
-import { type ReactNode, useEffect, useRef } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import type { BaseStats, CountsItem, DBEvent, DBOutput, DBUser, EventDailyItem, SentDailyItemGames } from "types";
 import { ActivityHeatmap } from "@/components/ActivityHeatmap";
 import { ActivityLegend } from "@/components/ActivityLegend";
@@ -23,6 +23,7 @@ import { CountUp } from "@/components/CountUp";
 import { chainRowClass, OutputEntry } from "@/components/OutputEntry";
 import { TimeAgo } from "@/components/TimeAgo";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { groupOutputs, toRows } from "@/lib/outputs";
 import { cn } from "@/lib/utils";
 import {
@@ -48,7 +49,6 @@ function DataComponent() {
     outputsCountsQuery,
     outputsDailyGamesNoGapsQuery,
     eventsDailyNoGapsQuery,
-    outputsCountsLast7DaysQuery,
     outputsRecentQuery,
     eventsRecentQuery,
   ] = useQueries({
@@ -59,7 +59,6 @@ function DataComponent() {
       { ...outputsCountsQueryOptions(), staleTime: Number.POSITIVE_INFINITY },
       { ...outputsDailyGamesNoGapsQueryOptions, staleTime: Number.POSITIVE_INFINITY },
       { ...eventsDailyNoGapsQueryOptions, staleTime: Number.POSITIVE_INFINITY },
-      { ...outputsCountsQueryOptions({ days: 7 }), staleTime: Number.POSITIVE_INFINITY },
       { ...outputsRecentQueryOptions, staleTime: Number.POSITIVE_INFINITY },
       { ...eventsRecentQueryOptions, staleTime: Number.POSITIVE_INFINITY },
     ],
@@ -72,7 +71,6 @@ function DataComponent() {
     outputsCountsQuery,
     outputsDailyGamesNoGapsQuery,
     eventsDailyNoGapsQuery,
-    outputsCountsLast7DaysQuery,
     outputsRecentQuery,
     eventsRecentQuery,
   ];
@@ -86,9 +84,28 @@ function DataComponent() {
     hasScrolledToHashRef.current = true;
     const hash = window.location.hash.slice(1);
     if (!hash) return;
-    requestAnimationFrame(() => {
-      document.getElementById(hash)?.scrollIntoView({ behavior: "instant", block: "start" });
+
+    const scrollTo = (el: HTMLElement) => el.scrollIntoView({ behavior: "instant", block: "start" });
+    const existing = document.getElementById(hash);
+    if (existing) {
+      requestAnimationFrame(() => scrollTo(existing));
+      return;
+    }
+
+    // Sections that fetch on their own mount later, so wait for the target instead of giving up on the first miss
+    const observer = new MutationObserver(() => {
+      const el = document.getElementById(hash);
+      if (!el) return;
+      observer.disconnect();
+      requestAnimationFrame(() => scrollTo(el));
     });
+    observer.observe(document.body, { childList: true, subtree: true });
+    const timeout = setTimeout(() => observer.disconnect(), 10_000);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(timeout);
+    };
   }, [isLoading]);
 
   return (
@@ -153,14 +170,7 @@ function DataComponent() {
               />
             </section>
 
-            <section>
-              <SectionHeader
-                title="Last 7 days"
-                description="Rolling week"
-                extra={<Last7DaysTotals outputsCounts={outputsCountsLast7DaysQuery.data as CountsItem[]} />}
-              />
-              <Last7Days outputsCounts={outputsCountsLast7DaysQuery.data as CountsItem[]} />
-            </section>
+            <RollingWindowSection />
 
             <section>
               <SectionHeader title="Recent activity" description="Straight from the wire" />
@@ -345,7 +355,72 @@ const SinceJanuary = ({
   );
 };
 
-const Last7DaysTotals = ({ outputsCounts }: { outputsCounts: CountsItem[] }) => {
+/** Windows offered by the rolling window section. Capped at 366 days by the API. */
+const WINDOW_PRESETS: { label: string; days: number; offset?: number }[] = [
+  { label: "Last 7 days", days: 7 },
+  { label: "Previous 7 days", days: 7, offset: 7 },
+  { label: "Last 14 days", days: 14 },
+  { label: "Last 30 days", days: 30 },
+  { label: "Previous 30 days", days: 30, offset: 30 },
+  { label: "Last 90 days", days: 90 },
+  { label: "Last 365 days", days: 365 },
+];
+
+const RollingWindowSection = () => {
+  const [label, setLabel] = useState<string>(WINDOW_PRESETS[0].label);
+  const preset = WINDOW_PRESETS.find((x) => x.label === label) ?? WINDOW_PRESETS[0];
+
+  const { data, isPending, isError, isPlaceholderData } = useQuery({
+    ...outputsCountsQueryOptions({ days: preset.days, offset: preset.offset }),
+    staleTime: Number.POSITIVE_INFINITY,
+    // Keep the previous window on screen while the next one loads, so the charts do not collapse on every switch
+    placeholderData: keepPreviousData,
+  });
+
+  // Placeholder data still belongs to the previous window, so hold its label until the new data lands
+  const [shown, setShown] = useState(preset.label);
+  useEffect(() => {
+    if (!isPlaceholderData) setShown(preset.label);
+  }, [isPlaceholderData, preset.label]);
+
+  return (
+    <section>
+      <SectionHeader
+        title={shown}
+        description="Rolling window"
+        extra={
+          <div className="flex flex-wrap items-center justify-end gap-3">
+            {data && <RollingWindowTotals outputsCounts={data} />}
+            <Select value={label} onValueChange={setLabel}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {WINDOW_PRESETS.map((x) => (
+                    <SelectItem key={x.label} value={x.label}>
+                      {x.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        }
+      />
+      {isPending ? (
+        <LoadingText />
+      ) : isError ? (
+        <ErrorFetchingText />
+      ) : (
+        // Row counts differ per window, so remount rather than reconcile one chart's rows into another's
+        <RollingWindowCharts key={shown} outputsCounts={data} label={shown.toLowerCase()} />
+      )}
+    </section>
+  );
+};
+
+const RollingWindowTotals = ({ outputsCounts }: { outputsCounts: CountsItem[] }) => {
   const totalSent = outputsCounts.filter((x) => x.category === "game").reduce((a, b) => a + b.sent, 0);
   return (
     <span>
@@ -354,7 +429,7 @@ const Last7DaysTotals = ({ outputsCounts }: { outputsCounts: CountsItem[] }) => 
   );
 };
 
-const Last7Days = ({ outputsCounts }: { outputsCounts: CountsItem[] }) => {
+const RollingWindowCharts = ({ outputsCounts, label }: { outputsCounts: CountsItem[]; label: string }) => {
   const games = outputsCounts.filter((x) => x.category === "game");
   const segments = outputsCounts.filter((x) => x.category === "segment");
   const languages = outputsCounts.filter((x) => x.category === "language");
@@ -362,32 +437,30 @@ const Last7Days = ({ outputsCounts }: { outputsCounts: CountsItem[] }) => {
 
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-      <StatCard description="last 7 days" id="last-7-days-per-game" title="Per game">
+      <StatCard description={label} id="last-7-days-per-game" title="Per game">
         <ScrollArea type="always" className="h-[330px] pr-4">
           <BarChart
+            animate={false}
             data={games.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
             total={totalSent}
           />
         </ScrollArea>
       </StatCard>
 
-      <StatCard description="last 7 days" id="last-7-days-per-segment" title="Per segment">
+      <StatCard description={label} id="last-7-days-per-segment" title="Per segment">
         <ScrollArea type="always" className="h-[330px] pr-4">
           <BarChart
+            animate={false}
             data={segments.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
             total={totalSent}
           />
         </ScrollArea>
       </StatCard>
 
-      <StatCard
-        cardClassName="col-span-full"
-        description="last 7 days"
-        id="last-7-days-per-language"
-        title="Per language"
-      >
+      <StatCard cardClassName="col-span-full" description={label} id="last-7-days-per-language" title="Per language">
         <ScrollArea type="always" className="h-[330px] pr-4">
           <BarChart
+            animate={false}
             data={languages.map((x) => ({ name: x.item, value: x.sent })).sort((a, b) => b.value - a.value)}
             total={totalSent}
           />

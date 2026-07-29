@@ -417,8 +417,8 @@ export const EventsPerDayChartWithFilter = ({ data }: { data: EventDailyItem[] }
   );
 };
 
-type BarChartProps = CartesianChartProps & { chartConfig?: ChartConfig; total: number };
-export const BarChart = (props: BarChartProps) => {
+type BarChartProps = CartesianChartProps & { chartConfig?: ChartConfig; total: number; animate?: boolean };
+export const BarChart = ({ animate = true, ...props }: BarChartProps) => {
   const barHeight = 32;
   const barGap = 8;
 
@@ -447,6 +447,8 @@ export const BarChart = (props: BarChartProps) => {
           fill="var(--color-value)"
           background={{ radius: 0, fill: "hsl(var(--muted))" }}
           radius={[0, 2, 2, 0]}
+          // Labels are drawn inside shape below, so an animated swap paints both datasets at once mid-tween
+          isAnimationActive={animate}
           // Thanks shadcn: https://x.com/shadcn/status/1813643935254041045
           // biome-ignore lint/suspicious/noExplicitAny: Jank
           shape={(shapeProps: any) => {
