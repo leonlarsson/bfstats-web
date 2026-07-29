@@ -42,6 +42,16 @@ export const Route = createFileRoute("/data")({
 });
 
 function DataComponent() {
+  const [windowLabel, setWindowLabel] = useState(WINDOW_PRESETS[0].label);
+  const windowPreset = WINDOW_PRESETS.find((x) => x.label === windowLabel) ?? WINDOW_PRESETS[0];
+
+  // Kept out of useQueries: keepPreviousData only holds across a key change on a standalone useQuery
+  const outputsWindowQuery = useQuery({
+    ...outputsCountsQueryOptions({ days: windowPreset.days, offset: windowPreset.offset }),
+    staleTime: Number.POSITIVE_INFINITY,
+    placeholderData: keepPreviousData,
+  });
+
   const [
     baseStatsQuery,
     usersCountQuery,
@@ -71,6 +81,7 @@ function DataComponent() {
     outputsCountsQuery,
     outputsDailyGamesNoGapsQuery,
     eventsDailyNoGapsQuery,
+    outputsWindowQuery,
     outputsRecentQuery,
     eventsRecentQuery,
   ];
@@ -84,28 +95,9 @@ function DataComponent() {
     hasScrolledToHashRef.current = true;
     const hash = window.location.hash.slice(1);
     if (!hash) return;
-
-    const scrollTo = (el: HTMLElement) => el.scrollIntoView({ behavior: "instant", block: "start" });
-    const existing = document.getElementById(hash);
-    if (existing) {
-      requestAnimationFrame(() => scrollTo(existing));
-      return;
-    }
-
-    // Sections that fetch on their own mount later, so wait for the target instead of giving up on the first miss
-    const observer = new MutationObserver(() => {
-      const el = document.getElementById(hash);
-      if (!el) return;
-      observer.disconnect();
-      requestAnimationFrame(() => scrollTo(el));
+    requestAnimationFrame(() => {
+      document.getElementById(hash)?.scrollIntoView({ behavior: "instant", block: "start" });
     });
-    observer.observe(document.body, { childList: true, subtree: true });
-    const timeout = setTimeout(() => observer.disconnect(), 10_000);
-
-    return () => {
-      observer.disconnect();
-      clearTimeout(timeout);
-    };
   }, [isLoading]);
 
   return (
@@ -170,7 +162,12 @@ function DataComponent() {
               />
             </section>
 
-            <RollingWindowSection />
+            <RollingWindowSection
+              outputsCounts={outputsWindowQuery.data as CountsItem[]}
+              label={windowLabel}
+              onLabelChange={setWindowLabel}
+              isPlaceholderData={outputsWindowQuery.isPlaceholderData}
+            />
 
             <section>
               <SectionHeader title="Recent activity" description="Straight from the wire" />
@@ -366,22 +363,22 @@ const WINDOW_PRESETS: { label: string; days: number; offset?: number }[] = [
   { label: "Last 365 days", days: 365 },
 ];
 
-const RollingWindowSection = () => {
-  const [label, setLabel] = useState<string>(WINDOW_PRESETS[0].label);
-  const preset = WINDOW_PRESETS.find((x) => x.label === label) ?? WINDOW_PRESETS[0];
-
-  const { data, isPending, isError, isPlaceholderData } = useQuery({
-    ...outputsCountsQueryOptions({ days: preset.days, offset: preset.offset }),
-    staleTime: Number.POSITIVE_INFINITY,
-    // Keep the previous window on screen while the next one loads, so the charts do not collapse on every switch
-    placeholderData: keepPreviousData,
-  });
-
+const RollingWindowSection = ({
+  outputsCounts,
+  label,
+  onLabelChange,
+  isPlaceholderData,
+}: {
+  outputsCounts: CountsItem[];
+  label: string;
+  onLabelChange: (label: string) => void;
+  isPlaceholderData: boolean;
+}) => {
   // Placeholder data still belongs to the previous window, so hold its label until the new data lands
-  const [shown, setShown] = useState(preset.label);
+  const [shown, setShown] = useState(label);
   useEffect(() => {
-    if (!isPlaceholderData) setShown(preset.label);
-  }, [isPlaceholderData, preset.label]);
+    if (!isPlaceholderData) setShown(label);
+  }, [isPlaceholderData, label]);
 
   return (
     <section>
@@ -390,8 +387,8 @@ const RollingWindowSection = () => {
         description="Rolling window"
         extra={
           <div className="flex flex-wrap items-center justify-end gap-3">
-            {data && <RollingWindowTotals outputsCounts={data} />}
-            <Select value={label} onValueChange={setLabel}>
+            <RollingWindowTotals outputsCounts={outputsCounts} />
+            <Select value={label} onValueChange={onLabelChange}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue />
               </SelectTrigger>
@@ -408,14 +405,8 @@ const RollingWindowSection = () => {
           </div>
         }
       />
-      {isPending ? (
-        <LoadingText />
-      ) : isError ? (
-        <ErrorFetchingText />
-      ) : (
-        // Row counts differ per window, so remount rather than reconcile one chart's rows into another's
-        <RollingWindowCharts key={shown} outputsCounts={data} label={shown.toLowerCase()} />
-      )}
+      {/* Row counts differ per window, so remount rather than reconcile one chart's rows into another's */}
+      <RollingWindowCharts key={shown} outputsCounts={outputsCounts} label={shown.toLowerCase()} />
     </section>
   );
 };
