@@ -10,11 +10,21 @@ export const baseStatsQueryOptions = queryOptions({
 
 // OUTPUTS
 
-export const outputsCountsQueryOptions = queryOptions({
-  queryKey: ["outputs", "counts"],
-  queryFn: () =>
-    fetch("https://api.battlefieldstats.com/outputs/counts").then((res) => res.json() as unknown as CountsItem[]),
-});
+/** Counts per game, segment, and language. Covers all time unless days/offset narrow it to a window. */
+export const outputsCountsQueryOptions = ({ days, offset }: { days?: number; offset?: number } = {}) => {
+  const params = new URLSearchParams();
+  if (days !== undefined) params.set("days", String(days));
+  if (offset !== undefined) params.set("offset", String(offset));
+  const search = params.toString();
+
+  return queryOptions({
+    queryKey: ["outputs", "counts", { days, offset }],
+    queryFn: () =>
+      fetch(`https://api.battlefieldstats.com/outputs/counts${search ? `?${search}` : ""}`).then(
+        (res) => res.json() as unknown as CountsItem[],
+      ),
+  });
+};
 
 export const outputsRecentQueryOptions = queryOptions({
   queryKey: ["outputs", "recent"],
@@ -27,14 +37,6 @@ export const outputsDailyGamesNoGapsQueryOptions = queryOptions({
   queryFn: () =>
     fetch("https://api.battlefieldstats.com/outputs/daily-games-no-gaps").then(
       (res) => res.json() as unknown as SentDailyItemGames[],
-    ),
-});
-
-export const outputsCountsLast7DaysQueryOptions = queryOptions({
-  queryKey: ["outputs", "counts-last-7-days"],
-  queryFn: async () =>
-    fetch("https://api.battlefieldstats.com/outputs/counts-last-7-days").then(
-      (res) => res.json() as unknown as CountsItem[],
     ),
 });
 
