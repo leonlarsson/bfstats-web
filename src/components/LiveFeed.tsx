@@ -56,15 +56,40 @@ export const LiveFeed = () => {
       (a, b) => parseUTCDate(b.date).getTime() - parseUTCDate(a.date).getTime(),
     );
 
-    // Budget by rows, not items — a session renders one row per segment. The item that crosses the
-    // budget is kept, so the panel always fills and clips under the fade.
+    // Budget by rows, not items. Sessions stay intact where possible; the final session is trimmed if needed so the feed never exceeds the row budget.
     const shown: FeedItem[] = [];
     let rows = 0;
+
     for (const item of sorted) {
-      shown.push(item);
-      rows += item.kind === "output" ? item.session.segments.length : 1;
-      if (rows >= FEED_ROWS) break;
+      const remaining = FEED_ROWS - rows;
+      if (remaining <= 0) break;
+
+      if (item.kind === "event") {
+        shown.push(item);
+        rows++;
+        continue;
+      }
+
+      const segmentCount = item.session.segments.length;
+
+      if (segmentCount <= remaining) {
+        shown.push(item);
+        rows += segmentCount;
+        continue;
+      }
+
+      // Last visible session: trim it so we never exceed FEED_ROWS.
+      shown.push({
+        ...item,
+        session: {
+          ...item.session,
+          segments: item.session.segments.slice(0, remaining),
+        },
+      });
+
+      break;
     }
+
     return shown;
   }, [outputsQuery.data, eventsQuery.data]);
 
