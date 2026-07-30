@@ -46,20 +46,22 @@ const ChainRail = ({ row }: { row: OutputRow }) =>
     <>
       <span
         className={cn(
-          "absolute left-0 w-px bg-primary/30",
-          row.first && "top-1/2 bottom-0",
+          "absolute left-2 w-px bg-primary/30",
+          row.first && "top-8 bottom-0",
           // 1px past centre to fill the corner.
           row.last && "top-0 bottom-[calc(50%-1px)]",
           !row.first && !row.last && "inset-y-0",
         )}
       />
       {/* Starts right of the rail so the two translucent layers don't stack. */}
-      <span className="absolute top-1/2 left-px h-px w-2 bg-primary/30" />
+      {!row.first && <span className="absolute top-1/2 left-[9px] h-px w-2 bg-primary/30" />}
     </>
   ) : null;
 
 /** Indents the whole row so wrapped lines clear the rail, and drops the dividers that would cut it. */
-export const chainRowClass = (row: OutputRow) => cn(row.chained && "pl-4", row.chained && !row.last && "border-b-0");
+export const chainRowClass = (row: OutputRow) =>
+  // pl-[22px] would exactly match the first
+  cn(row.chained && !row.first && "pl-6", row.chained && !row.last && "border-b-0");
 
 const SortIcon = ({ ascending }: { ascending: boolean }) =>
   ascending ? <SortAscIcon className="size-3" /> : <SortDescIcon className="size-3" />;
