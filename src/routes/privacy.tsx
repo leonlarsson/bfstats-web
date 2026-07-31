@@ -142,9 +142,9 @@ function PrivacyComponent() {
           <img
             alt="Output identifer example"
             className="clip-notch border"
-            height={125}
-            src="/images/OutputIdentifierExample.png"
-            width={319}
+            height={102}
+            src="/images/OutputIdentifierExample.webp"
+            width={244}
           />
         </PolicySection>
 
