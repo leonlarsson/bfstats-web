@@ -276,51 +276,59 @@ function HomeComponent() {
       </Section>
 
       {/* ============ ACCOUNT LINKING ============ */}
-      <Section
-        className="border-t"
-        title="Stop typing your username"
-        description="Link your Battlefield account once and the bot remembers your username and platform on every command after that."
-      >
-        <div className="grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-14">
-          <div>
-            <ul className="space-y-4">
-              <LinkFeature icon={<LockIcon className="size-4" />}>
-                Private. Only you can see or use your linked accounts.
-              </LinkFeature>
-              <LinkFeature icon={<TerminalIcon className="size-4" />}>
-                <BotCommand command="/link add" /> links in seconds, <BotCommand command="/link help" /> explains the
-                details.
-              </LinkFeature>
-              <LinkFeature icon={<TerminalIcon className="size-4" />}>
-                <BotCommand command="/link remove" /> unlinks at any time, no questions asked.
-              </LinkFeature>
-              <LinkFeature icon={<TerminalIcon className="size-4" />}>
-                <BotCommand command="/<game> mystats" /> pulls the linked account straight away.
-              </LinkFeature>
-            </ul>
-            <p className="mt-6 text-sm text-muted-foreground">
-              There is also a <span className="font-medium text-foreground">Link Account</span> button on every stats
-              reply.
-            </p>
-          </div>
+      {/* Deliberately not the shared Section. Its heading spans the full width, which
+          strands the space beside it and forces the video to begin below the header.
+          Here the heading sits inside the left column so the video spans the whole block. */}
+      <section className="border-t">
+        <div className="container px-4 py-16 lg:px-8 lg:py-20">
+          <div className="grid gap-10 lg:grid-cols-[1fr_minmax(0,30rem)] lg:items-center lg:gap-14">
+            <div>
+              <h2 className="display text-3xl sm:text-4xl">Stop typing your username</h2>
+              <p className="mt-4 leading-relaxed text-muted-foreground">
+                Link your Battlefield account once and the bot remembers your username and platform on every command
+                after that.
+              </p>
 
-          <video
-            aria-label="Demonstration of linking a Battlefield account."
-            className="clip-notch aspect-[794/696] w-full max-w-xl border justify-self-center lg:justify-self-end"
-            controls
-            autoPlay
-            height={696}
-            loop
-            muted
-            playsInline
-            preload="metadata"
-            width={794}
-          >
-            <source src="/images/linking.mp4" type="video/mp4" />
-            Your browser does not support embedded videos.
-          </video>
+              <ul className="mt-9 space-y-4">
+                <LinkFeature icon={<LockIcon className="size-4" />}>
+                  Private. Only you can see or use your linked accounts.
+                </LinkFeature>
+                <LinkFeature icon={<TerminalIcon className="size-4" />}>
+                  <BotCommand command="/link add" /> links in seconds, <BotCommand command="/link help" /> explains the
+                  details.
+                </LinkFeature>
+                <LinkFeature icon={<TerminalIcon className="size-4" />}>
+                  <BotCommand command="/link remove" /> unlinks at any time, no questions asked.
+                </LinkFeature>
+                <LinkFeature icon={<TerminalIcon className="size-4" />}>
+                  <BotCommand command="/<game> mystats" /> pulls the linked account straight away.
+                </LinkFeature>
+              </ul>
+
+              <p className="mt-6 text-sm text-muted-foreground">
+                There is also a <span className="font-medium text-foreground">Link Account</span> button on every stats
+                reply.
+              </p>
+            </div>
+
+            <video
+              aria-label="Demonstration of linking a Battlefield account."
+              className="clip-notch aspect-[794/696] w-full border justify-self-center lg:justify-self-end"
+              controls
+              autoPlay
+              height={696}
+              loop
+              muted
+              playsInline
+              preload="metadata"
+              width={794}
+            >
+              <source src="/images/linking.mp4" type="video/mp4" />
+              Your browser does not support embedded videos.
+            </video>
+          </div>
         </div>
-      </Section>
+      </section>
 
       {/* ============ LIVE DEMO ============ */}
       <Section
