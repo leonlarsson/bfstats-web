@@ -53,7 +53,7 @@ export const DEMO_GAMES: DemoGame[] = [
   {
     key: "bf6",
     name: "Battlefield 6",
-    segments: [SEG.overview, SEG.weapons, SEG.vehicles, SEG.classes, SEG.gadgets, SEG.maps, SEG.modes],
+    segments: [SEG.overview, SEG.weapons, SEG.vehicles, SEG.classes, SEG.gadgets, SEG.maps, SEG.modes, SEG.matches],
     platforms: PLATFORMS.bf6,
   },
   {

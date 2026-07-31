@@ -102,17 +102,14 @@ function DataComponent() {
 
   return (
     <div className="container px-4 py-12 lg:px-8">
-      <span className="eyebrow mb-4">Command center</span>
-      <h1 className="display text-4xl sm:text-6xl">
-        Data<span className="text-primary">.</span>
-      </h1>
-      <p className="mt-4 max-w-2xl text-muted-foreground">
-        Everything here consumes the{" "}
+      <h1 className="display text-4xl sm:text-5xl">Usage data</h1>
+      <p className="mt-4 max-w-2xl leading-relaxed text-muted-foreground">
+        Every figure on this page comes from the{" "}
         <a className="link" href="https://api.battlefieldstats.com/" rel="noreferrer" target="_blank">
           public API
-        </a>
-        . To see your personal usage, run the <BotCommand command="/usage" /> command in Discord — it shows your totals
-        grouped by game.
+        </a>{" "}
+        and updates as the bot runs. For your own usage, run <BotCommand command="/usage" /> in Discord to see your
+        totals grouped by game.
       </p>
 
       <div className="mt-10">
@@ -208,16 +205,16 @@ const TileRow = ({ baseStats, totalUsers }: { baseStats: BaseStats; totalUsers: 
 );
 
 const Tile = ({ icon, label, value, note }: { icon: ReactNode; label: string; value: number; note?: string }) => (
-  <div className="panel clip-notch-sm flex flex-col p-4">
-    <div className="flex items-center gap-1.5 font-mono text-[11px] font-medium uppercase tracking-widest text-muted-foreground">
+  <div className="panel clip-notch flex flex-col p-4">
+    <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
       <span className="text-primary">{icon}</span>
       <span className="truncate">{label}</span>
     </div>
     <div className="mt-auto flex items-baseline gap-1.5 pt-2">
-      <span className="text-2xl font-black tabular-nums lg:text-3xl">
+      <span className="figure text-2xl font-semibold lg:text-3xl">
         <CountUp value={value} />
       </span>
-      {note && <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground/70">{note}</span>}
+      {note && <span className="text-xs text-muted-foreground/80">{note}</span>}
     </div>
   </div>
 );
@@ -226,9 +223,7 @@ const SectionHeader = ({ title, description, extra }: { title: string; descripti
   <div className="mb-6 flex flex-wrap items-end justify-between gap-3 border-b pb-3">
     <div>
       <h2 className="display text-2xl sm:text-3xl">{title}</h2>
-      {description && (
-        <div className="mt-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">{description}</div>
-      )}
+      {description && <div className="mt-1 text-sm text-muted-foreground">{description}</div>}
     </div>
     {extra && <div className="text-right text-sm text-muted-foreground">{extra}</div>}
   </div>
@@ -491,7 +486,9 @@ const ActivityList = <T extends { date: string }>({
             )}
           >
             <span className="flex min-w-0 items-baseline gap-2">{renderedItem}</span>
-            <TimeAgo date={item.date} />
+            <div className="pl-6">
+              <TimeAgo date={item.date} />
+            </div>
           </li>
         );
       })}
@@ -565,14 +562,14 @@ const RecentEvents = ({ events }: { events: DBEvent[] }) => {
 };
 
 const LoadingText = () => (
-  <div className="panel clip-notch flex items-center gap-3 p-6 font-mono text-sm uppercase tracking-widest text-muted-foreground">
-    <Loader2Icon className="size-5 animate-spin text-primary" /> Fetching data... this might take a while.
+  <div className="panel clip-notch flex items-center gap-3 p-6 text-sm text-muted-foreground">
+    <Loader2Icon className="size-5 animate-spin text-primary" /> Loading usage data. This can take a few seconds.
   </div>
 );
 
 const ErrorFetchingText = () => (
-  <div className="panel clip-notch border-destructive/50 p-6 font-mono text-sm uppercase tracking-widest text-destructive">
-    Error fetching data.
+  <div className="panel clip-notch border-destructive/50 p-6 text-sm text-destructive">
+    Couldn't load usage data. The public API may be unreachable right now. Refresh to try again.
   </div>
 );
 
@@ -599,7 +596,7 @@ const StatCard = ({
   return (
     <div
       className={cn(
-        "panel clip-notch-sm transition-colors",
+        "panel clip-notch transition-colors",
         id && "scroll-mt-24",
         isActive && "border-primary bg-primary/5",
         cardClassName,
@@ -624,11 +621,7 @@ const StatCard = ({
         {(description || extra) && (
           // Self-centred: an icon-only span has no text baseline, so it sits high in a baseline row.
           <span className="flex items-center gap-2 self-center">
-            {description && (
-              <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
-                {description}
-              </span>
-            )}
+            {description && <span className="text-xs text-muted-foreground">{description}</span>}
             {extra}
           </span>
         )}

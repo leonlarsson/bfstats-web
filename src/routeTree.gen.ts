@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TosRouteImport } from './routes/tos'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as DataRouteImport } from './routes/data'
-import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
 const TosRoute = TosRouteImport.update({
@@ -30,11 +29,6 @@ const DataRoute = DataRouteImport.update({
   path: '/data',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -43,14 +37,12 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/data': typeof DataRoute
   '/privacy': typeof PrivacyRoute
   '/tos': typeof TosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/data': typeof DataRoute
   '/privacy': typeof PrivacyRoute
   '/tos': typeof TosRoute
@@ -58,22 +50,20 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/data': typeof DataRoute
   '/privacy': typeof PrivacyRoute
   '/tos': typeof TosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/data' | '/privacy' | '/tos'
+  fullPaths: '/' | '/data' | '/privacy' | '/tos'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/data' | '/privacy' | '/tos'
-  id: '__root__' | '/' | '/about' | '/data' | '/privacy' | '/tos'
+  to: '/' | '/data' | '/privacy' | '/tos'
+  id: '__root__' | '/' | '/data' | '/privacy' | '/tos'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
   DataRoute: typeof DataRoute
   PrivacyRoute: typeof PrivacyRoute
   TosRoute: typeof TosRoute
@@ -102,13 +92,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DataRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -121,7 +104,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
   DataRoute: DataRoute,
   PrivacyRoute: PrivacyRoute,
   TosRoute: TosRoute,

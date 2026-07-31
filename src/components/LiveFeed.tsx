@@ -4,9 +4,9 @@ import { ArrowRightIcon, HomeIcon, ImagePlusIcon, Link2Icon, type LucideIcon, Ra
 import { type ReactNode, useMemo } from "react";
 import type { DBEvent } from "types";
 import { ActivityLegend } from "@/components/ActivityLegend";
-import { chainRowClass, OutputEntry } from "@/components/OutputEntry";
+import { CompactOutputEntry } from "@/components/OutputEntry";
 import { TimeAgo } from "@/components/TimeAgo";
-import { groupOutputs, type OutputSession, toRows } from "@/lib/outputs";
+import { groupOutputs, type OutputSession } from "@/lib/outputs";
 import { cn, parseUTCDate } from "@/lib/utils";
 import { eventsRecentQueryOptions, outputsRecentQueryOptions } from "@/queries";
 
@@ -29,7 +29,7 @@ type FeedItem =
   | { kind: "output"; date: string; session: OutputSession }
   | { kind: "event"; date: string; event: DBEvent };
 
-const FEED_ROWS = 12;
+const FEED_ROWS = 8;
 
 /** Real-time feed of the bot's recent deliveries and install/link events, straight from the public API. */
 export const LiveFeed = () => {
@@ -56,41 +56,9 @@ export const LiveFeed = () => {
       (a, b) => parseUTCDate(b.date).getTime() - parseUTCDate(a.date).getTime(),
     );
 
-    // Budget by rows, not items. Sessions stay intact where possible; the final session is trimmed if needed so the feed never exceeds the row budget.
-    const shown: FeedItem[] = [];
-    let rows = 0;
-
-    for (const item of sorted) {
-      const remaining = FEED_ROWS - rows;
-      if (remaining <= 0) break;
-
-      if (item.kind === "event") {
-        shown.push(item);
-        rows++;
-        continue;
-      }
-
-      const segmentCount = item.session.segments.length;
-
-      if (segmentCount <= remaining) {
-        shown.push(item);
-        rows += segmentCount;
-        continue;
-      }
-
-      // Last visible session: trim it so we never exceed FEED_ROWS.
-      shown.push({
-        ...item,
-        session: {
-          ...item.session,
-          segments: item.session.segments.slice(0, remaining),
-        },
-      });
-
-      break;
-    }
-
-    return shown;
+    // Every session collapses to one row here, so the budget is just a count — no session
+    // gets trimmed, and one long chain can't crowd out everything else that happened.
+    return sorted.slice(0, FEED_ROWS);
   }, [outputsQuery.data, eventsQuery.data]);
 
   // Both feeds failed (retries exhausted) → offline; otherwise live if we have data, else still connecting.
@@ -101,17 +69,12 @@ export const LiveFeed = () => {
   return (
     <div className="panel clip-notch flex h-full flex-col">
       <div className="flex items-center justify-between border-b px-4 py-3">
-        <span className="flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-widest">
+        <span className="flex items-center gap-2 text-sm font-medium">
           <RadioIcon className="size-4 text-primary" />
           Live feed
           <ActivityLegend />
         </span>
-        <span
-          className={cn(
-            "flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-widest transition-colors",
-            statusMeta.text,
-          )}
-        >
+        <span className={cn("flex items-center gap-1.5 text-xs transition-colors", statusMeta.text)}>
           <span className={cn("size-1.5 rounded-full", statusMeta.dot)} />
           {statusMeta.label}
         </span>
@@ -122,14 +85,14 @@ export const LiveFeed = () => {
           <ul className="divide-y divide-border/60">
             {items.map((item, i) =>
               item.kind === "output" ? (
-                toRows([item.session]).map((row) => (
-                  <FeedRow className={chainRowClass(row)} key={`output-${row.date}`}>
-                    <span className="flex min-w-0 items-baseline gap-2">
-                      <OutputEntry row={row} />
-                    </span>
-                    <TimeAgo date={row.date} responsive />
-                  </FeedRow>
-                ))
+                // Keyed on the chain so a session that gains a segment updates in place
+                // instead of re-entering.
+                <FeedRow key={`output-${item.session.latest.chainIdentifier || item.session.date}`}>
+                  <span className="flex min-w-0 items-baseline gap-2">
+                    <CompactOutputEntry session={item.session} />
+                  </span>
+                  <TimeAgo date={item.date} responsive />
+                </FeedRow>
               ) : (
                 <FeedRow key={`event-${item.date}-${i.toString()}`}>
                   <EventRow event={item.event} />
@@ -140,18 +103,17 @@ export const LiveFeed = () => {
           </ul>
         ) : (
           <ul className="divide-y divide-border/60">
-            {Array.from({ length: 12 }, (_, i) => i).map((i) => (
+            {Array.from({ length: FEED_ROWS }, (_, i) => i).map((i) => (
               <li className="py-2" key={i}>
                 <div className="h-5 w-full animate-pulse rounded bg-muted" style={{ animationDelay: `${i * 80}ms` }} />
               </li>
             ))}
           </ul>
         )}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-linear-to-t from-card to-transparent" />
       </div>
 
-      <div className="flex items-baseline justify-between gap-3 border-t px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
-        <span className="truncate">Latest deliveries & events</span>
+      <div className="flex items-baseline justify-between gap-3 border-t px-4 py-2.5 text-xs text-muted-foreground">
+        <span className="truncate">Latest deliveries and events</span>
         <Link
           className="group flex shrink-0 items-center gap-1 transition-colors hover:text-primary"
           hash="recent-outputs"
@@ -166,8 +128,9 @@ export const LiveFeed = () => {
   );
 };
 
-const FeedRow = ({ children, className }: { children: ReactNode; className?: string }) => (
-  <li className={cn("relative flex items-baseline justify-between gap-3 py-2 text-sm", className)}>{children}</li>
+/** Keyed per delivery, so only rows that just arrived mount — and only those animate. */
+const FeedRow = ({ children }: { children: ReactNode }) => (
+  <li className="feed-in flex items-baseline justify-between gap-3 py-2 text-sm">{children}</li>
 );
 
 const EventRow = ({ event }: { event: DBEvent }) => {

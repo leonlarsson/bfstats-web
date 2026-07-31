@@ -26,9 +26,9 @@ export const HeaderSheet = () => {
           <SheetTitle className="flex items-center gap-3">
             <img
               alt="Battlefield Stats icon"
-              className="clip-notch-sm size-9"
+              className="clip-notch size-9"
               height={100}
-              src="/images/avatar.png"
+              src="/images/avatar.webp"
               width={100}
             />
             <Wordmark />
@@ -40,7 +40,7 @@ export const HeaderSheet = () => {
             <SheetClose asChild key={navLink.to}>
               <Link
                 activeProps={{ className: "!text-foreground !border-primary" }}
-                className="border-l-2 border-transparent px-3 py-2 font-mono text-sm font-medium uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground"
+                className="border-l border-transparent px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                 to={navLink.to}
               >
                 {navLink.name}

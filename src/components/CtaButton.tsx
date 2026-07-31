@@ -9,7 +9,7 @@ const ctaButtonVariants = cva(
     variants: {
       variant: {
         primary: "bg-primary font-bold text-primary-foreground hover:opacity-90",
-        outline: "border border-input bg-background/60 font-semibold backdrop-blur hover:bg-accent",
+        outline: "border border-input bg-background font-semibold hover:bg-accent",
       },
       size: {
         sm: "h-9 px-4 text-sm",
