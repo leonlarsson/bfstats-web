@@ -7,17 +7,40 @@ export type GalleryImage = {
   segment: string;
 };
 
+/**
+ * Real unedited bot output, one entry per rendered card. Grouped by game in the order
+ * the game tabs use, and within a game: Overview first, since it leads the row.
+ */
 export const GALLERY_IMAGES: GalleryImage[] = [
-  { src: "/images/example_bf6.png", game: "Battlefield 6", segment: "Overview" },
-  { src: "/images/example_bf6w.png", game: "Battlefield 6", segment: "Weapons" },
-  { src: "/images/example_bf6v.gif", game: "Battlefield 6", segment: "Vehicles (GIF)" },
-  { src: "/images/example_bf2042.png", game: "Battlefield 2042", segment: "Overview" },
-  { src: "/images/example_bfv.png", game: "Battlefield V", segment: "Overview" },
-  { src: "/images/example_bf1.png", game: "Battlefield 1", segment: "Overview" },
-  { src: "/images/example_bfh.png", game: "Battlefield Hardline", segment: "Overview" },
-  { src: "/images/example_bf4.png", game: "Battlefield 4", segment: "Overview" },
-  { src: "/images/example_bf3.png", game: "Battlefield 3", segment: "Overview" },
-  { src: "/images/example_bf2.png", game: "Battlefield 2", segment: "Overview" },
+  { src: "/images/examples/bf6-overview.webp", game: "Battlefield 6", segment: "Overview" },
+  { src: "/images/examples/bf6-weapons.webp", game: "Battlefield 6", segment: "Weapons" },
+  { src: "/images/examples/bf6-vehicles.webp", game: "Battlefield 6", segment: "Vehicles" },
+
+  { src: "/images/examples/bf2042-overview.webp", game: "Battlefield 2042", segment: "Overview" },
+  { src: "/images/examples/bf2042-weapons.webp", game: "Battlefield 2042", segment: "Weapons" },
+  { src: "/images/examples/bf2042-vehicles.webp", game: "Battlefield 2042", segment: "Vehicles" },
+
+  { src: "/images/examples/bfv-overview.webp", game: "Battlefield V", segment: "Overview" },
+  { src: "/images/examples/bfv-weapons.webp", game: "Battlefield V", segment: "Weapons" },
+  { src: "/images/examples/bfv-vehicles.webp", game: "Battlefield V", segment: "Vehicles" },
+
+  { src: "/images/examples/bf1-overview.webp", game: "Battlefield 1", segment: "Overview" },
+  { src: "/images/examples/bf1-weapons.webp", game: "Battlefield 1", segment: "Weapons" },
+  { src: "/images/examples/bf1-vehicles.webp", game: "Battlefield 1", segment: "Vehicles" },
+
+  { src: "/images/examples/bfh-overview.webp", game: "Battlefield Hardline", segment: "Overview" },
+  { src: "/images/examples/bfh-vehicles.webp", game: "Battlefield Hardline", segment: "Vehicles" },
+
+  { src: "/images/examples/bf4-overview.webp", game: "Battlefield 4", segment: "Overview" },
+  { src: "/images/examples/bf4-weapons.webp", game: "Battlefield 4", segment: "Weapons" },
+  { src: "/images/examples/bf4-vehicles.webp", game: "Battlefield 4", segment: "Vehicles" },
+
+  { src: "/images/examples/bf3-overview.webp", game: "Battlefield 3", segment: "Overview" },
+  { src: "/images/examples/bf3-weapons.webp", game: "Battlefield 3", segment: "Weapons" },
+  { src: "/images/examples/bf3-vehicles.webp", game: "Battlefield 3", segment: "Vehicles" },
+
+  { src: "/images/examples/bf2-overview.webp", game: "Battlefield 2", segment: "Overview" },
+  { src: "/images/examples/bf2-weapons.webp", game: "Battlefield 2", segment: "Weapons" },
 ];
 
 /** Full-screen viewer for a gallery image. Controlled: pass null to close. */
