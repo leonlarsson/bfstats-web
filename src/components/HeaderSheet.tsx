@@ -28,7 +28,7 @@ export const HeaderSheet = () => {
               alt="Battlefield Stats icon"
               className="clip-notch size-9"
               height={100}
-              src="/images/avatar.png"
+              src="/images/avatar.webp"
               width={100}
             />
             <Wordmark />

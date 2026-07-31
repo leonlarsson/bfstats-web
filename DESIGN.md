@@ -212,7 +212,7 @@ Dark is the canonical theme: `<html class="dark">` ships in the markup, `ThemePr
 
 **The One Amber Rule.** There is exactly one accent hue in this system. Amber marks live signal, active state, and the single primary action; it never fills a surface and never becomes a background wash. If something needs a second hue to be readable, the hierarchy is wrong — fix the weight, the tone step, or the border instead.
 
-**The Avatar Exception.** `/images/avatar.png` is the product's real, pre-existing brand avatar, and it renders mint-teal. It is the single sanctioned second hue in this system, it is confined to the wordmark lockup in the header and the footer, and it is a permanent brand asset — not a build choice and not a defect. No other element may introduce a second hue on its precedent, and the avatar's teal is never sampled, extended, or echoed into UI color.
+**The Avatar Exception.** `/images/avatar.webp` is the product's real brand avatar: the white BF/STATS mark over a blurred Battlefield screenshot in warm sand and tan. It is the one photographic surface in an otherwise flat system and the one place colour arrives from outside the palette, and it is a brand asset rather than a build choice. It is confined to the wordmark lockup in the header, the mobile sheet, and the footer, always at 36px behind `.clip-notch`. Nothing else may carry a photograph as chrome on its precedent, and the avatar's warm tones are never sampled, extended, or echoed into UI colour — the accent stays amber.
 
 **The Chart Quarantine Rule.** `chart-1` through `chart-5` exist only inside charts on `/data`. They are a data-encoding palette, not a UI palette; they never appear on a button, a border, a badge, or a piece of running text.
 
@@ -368,7 +368,7 @@ Four animations exist, and every one is guarded by `prefers-reduced-motion`. `fa
 - **Do** build every surface from `.panel` + `.clip-notch`: `card` fill, 1px `border`, 9px top-right chamfer.
 - **Do** use `.clip-btn` for controls and `.clip-notch` for surfaces, so the silhouette tells you what a thing is.
 - **Do** keep amber for live signal, active state, and the one primary action per screen.
-- **Do** treat `/images/avatar.png` as the single sanctioned second hue, and only inside the wordmark lockup.
+- **Do** treat `/images/avatar.webp` as the one sanctioned photographic surface, and only inside the wordmark lockup.
 - **Do** set headings in `.display` — weight 800, -0.03em, 1.02 line-height, sentence case.
 - **Do** reserve monospace for bot commands, timestamps, chart and data badges, and the game-tab command line.
 - **Do** keep figures on `.figure` (tabular numerals) so counters don't reflow as they tick.
@@ -381,7 +381,7 @@ Four animations exist, and every one is guarded by `prefers-reduced-motion`. `fa
 - **Don't** add a box-shadow to a designed surface. Depth is a tone step plus a 1px border.
 - **Don't** introduce a second chamfer size, put a rounded corner on a panel, or reintroduce `.clip-notch-sm`.
 - **Don't** treat the inherited 2/4/6px shadcn radius scale as the form language — it stays on the vendor primitives it came with.
-- **Don't** introduce a second accent hue anywhere in the UI, and don't cite the mint-teal avatar as precedent.
+- **Don't** introduce a second accent hue anywhere in the UI, and don't cite the avatar's photographic tile as precedent.
 - **Don't** use `chart-1`…`chart-5` outside a chart on `/data`.
 - **Don't** add a grid backdrop, a radial accent glow, a gradient wash, or a decorative divider.
 - **Don't** put an eyebrow or kicker label above a heading, and don't rebuild the eyebrow→display→description section template.
