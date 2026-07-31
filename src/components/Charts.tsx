@@ -440,7 +440,9 @@ export const BarChart = ({ animate = true, ...props }: BarChartProps) => {
       }}
     >
       <BarChartRaw accessibilityLayer layout="vertical" barSize={barHeight} margin={{ left: 0, right: 0 }} {...props}>
-        <XAxis dataKey="value" type="number" hide />
+        {/* Headroom so the longest bar can never reach the value column on the right,
+            which is what let values straddle the fill edge. */}
+        <XAxis dataKey="value" type="number" hide domain={[0, (dataMax: number) => dataMax * 1.7]} />
         <YAxis dataKey="name" type="category" hide />
         <Bar
           dataKey="value"
@@ -452,22 +454,29 @@ export const BarChart = ({ animate = true, ...props }: BarChartProps) => {
           // Thanks shadcn: https://x.com/shadcn/status/1813643935254041045
           // biome-ignore lint/suspicious/noExplicitAny: Jank
           shape={(shapeProps: any) => {
+            const name = String(shapeProps.name ?? "");
+            const value = `${shapeProps.value?.toLocaleString("en")} (${((shapeProps.value / props.total) * 100).toFixed(1)}%)`;
+            // Each label sits on the bar or on the track depending on how far the bar runs,
+            // so the ink is chosen per row rather than haloed to survive both.
+            const advance = (text: string) => text.length * 7;
+            const barEnd = shapeProps.x + shapeProps.width;
+            const trackEnd = shapeProps.background.x + shapeProps.background.width;
+            const ink = (onBar: boolean) => (onBar ? "hsl(var(--chart-ink))" : "hsl(var(--foreground))");
+            // The name is either wholly inside the fill or wholly past it — never
+            // spanning the edge, which is what stranded half a label in the wrong ink.
+            const nameInside = shapeProps.width > advance(name) + 20;
+
             return (
               <>
                 {/* Bar */}
                 <Rectangle {...shapeProps} />
                 {/* Name */}
-                <text x={shapeProps.x + 10} y={shapeProps.y + 20} fill="hsl(var(--foreground))">
-                  {shapeProps.name}
+                <text x={nameInside ? shapeProps.x + 10 : barEnd + 10} y={shapeProps.y + 20} fill={ink(nameInside)}>
+                  {name}
                 </text>
-                {/* Value */}
-                <text
-                  x={shapeProps.background.width - 10}
-                  y={shapeProps.y + 20}
-                  textAnchor="end"
-                  fill="hsl(var(--foreground))"
-                >
-                  {shapeProps.value?.toLocaleString("en")} ({((shapeProps.value / props.total) * 100).toFixed(1)}%)
+                {/* Value: a fixed column on the track, right-aligned down the whole chart. */}
+                <text x={trackEnd - 10} y={shapeProps.y + 20} textAnchor="end" fill="hsl(var(--foreground))">
+                  {value}
                 </text>
               </>
             );

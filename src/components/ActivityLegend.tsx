@@ -21,7 +21,7 @@ export const ActivityLegend = () => (
       <CircleHelpIcon className="size-4" />
     </PopoverTrigger>
     <PopoverContent align="end" className="w-80 space-y-3 text-xs">
-      <p className="font-mono text-[11px] font-semibold uppercase tracking-widest">Reading this list</p>
+      <p className="text-xs font-semibold">Reading this list</p>
       <p className="text-muted-foreground">Every row is one stats response the bot delivered.</p>
       <dl className="grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-2 text-muted-foreground">
         <dt className="justify-self-center">

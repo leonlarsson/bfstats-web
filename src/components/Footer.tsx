@@ -11,16 +11,16 @@ export const Footer = () => {
             <Link className="flex items-center gap-3" to="/">
               <img
                 alt="Battlefield Stats icon"
-                className="clip-notch-sm size-9"
+                className="clip-notch size-9"
                 height={100}
                 src="/images/avatar.png"
                 width={100}
               />
               <Wordmark className="text-lg" />
             </Link>
-            <p className="max-w-sm text-sm text-muted-foreground">
-              The biggest Battlefield bot on Discord. Real-time stats, leaderboards, and more for every major
-              Battlefield title — since 2021.
+            <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
+              The largest Battlefield bot on Discord. Real-time stats, leaderboards, and more for every major
+              Battlefield title, since 2021.
             </p>
             <div className="flex items-center gap-1">
               <a
@@ -54,9 +54,7 @@ export const Footer = () => {
           </div>
 
           <div>
-            <div className="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-              Site
-            </div>
+            <div className="mb-3 text-sm font-semibold text-foreground">Site</div>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link className="text-muted-foreground transition-colors hover:text-foreground" to="/">
@@ -66,6 +64,11 @@ export const Footer = () => {
               <li>
                 <Link className="text-muted-foreground transition-colors hover:text-foreground" to="/data">
                   Data
+                </Link>
+              </li>
+              <li>
+                <Link className="text-muted-foreground transition-colors hover:text-foreground" to="/about">
+                  About
                 </Link>
               </li>
               <li>
@@ -82,9 +85,7 @@ export const Footer = () => {
           </div>
 
           <div>
-            <div className="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-              Resources
-            </div>
+            <div className="mb-3 text-sm font-semibold text-foreground">Resources</div>
             <ul className="space-y-2 text-sm">
               <li>
                 <a
@@ -135,7 +136,7 @@ export const Footer = () => {
             Not endorsed by or affiliated with EA or DICE. Battlefield imagery is property of EA/DICE. Stats powered by
             Tracker Network and Community Network.
           </span>
-          <span className="shrink-0 font-mono uppercase tracking-widest">
+          <span className="shrink-0">
             Built by{" "}
             <a
               className="text-foreground transition-colors hover:text-primary"

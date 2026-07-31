@@ -16,13 +16,8 @@ const PolicySection = ({ title, children }: { title: string; children: ReactNode
 function PrivacyComponent() {
   return (
     <div className="container px-4 py-12 lg:px-8">
-      <span className="eyebrow mb-4">Intel handling</span>
-      <h1 className="display text-4xl sm:text-6xl">
-        Privacy Policy<span className="text-primary">.</span>
-      </h1>
-      <div className="mt-2 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-        Updated July 29, 2026
-      </div>
+      <h1 className="display text-4xl sm:text-5xl">Privacy Policy</h1>
+      <div className="mt-3 text-sm text-muted-foreground">Last updated July 29, 2026</div>
 
       <div className="mt-10 max-w-3xl space-y-10">
         <PolicySection title="User Data handling and usage">
@@ -146,7 +141,7 @@ function PrivacyComponent() {
           </p>
           <img
             alt="Output identifer example"
-            className="clip-notch-sm border"
+            className="clip-notch border"
             height={125}
             src="/images/OutputIdentifierExample.png"
             width={319}

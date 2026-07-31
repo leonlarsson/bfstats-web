@@ -31,7 +31,7 @@ export const Header = () => {
           >
             <img
               alt="Battlefield Stats icon"
-              className="clip-notch-sm size-9"
+              className="clip-notch size-9"
               height={100}
               src="/images/avatar.png"
               width={100}
@@ -43,7 +43,7 @@ export const Header = () => {
             {NAV_LINKS.map((navLink) => (
               <Link
                 activeProps={{ className: "!text-foreground after:!scale-x-100" }}
-                className="relative px-2.5 py-2 font-mono text-[13px] font-medium uppercase tracking-widest text-muted-foreground transition-colors after:absolute after:inset-x-2.5 after:bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-primary after:transition-transform hover:text-foreground hover:after:scale-x-100 lg:px-3 lg:after:inset-x-3"
+                className="relative px-2.5 py-2 text-sm font-medium text-muted-foreground transition-colors after:absolute after:inset-x-2.5 after:bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-primary after:transition-transform hover:text-foreground hover:after:scale-x-100 lg:px-3 lg:after:inset-x-3"
                 key={navLink.to}
                 to={navLink.to}
               >

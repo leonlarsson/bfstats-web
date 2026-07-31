@@ -1,0 +1,698 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-31T00:00:00.000Z",
+  "title": "Design System: Battlefield Stats",
+  "extensions": {
+    "colorMeta": {
+      "background": {
+        "role": "neutral",
+        "displayName": "Near-Black Ground",
+        "canonical": "hsl(220 14% 4%)",
+        "light": "hsl(40 20% 98%)",
+        "notes": "The page. Lowest step of the tonal ladder. Declared as the HSL triplet `--background` and consumed as hsl(var(--background)).",
+        "tonalRamp": [
+          "hsl(220 14% 4%)",
+          "hsl(220 14% 10%)",
+          "hsl(220 14% 20%)",
+          "hsl(220 14% 32%)",
+          "hsl(220 14% 45%)",
+          "hsl(220 14% 60%)",
+          "hsl(220 14% 78%)",
+          "hsl(220 14% 94%)"
+        ]
+      },
+      "foreground": {
+        "role": "neutral",
+        "displayName": "Bright Ink",
+        "canonical": "hsl(210 12% 95%)",
+        "light": "hsl(222 15% 10%)",
+        "notes": "Primary text, figures, and any chart label sitting on an empty track.",
+        "tonalRamp": [
+          "hsl(210 12% 8%)",
+          "hsl(210 12% 16%)",
+          "hsl(210 12% 26%)",
+          "hsl(210 12% 38%)",
+          "hsl(210 12% 52%)",
+          "hsl(210 12% 68%)",
+          "hsl(210 12% 84%)",
+          "hsl(210 12% 95%)"
+        ]
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Panel Slate",
+        "canonical": "hsl(220 12% 6.5%)",
+        "light": "hsl(0 0% 100%)",
+        "notes": "Every panel and the footer; at 40% opacity it becomes the alternating section band.",
+        "tonalRamp": [
+          "hsl(220 12% 6.5%)",
+          "hsl(220 12% 12%)",
+          "hsl(220 12% 21%)",
+          "hsl(220 12% 33%)",
+          "hsl(220 12% 46%)",
+          "hsl(220 12% 61%)",
+          "hsl(220 12% 79%)",
+          "hsl(220 12% 95%)"
+        ]
+      },
+      "card-foreground": {
+        "role": "neutral",
+        "displayName": "Panel Ink",
+        "canonical": "hsl(210 12% 95%)",
+        "light": "hsl(222 15% 10%)",
+        "notes": "Text on a panel. Tracks foreground exactly in both themes.",
+        "tonalRamp": [
+          "hsl(210 12% 8%)",
+          "hsl(210 12% 16%)",
+          "hsl(210 12% 26%)",
+          "hsl(210 12% 38%)",
+          "hsl(210 12% 52%)",
+          "hsl(210 12% 68%)",
+          "hsl(210 12% 84%)",
+          "hsl(210 12% 95%)"
+        ]
+      },
+      "popover": {
+        "role": "neutral",
+        "displayName": "Overlay Slate",
+        "canonical": "hsl(220 12% 8%)",
+        "light": "hsl(0 0% 100%)",
+        "notes": "Tooltips, select menus, popovers. One step above card so an overlay clears the panel behind it.",
+        "tonalRamp": [
+          "hsl(220 12% 8%)",
+          "hsl(220 12% 14%)",
+          "hsl(220 12% 22%)",
+          "hsl(220 12% 34%)",
+          "hsl(220 12% 47%)",
+          "hsl(220 12% 62%)",
+          "hsl(220 12% 79%)",
+          "hsl(220 12% 95%)"
+        ]
+      },
+      "popover-foreground": {
+        "role": "neutral",
+        "displayName": "Overlay Ink",
+        "canonical": "hsl(210 12% 95%)",
+        "light": "hsl(222 15% 10%)",
+        "notes": "Text inside an overlay.",
+        "tonalRamp": [
+          "hsl(210 12% 8%)",
+          "hsl(210 12% 16%)",
+          "hsl(210 12% 26%)",
+          "hsl(210 12% 38%)",
+          "hsl(210 12% 52%)",
+          "hsl(210 12% 68%)",
+          "hsl(210 12% 84%)",
+          "hsl(210 12% 95%)"
+        ]
+      },
+      "primary": {
+        "role": "primary",
+        "displayName": "Signal Amber",
+        "canonical": "hsl(32 100% 59%)",
+        "light": "hsl(25 88% 40%)",
+        "notes": "The one accent. Live signal, active state, and the single primary action. Never fills a surface.",
+        "tonalRamp": [
+          "hsl(32 100% 12%)",
+          "hsl(32 100% 20%)",
+          "hsl(32 100% 29%)",
+          "hsl(32 100% 38%)",
+          "hsl(32 100% 48%)",
+          "hsl(32 100% 59%)",
+          "hsl(32 100% 74%)",
+          "hsl(32 100% 90%)"
+        ]
+      },
+      "primary-foreground": {
+        "role": "primary",
+        "displayName": "Amber Ink",
+        "canonical": "hsl(220 15% 6%)",
+        "light": "hsl(0 0% 100%)",
+        "notes": "The label on an amber fill. Near-black in dark, white in light.",
+        "tonalRamp": [
+          "hsl(220 15% 6%)",
+          "hsl(220 15% 13%)",
+          "hsl(220 15% 22%)",
+          "hsl(220 15% 34%)",
+          "hsl(220 15% 47%)",
+          "hsl(220 15% 62%)",
+          "hsl(220 15% 79%)",
+          "hsl(220 15% 95%)"
+        ]
+      },
+      "secondary": {
+        "role": "neutral",
+        "displayName": "Quiet Fill",
+        "canonical": "hsl(220 9% 13%)",
+        "light": "hsl(222 10% 93%)",
+        "notes": "Inherited shadcn secondary fill. Rarely used by designed surfaces; muted carries this role.",
+        "tonalRamp": [
+          "hsl(220 9% 7%)",
+          "hsl(220 9% 13%)",
+          "hsl(220 9% 22%)",
+          "hsl(220 9% 33%)",
+          "hsl(220 9% 46%)",
+          "hsl(220 9% 62%)",
+          "hsl(220 9% 79%)",
+          "hsl(220 9% 94%)"
+        ]
+      },
+      "secondary-foreground": {
+        "role": "neutral",
+        "displayName": "Quiet Fill Ink",
+        "canonical": "hsl(210 12% 95%)",
+        "light": "hsl(222 15% 10%)",
+        "notes": "Text on the secondary fill.",
+        "tonalRamp": [
+          "hsl(210 12% 8%)",
+          "hsl(210 12% 16%)",
+          "hsl(210 12% 26%)",
+          "hsl(210 12% 38%)",
+          "hsl(210 12% 52%)",
+          "hsl(210 12% 68%)",
+          "hsl(210 12% 84%)",
+          "hsl(210 12% 95%)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Recessed Slate",
+        "canonical": "hsl(220 9% 11%)",
+        "light": "hsl(222 10% 94%)",
+        "notes": "Chart tracks, command chips, skeleton rows, the demo preview well. Third and last step of the ladder.",
+        "tonalRamp": [
+          "hsl(220 9% 6%)",
+          "hsl(220 9% 11%)",
+          "hsl(220 9% 20%)",
+          "hsl(220 9% 32%)",
+          "hsl(220 9% 45%)",
+          "hsl(220 9% 61%)",
+          "hsl(220 9% 79%)",
+          "hsl(220 9% 94%)"
+        ]
+      },
+      "muted-foreground": {
+        "role": "neutral",
+        "displayName": "Quiet Ink",
+        "canonical": "hsl(220 7% 66%)",
+        "light": "hsl(222 9% 35%)",
+        "notes": "The workhorse. Supporting prose, feed chrome, timestamps, field labels.",
+        "tonalRamp": [
+          "hsl(220 7% 10%)",
+          "hsl(220 7% 18%)",
+          "hsl(220 7% 28%)",
+          "hsl(220 7% 40%)",
+          "hsl(220 7% 53%)",
+          "hsl(220 7% 66%)",
+          "hsl(220 7% 82%)",
+          "hsl(220 7% 95%)"
+        ]
+      },
+      "accent": {
+        "role": "neutral",
+        "displayName": "Hover Wash",
+        "canonical": "hsl(220 9% 14%)",
+        "light": "hsl(25 80% 93%)",
+        "notes": "The hover fill on the outline button and on icon buttons. Neutral in dark, a pale amber tint in light.",
+        "tonalRamp": [
+          "hsl(220 9% 7%)",
+          "hsl(220 9% 14%)",
+          "hsl(220 9% 23%)",
+          "hsl(220 9% 34%)",
+          "hsl(220 9% 47%)",
+          "hsl(220 9% 62%)",
+          "hsl(220 9% 80%)",
+          "hsl(220 9% 94%)"
+        ]
+      },
+      "accent-foreground": {
+        "role": "neutral",
+        "displayName": "Hover Wash Ink",
+        "canonical": "hsl(210 12% 95%)",
+        "light": "hsl(25 88% 25%)",
+        "notes": "Text on the hover wash.",
+        "tonalRamp": [
+          "hsl(210 12% 8%)",
+          "hsl(210 12% 16%)",
+          "hsl(210 12% 26%)",
+          "hsl(210 12% 38%)",
+          "hsl(210 12% 52%)",
+          "hsl(210 12% 68%)",
+          "hsl(210 12% 84%)",
+          "hsl(210 12% 95%)"
+        ]
+      },
+      "destructive": {
+        "role": "tertiary",
+        "displayName": "Alert Red",
+        "canonical": "hsl(0 70% 58%)",
+        "light": "hsl(0 67% 45%)",
+        "notes": "Offline feed status, demo render failures, the /data fetch-error panel. Failure only.",
+        "tonalRamp": [
+          "hsl(0 70% 12%)",
+          "hsl(0 70% 20%)",
+          "hsl(0 70% 29%)",
+          "hsl(0 70% 39%)",
+          "hsl(0 70% 48%)",
+          "hsl(0 70% 58%)",
+          "hsl(0 70% 74%)",
+          "hsl(0 70% 90%)"
+        ]
+      },
+      "destructive-foreground": {
+        "role": "tertiary",
+        "displayName": "Alert Ink",
+        "canonical": "hsl(0 0% 98%)",
+        "light": "hsl(0 0% 98%)",
+        "notes": "Text on an alert fill. Identical in both themes.",
+        "tonalRamp": [
+          "hsl(0 0% 8%)",
+          "hsl(0 0% 16%)",
+          "hsl(0 0% 26%)",
+          "hsl(0 0% 38%)",
+          "hsl(0 0% 52%)",
+          "hsl(0 0% 68%)",
+          "hsl(0 0% 84%)",
+          "hsl(0 0% 98%)"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "hsl(220 10% 14%)",
+        "light": "hsl(222 10% 87%)",
+        "notes": "Every border, every divider, every section separator — and the system's entire elevation vocabulary. Always 1px; 60% opacity on list dividers.",
+        "tonalRamp": [
+          "hsl(220 10% 7%)",
+          "hsl(220 10% 14%)",
+          "hsl(220 10% 23%)",
+          "hsl(220 10% 34%)",
+          "hsl(220 10% 47%)",
+          "hsl(220 10% 62%)",
+          "hsl(220 10% 79%)",
+          "hsl(220 10% 94%)"
+        ]
+      },
+      "input": {
+        "role": "neutral",
+        "displayName": "Field Edge",
+        "canonical": "hsl(220 10% 20%)",
+        "light": "hsl(222 10% 80%)",
+        "notes": "The stroke on inputs, selects, and the outline button. One step brighter than the hairline so a control reads as touchable.",
+        "tonalRamp": [
+          "hsl(220 10% 8%)",
+          "hsl(220 10% 14%)",
+          "hsl(220 10% 20%)",
+          "hsl(220 10% 32%)",
+          "hsl(220 10% 45%)",
+          "hsl(220 10% 61%)",
+          "hsl(220 10% 79%)",
+          "hsl(220 10% 94%)"
+        ]
+      },
+      "ring": {
+        "role": "primary",
+        "displayName": "Focus Amber",
+        "canonical": "hsl(32 100% 59%)",
+        "light": "hsl(25 88% 40%)",
+        "notes": "The global focus ring: 2px solid at 2px offset on :focus-visible. Identical to primary; never overridden per component.",
+        "tonalRamp": [
+          "hsl(32 100% 12%)",
+          "hsl(32 100% 20%)",
+          "hsl(32 100% 29%)",
+          "hsl(32 100% 38%)",
+          "hsl(32 100% 48%)",
+          "hsl(32 100% 59%)",
+          "hsl(32 100% 74%)",
+          "hsl(32 100% 90%)"
+        ]
+      },
+      "chart-1": {
+        "role": "tertiary",
+        "displayName": "Chart Amber",
+        "canonical": "hsl(30 80% 46%)",
+        "light": "hsl(28 85% 46%)",
+        "notes": "First categorical series. Held at L=46% in both themes so one chart ink clears 4.5:1 on the fill either way. Charts on /data only.",
+        "tonalRamp": [
+          "hsl(30 80% 12%)",
+          "hsl(30 80% 20%)",
+          "hsl(30 80% 29%)",
+          "hsl(30 80% 38%)",
+          "hsl(30 80% 46%)",
+          "hsl(30 80% 60%)",
+          "hsl(30 80% 76%)",
+          "hsl(30 80% 92%)"
+        ]
+      },
+      "chart-2": {
+        "role": "tertiary",
+        "displayName": "Chart Blue",
+        "canonical": "hsl(213 70% 55%)",
+        "light": "hsl(214 75% 48%)",
+        "notes": "Second categorical series. Charts on /data only.",
+        "tonalRamp": [
+          "hsl(213 70% 12%)",
+          "hsl(213 70% 20%)",
+          "hsl(213 70% 29%)",
+          "hsl(213 70% 39%)",
+          "hsl(213 70% 48%)",
+          "hsl(213 70% 60%)",
+          "hsl(213 70% 76%)",
+          "hsl(213 70% 92%)"
+        ]
+      },
+      "chart-3": {
+        "role": "tertiary",
+        "displayName": "Chart Green",
+        "canonical": "hsl(155 74% 36%)",
+        "light": "hsl(155 78% 27%)",
+        "notes": "Third categorical series. Charts on /data only.",
+        "tonalRamp": [
+          "hsl(155 74% 10%)",
+          "hsl(155 74% 17%)",
+          "hsl(155 74% 25%)",
+          "hsl(155 74% 36%)",
+          "hsl(155 74% 47%)",
+          "hsl(155 74% 60%)",
+          "hsl(155 74% 76%)",
+          "hsl(155 74% 92%)"
+        ]
+      },
+      "chart-4": {
+        "role": "tertiary",
+        "displayName": "Chart Violet",
+        "canonical": "hsl(263 84% 69%)",
+        "light": "hsl(262 83% 58%)",
+        "notes": "Fourth categorical series. Charts on /data only.",
+        "tonalRamp": [
+          "hsl(263 84% 14%)",
+          "hsl(263 84% 22%)",
+          "hsl(263 84% 32%)",
+          "hsl(263 84% 44%)",
+          "hsl(263 84% 58%)",
+          "hsl(263 84% 69%)",
+          "hsl(263 84% 82%)",
+          "hsl(263 84% 93%)"
+        ]
+      },
+      "chart-5": {
+        "role": "tertiary",
+        "displayName": "Chart Red",
+        "canonical": "hsl(0 70% 60%)",
+        "light": "hsl(0 67% 45%)",
+        "notes": "Fifth categorical series. Charts on /data only.",
+        "tonalRamp": [
+          "hsl(0 70% 12%)",
+          "hsl(0 70% 20%)",
+          "hsl(0 70% 29%)",
+          "hsl(0 70% 39%)",
+          "hsl(0 70% 48%)",
+          "hsl(0 70% 60%)",
+          "hsl(0 70% 76%)",
+          "hsl(0 70% 92%)"
+        ]
+      },
+      "chart-ink": {
+        "role": "tertiary",
+        "displayName": "Chart Ink",
+        "canonical": "hsl(220 20% 8%)",
+        "light": "hsl(220 20% 8%)",
+        "notes": "One dark ink for a label sitting wholly inside a chart fill. Identical in both themes by design — chart-1 holds L=46% in both, so a single ink clears 4.5:1 on the bar either way. A label on the empty track uses foreground instead; a label never straddles the edge.",
+        "tonalRamp": [
+          "hsl(220 20% 8%)",
+          "hsl(220 20% 15%)",
+          "hsl(220 20% 24%)",
+          "hsl(220 20% 35%)",
+          "hsl(220 20% 48%)",
+          "hsl(220 20% 63%)",
+          "hsl(220 20% 80%)",
+          "hsl(220 20% 94%)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The hero headline via .display. Weight 800, -0.03em, 1.02 line-height, sentence case, balanced wrap. The old uppercase-900 treatment is gone."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings on / and the page h1 on /data, /about, /privacy, /tos. Same .display class, smaller size."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Panel header rows, step titles, FAQ triggers, footer column headings. Sans, weight 600."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running prose in quiet ink at 1.625 line-height. Capped at max-w-2xl for section descriptions and max-w-3xl for policy text."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Field labels, tile captions, feed chrome, copy hints. Sentence case, quiet ink, never uppercase and never letterspaced."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Bot commands, timestamps, chart and data badges, and the game-tab command line. Nothing else — mono is data, not costume."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Data tile values and inline hero counters via .figure. Tabular numerals at -0.01em so counters don't reflow as they tick."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "fade-up",
+        "value": "fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both",
+        "purpose": "Hero entrance: opacity 0→1 with a 12px rise, staggered at 0 / 70 / 140 / 180 / 210ms across headline, description, actions, feed, and figures. Disabled under prefers-reduced-motion."
+      },
+      {
+        "name": "feed-in",
+        "value": "feed-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both",
+        "purpose": "A row landing in the live feed: opacity 0→1 with a 6px drop. Rows are keyed per delivery, so this runs on arrival rather than on every refetch. Disabled under prefers-reduced-motion."
+      },
+      {
+        "name": "blink",
+        "value": "blink 2s ease-in-out infinite",
+        "purpose": "The live feed's transmitting status dot, pulsing between 100% and 35% opacity. The only looping animation in the system."
+      },
+      {
+        "name": "accordion",
+        "value": "accordion-down / accordion-up 0.2s ease-out",
+        "purpose": "FAQ disclosure open and close."
+      },
+      {
+        "name": "ease-exponential",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The system's only easing curve for entrances — a fast exponential ease-out."
+      },
+      {
+        "name": "state-transition",
+        "value": "150ms",
+        "purpose": "Hover and state changes on color properties only (border-color, background-color, text-decoration-color, opacity). Nothing transforms, lifts, or scales."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" },
+      { "name": "2xl", "value": "1536px" },
+      { "name": "container-cap", "value": "1400px (container maxes out at 1360px above this)" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "kind": "button",
+      "refersTo": "cta-primary",
+      "description": "The site's install action. Amber fill, near-black label, control chamfer on two opposite corners.",
+      "html": "<a class=\"ds-cta-primary\" href=\"#\"><svg viewBox=\"0 0 640 512\" width=\"20\" height=\"20\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M524.531,69.836a1.5,1.5,0,0,0-.764-.7A485.065,485.065,0,0,0,404.081,32.03a1.816,1.816,0,0,0-1.923.91,337.461,337.461,0,0,0-14.9,30.6,447.848,447.848,0,0,0-134.426,0,309.541,309.541,0,0,0-15.135-30.6,1.89,1.89,0,0,0-1.924-.91A483.689,483.689,0,0,0,116.085,69.137a1.712,1.712,0,0,0-.788.676C39.068,183.651,18.186,294.69,28.43,404.354a2.016,2.016,0,0,0,.765,1.375A487.666,487.666,0,0,0,176.02,479.918a1.9,1.9,0,0,0,2.063-.676A348.2,348.2,0,0,0,208.12,430.4a1.86,1.86,0,0,0-1.019-2.588,321.173,321.173,0,0,1-45.868-21.853,1.885,1.885,0,0,1-.185-3.126c3.082-2.309,6.166-4.711,9.109-7.137a1.819,1.819,0,0,1,1.9-.256c96.229,43.917,200.41,43.917,295.5,0a1.812,1.812,0,0,1,1.924.233c2.944,2.426,6.027,4.851,9.132,7.16a1.884,1.884,0,0,1-.162,3.126,301.407,301.407,0,0,1-45.89,21.83,1.875,1.875,0,0,0-1,2.611,391.055,391.055,0,0,0,30.014,48.815,1.864,1.864,0,0,0,2.063.7A486.048,486.048,0,0,0,610.7,405.729a1.882,1.882,0,0,0,.765-1.352C623.729,277.594,590.933,167.465,524.531,69.836ZM222.491,337.58c-28.972,0-52.844-26.587-52.844-59.239S193.056,219.1,222.491,219.1c29.665,0,53.306,26.82,52.843,59.239C275.334,310.993,251.924,337.58,222.491,337.58Zm195.38,0c-28.971,0-52.843-26.587-52.843-59.239S388.437,219.1,417.871,219.1c29.667,0,53.307,26.82,52.844,59.239C470.715,310.993,447.538,337.58,417.871,337.58Z\"/></svg>Add to Discord</a>",
+      "css": ".ds-cta-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; height: 48px; padding: 0 24px; background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); font-family: \"Geist\", sans-serif; font-size: 1rem; font-weight: 700; text-decoration: none; cursor: pointer; border: none; border-radius: 0; clip-path: polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px); transition: opacity 150ms, background-color 150ms, border-color 150ms; } .ds-cta-primary:hover { opacity: 0.9; } .ds-cta-primary:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; } .ds-cta-primary:active { opacity: 0.82; }"
+    },
+    {
+      "name": "Outline CTA Button",
+      "kind": "button",
+      "refersTo": "cta-outline",
+      "description": "The secondary action beside the primary CTA. Transparent over the page ground with a field-edge stroke.",
+      "html": "<a class=\"ds-cta-outline\" href=\"#\">Render a card now<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></a>",
+      "css": ".ds-cta-outline { display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; height: 48px; padding: 0 24px; background: hsl(var(--background)); color: hsl(var(--foreground)); border: 1px solid hsl(var(--input)); border-radius: 0; font-family: \"Geist\", sans-serif; font-size: 1rem; font-weight: 600; text-decoration: none; cursor: pointer; clip-path: polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px); transition: opacity 150ms, background-color 150ms, border-color 150ms; } .ds-cta-outline:hover { background: hsl(var(--accent)); } .ds-cta-outline:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "The single surface primitive: card fill, 1px hairline, 9px top-right chamfer, no shadow. Every card, tile, tab, and feed on the site is built from it.",
+      "html": "<div class=\"ds-panel\"><div class=\"ds-panel__head\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4.9 19.1C1 15.2 1 8.8 4.9 4.9\"/><path d=\"M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5\"/><circle cx=\"12\" cy=\"12\" r=\"2\"/><path d=\"M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5\"/><path d=\"M19.1 4.9C23 8.8 23 15.1 19.1 19\"/></svg><span>Command index</span><span class=\"ds-panel__hint\">Click to copy</span></div><div class=\"ds-panel__body\">Elevation is declared once, as a border. Depth beyond this is a tonal step, never a shadow.</div></div>",
+      "css": ".ds-panel { background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 0; color: hsl(var(--foreground)); font-family: \"Geist\", sans-serif; clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 0 100%); max-width: 420px; } .ds-panel__head { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid hsl(var(--border)); font-size: 0.875rem; font-weight: 500; } .ds-panel__head svg { color: hsl(var(--primary)); flex-shrink: 0; } .ds-panel__hint { margin-left: auto; font-size: 0.75rem; font-weight: 400; color: hsl(var(--muted-foreground)); } .ds-panel__body { padding: 16px; font-size: 0.875rem; line-height: 1.625; color: hsl(var(--muted-foreground)); }"
+    },
+    {
+      "name": "Bot Command Chip",
+      "kind": "chip",
+      "refersTo": "command-chip",
+      "description": "Signature click-to-copy chip. Every bot command anywhere on the site renders as one of these.",
+      "html": "<button class=\"ds-command-chip\" type=\"button\"><svg viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect width=\"14\" height=\"14\" x=\"8\" y=\"8\" rx=\"2\" ry=\"2\"/><path d=\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\"/></svg>/bf6 stats</button>",
+      "css": ".ds-command-chip { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; padding: 4px 10px; background: hsl(var(--muted)); color: hsl(var(--foreground)); border: 1px solid hsl(var(--border)); border-radius: 2px; font-family: ui-monospace, \"Cascadia Code\", \"Segoe UI Mono\", \"Roboto Mono\", monospace; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: border-color 150ms, color 150ms; } .ds-command-chip svg { color: hsl(var(--muted-foreground)); } .ds-command-chip:hover { border-color: hsl(var(--primary) / 0.6); } .ds-command-chip:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; } .ds-command-chip:active { border-color: hsl(var(--primary)); color: hsl(var(--primary)); } .ds-command-chip:active svg { color: hsl(var(--primary)); }"
+    },
+    {
+      "name": "Game Tab",
+      "kind": "nav",
+      "refersTo": "game-tab",
+      "description": "First-class game switching on the landing page: a horizontally scrolling row of chamfered tabs, each carrying its slash command in mono above the title in sans.",
+      "html": "<div class=\"ds-tabs\" role=\"tablist\"><button class=\"ds-tab ds-tab--selected\" role=\"tab\" aria-selected=\"true\" type=\"button\"><span class=\"ds-tab__cmd\">/bf6</span><span class=\"ds-tab__name\">Battlefield 6</span></button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\" type=\"button\"><span class=\"ds-tab__cmd\">/bf2042</span><span class=\"ds-tab__name\">Battlefield 2042</span></button></div>",
+      "css": ".ds-tabs { display: flex; gap: 8px; font-family: \"Geist\", sans-serif; } .ds-tab { flex-shrink: 0; text-align: left; padding: 10px 16px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 0; cursor: pointer; clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 0 100%); transition: border-color 150ms, background-color 150ms, color 150ms; } .ds-tab__cmd { display: block; font-family: ui-monospace, \"Cascadia Code\", \"Segoe UI Mono\", \"Roboto Mono\", monospace; font-size: 0.75rem; color: hsl(var(--muted-foreground)); transition: color 150ms; } .ds-tab__name { display: block; margin-top: 2px; white-space: nowrap; font-size: 0.875rem; font-weight: 600; color: hsl(var(--foreground)); } .ds-tab:hover { border-color: hsl(var(--muted-foreground) / 0.4); } .ds-tab:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; } .ds-tab--selected { background: hsl(var(--primary) / 0.1); border-color: hsl(var(--primary) / 0.7); } .ds-tab--selected .ds-tab__cmd { color: hsl(var(--primary)); }"
+    },
+    {
+      "name": "Live Feed",
+      "kind": "custom",
+      "refersTo": "feed-row",
+      "description": "The signature component and the landing page's lead proof: real deliveries and install events arriving from the public API, with a blinking status dot and an amber chain rail grouping one user's session.",
+      "html": "<div class=\"ds-feed\"><div class=\"ds-feed__head\"><span class=\"ds-feed__title\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4.9 19.1C1 15.2 1 8.8 4.9 4.9\"/><path d=\"M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5\"/><circle cx=\"12\" cy=\"12\" r=\"2\"/><path d=\"M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5\"/><path d=\"M19.1 4.9C23 8.8 23 15.1 19.1 19\"/></svg>Live feed</span><span class=\"ds-feed__status\"><span class=\"ds-feed__dot\"></span>Transmitting</span></div><ul class=\"ds-feed__list\"><li class=\"ds-feed__row\"><span class=\"ds-feed__entry\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m22 2-7 20-4-9-9-4Z\"/><path d=\"M22 2 11 13\"/></svg><span class=\"ds-feed__game\">Battlefield 6</span><span class=\"ds-feed__meta\">Overview &middot; English</span></span><span class=\"ds-feed__time\">12s ago</span></li><li class=\"ds-feed__row\"><span class=\"ds-feed__entry\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2\"/><circle cx=\"12\" cy=\"7\" r=\"4\"/></svg><span class=\"ds-feed__meta\">Installed to an account</span></span><span class=\"ds-feed__time\">1m ago</span></li></ul><div class=\"ds-feed__foot\"><span>Latest deliveries and events</span><a class=\"ds-feed__link\" href=\"#\">See all</a></div></div>",
+      "css": ".ds-feed { display: flex; flex-direction: column; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); font-family: \"Geist\", sans-serif; clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 0 100%); max-width: 460px; } .ds-feed__head { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid hsl(var(--border)); } .ds-feed__title { display: flex; align-items: center; gap: 8px; font-size: 0.875rem; font-weight: 500; color: hsl(var(--foreground)); } .ds-feed__title svg { color: hsl(var(--primary)); } .ds-feed__status { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: hsl(var(--muted-foreground)); } .ds-feed__dot { width: 6px; height: 6px; border-radius: 9999px; background: hsl(var(--primary)); animation: ds-blink 2s ease-in-out infinite; } @keyframes ds-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } } .ds-feed__list { list-style: none; margin: 0; padding: 8px 16px; } .ds-feed__row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 8px 0; font-size: 0.875rem; animation: ds-feed-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; } .ds-feed__row + .ds-feed__row { border-top: 1px solid hsl(var(--border) / 0.6); } @keyframes ds-feed-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } } .ds-feed__entry { display: flex; align-items: baseline; gap: 8px; min-width: 0; } .ds-feed__entry svg { color: hsl(var(--primary)); flex-shrink: 0; transform: translateY(2px); } .ds-feed__game { font-weight: 500; color: hsl(var(--foreground)); } .ds-feed__meta { color: hsl(var(--muted-foreground)); } .ds-feed__time { flex-shrink: 0; font-family: ui-monospace, \"Cascadia Code\", \"Segoe UI Mono\", \"Roboto Mono\", monospace; font-size: 0.6875rem; color: hsl(var(--muted-foreground)); } .ds-feed__foot { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 10px 16px; border-top: 1px solid hsl(var(--border)); font-size: 0.75rem; color: hsl(var(--muted-foreground)); } .ds-feed__link { color: inherit; text-decoration: none; transition: color 150ms; } .ds-feed__link:hover { color: hsl(var(--primary)); } @media (prefers-reduced-motion: reduce) { .ds-feed__row { animation: none; } .ds-feed__dot { animation: none; } }"
+    },
+    {
+      "name": "Data Tile",
+      "kind": "card",
+      "refersTo": "data-tile",
+      "description": "A single live figure on /data. Amber glyph, quiet-ink label, tabular value pinned to the bottom of the tile.",
+      "html": "<div class=\"ds-tile\"><div class=\"ds-tile__label\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m22 2-7 20-4-9-9-4Z\"/><path d=\"M22 2 11 13\"/></svg><span>Stats sent</span></div><div class=\"ds-tile__value\">4,182,930</div></div>",
+      "css": ".ds-tile { display: flex; flex-direction: column; padding: 16px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); font-family: \"Geist\", sans-serif; clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 0 100%); max-width: 220px; } .ds-tile__label { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 500; color: hsl(var(--muted-foreground)); } .ds-tile__label svg { color: hsl(var(--primary)); flex-shrink: 0; } .ds-tile__value { margin-top: auto; padding-top: 8px; font-size: 1.875rem; font-weight: 600; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; color: hsl(var(--foreground)); }"
+    },
+    {
+      "name": "Input Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "The demo form's text field. Sans label above, page-ground fill, field-edge stroke, inherited 4px radius.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field__label\">Username</span><input class=\"ds-field__input\" type=\"text\" placeholder=\"e.g. MozzyFX\" autocomplete=\"off\" spellcheck=\"false\" /></label>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; font-family: \"Geist\", sans-serif; max-width: 320px; } .ds-field__label { font-size: 0.75rem; font-weight: 500; color: hsl(var(--muted-foreground)); } .ds-field__input { height: 40px; width: 100%; padding: 8px 12px; background: hsl(var(--background)); color: hsl(var(--foreground)); border: 1px solid hsl(var(--input)); border-radius: 4px; font-family: inherit; font-size: 0.875rem; transition: border-color 150ms; } .ds-field__input::placeholder { color: hsl(var(--muted-foreground)); } .ds-field__input:hover { border-color: hsl(var(--muted-foreground) / 0.5); } .ds-field__input:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; } .ds-field__input:disabled { background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); cursor: not-allowed; }"
+    },
+    {
+      "name": "Nav Link",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "Header navigation. Quiet ink with a 2px amber underline that scales in from the left on hover and holds at full width when active.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav__link ds-nav__link--active\" href=\"#\">Data</a><a class=\"ds-nav__link\" href=\"#\">Privacy</a><a class=\"ds-nav__link\" href=\"#\">Terms</a></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; gap: 4px; font-family: \"Geist\", sans-serif; } .ds-nav__link { position: relative; padding: 8px 12px; font-size: 0.875rem; font-weight: 500; color: hsl(var(--muted-foreground)); text-decoration: none; transition: color 150ms; } .ds-nav__link::after { content: \"\"; position: absolute; left: 12px; right: 12px; bottom: 2px; height: 2px; background: hsl(var(--primary)); transform: scaleX(0); transform-origin: left; transition: transform 150ms; } .ds-nav__link:hover { color: hsl(var(--foreground)); } .ds-nav__link:hover::after { transform: scaleX(1); } .ds-nav__link:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; } .ds-nav__link--active { color: hsl(var(--foreground)); } .ds-nav__link--active::after { transform: scaleX(1); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Instrument Panel",
+    "overview": "This is a dark, precise, data-forward product surface where the live data is the ornament. The page does not describe what the bot returns; it shows requests landing in real time, in a bordered panel running the full height of the first viewport, while the headline and the install button sit beside it. Every figure on the site is a real number from the public API and every image is real bot output. Nothing is decorated to look like data — the data is already the decoration, so the chrome around it stays quiet enough to let it read.\n\nThe world is the category standard, executed at full craft. That is a deliberate, standing commitment: the conventional dark product-site idiom, taken seriously, without irony and without smuggled quirk. The distinguishing quality here is finish, not novelty. Density comes from tracker.gg and Faceit — dense stat presentation that stays scannable, game-switching treated as first-class navigation, data as the hero rather than the garnish. Spacing discipline comes from Vercel and Resend — immaculate rhythm, live demos used as proof, documentation-grade clarity in every label. Those four set the craft level this surface is measured against.\n\nThe material is thin: near-black ground, one amber accent, hairline borders, no shadows at all, and a single 9px corner chamfer as the only ornament in the system. Confirmed rejections, all of them devices this build removed rather than never had: grid backdrops, radial accent glows, eyebrow labels above headings, the repeated eyebrow→display→description section template, hero stat-metric grids, two-clause antithesis headlines, em-dash body rhythm, marquees, and monospace worn as costume. The register is Persuade on `/` and Operate/Read on `/data` and the policy pages; the same tokens serve both, and only the density changes.",
+    "keyCharacteristics": [
+      "Near-black ground with a three-step tonal ladder: background → card → muted.",
+      "Exactly one accent hue, amber, reserved for live signal, active state, and the single primary action.",
+      "Geist at two working weights — 500/600 for interface, 800 for headings.",
+      "Hairline 1px borders carry every edge, every separation, and all elevation.",
+      "One 9px chamfer: top-right on surfaces, two opposite corners on controls.",
+      "Zero shadows on designed surfaces.",
+      "Motion only marks arrival; it never decorates, and it is fully suppressed under `prefers-reduced-motion`.",
+      "Dark is canonical; light is complete and first-class."
+    ],
+    "rules": [
+      {
+        "name": "The One Amber Rule",
+        "body": "There is exactly one accent hue in this system. Amber marks live signal, active state, and the single primary action; it never fills a surface and never becomes a background wash. If something needs a second hue to be readable, the hierarchy is wrong — fix the weight, the tone step, or the border instead.",
+        "section": "colors"
+      },
+      {
+        "name": "The Avatar Exception",
+        "body": "`/images/avatar.png` is the product's real, pre-existing brand avatar, and it renders mint-teal. It is the single sanctioned second hue in this system, it is confined to the wordmark lockup in the header and the footer, and it is a permanent brand asset — not a build choice and not a defect. No other element may introduce a second hue on its precedent, and the avatar's teal is never sampled, extended, or echoed into UI color.",
+        "section": "colors"
+      },
+      {
+        "name": "The Chart Quarantine Rule",
+        "body": "`chart-1` through `chart-5` exist only inside charts on `/data`. They are a data-encoding palette, not a UI palette; they never appear on a button, a border, a badge, or a piece of running text.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Weights Rule",
+        "body": "Geist works at two weights: 500/600 for interface text, 800 for `.display` headings. Emphasis comes from weight and size and nothing else — no third face, no italics for emphasis, no letterspaced small caps, no uppercase display type. The wordmark's `font-black uppercase` is the one standing exception, and it is a logotype, not a heading style.",
+        "section": "typography"
+      },
+      {
+        "name": "The Mono Is Data Rule",
+        "body": "Monospace is only for things a person could type or copy: bot commands, timestamps, chart and data badges, and the game-tab command line. Navigation, section labels, footer headings, feed chrome, and form labels are all sans. Mono is never used to make ordinary interface text look technical.",
+        "section": "typography"
+      },
+      {
+        "name": "The Sentence Case Rule",
+        "body": "Every heading is sentence case. Uppercase belongs to the wordmark alone.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Container Rule",
+        "body": "Everything lives in the single centered container at 16px / 32px gutters. Nothing bleeds to the viewport edge except a section's own background and its 1px border.",
+        "section": "layout"
+      },
+      {
+        "name": "The Border Between Sections Rule",
+        "body": "Adjacent sections are separated by a 1px border and a tone step, never by empty space and never by a decorative divider, rule graphic, or gradient fade.",
+        "section": "layout"
+      },
+      {
+        "name": "The No Shadow Rule",
+        "body": "No designed surface in this project casts a shadow. If a thing needs to separate from what is behind it, it gets a tone step and a 1px border — in that order.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Elevation Is A Border Rule",
+        "body": "`.panel` declares elevation exactly once: `card` fill plus `1px solid border`. Do not add a ring, a second border, an inset highlight, or a gradient on top of it.",
+        "section": "elevation"
+      },
+      {
+        "name": "The One Chamfer Rule",
+        "body": "9px, and only 9px. Never a second radius, never a rounded corner on a designed surface, never both clip utilities on one element.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Surfaces Cut One, Controls Cut Two Rule",
+        "body": "A surface cuts its top-right corner; a control cuts top-left and bottom-right. The silhouette alone should tell you whether a thing is a panel or something you can press.",
+        "section": "shapes"
+      },
+      {
+        "name": "The One Button Rule",
+        "body": "`CtaButton` is the site's button. `ui/button.tsx` is inherited shadcn kept for in-form controls; do not reach for it to build a call to action, and do not add variants to it.",
+        "section": "components"
+      },
+      {
+        "name": "The Label Never Straddles Rule",
+        "body": "A chart bar label is either wholly inside the fill or wholly on the track, and its ink is chosen to match. A label spanning the fill edge is a defect, not a styling choice — never solve it with a halo, a stroke, or a drop shadow.",
+        "section": "components"
+      },
+      {
+        "name": "The Arrival-Only Motion Rule",
+        "body": "Motion marks something arriving — the hero on load, a new row in the feed, the live dot. Nothing loops for decoration, nothing parallaxes, nothing moves on scroll, and every animation has a `prefers-reduced-motion` off switch.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do build every surface from `.panel` + `.clip-notch`: `card` fill, 1px `border`, 9px top-right chamfer.",
+      "Do use `.clip-btn` for controls and `.clip-notch` for surfaces, so the silhouette tells you what a thing is.",
+      "Do keep amber for live signal, active state, and the one primary action per screen.",
+      "Do treat `/images/avatar.png` as the single sanctioned second hue, and only inside the wordmark lockup.",
+      "Do set headings in `.display` — weight 800, -0.03em, 1.02 line-height, sentence case.",
+      "Do reserve monospace for bot commands, timestamps, chart and data badges, and the game-tab command line.",
+      "Do keep figures on `.figure` (tabular numerals) so counters don't reflow as they tick.",
+      "Do separate sections with a 1px border and a `card`-at-40% tone step.",
+      "Do keep both themes first-class: every new token needs a light value, and dark stays the default.",
+      "Do wrap any new animation in `prefers-reduced-motion: reduce`.",
+      "Do show real bot output and real API numbers. Every image on this site is genuine output; every figure comes from the public API."
+    ],
+    "donts": [
+      "Don't add a box-shadow to a designed surface. Depth is a tone step plus a 1px border.",
+      "Don't introduce a second chamfer size, put a rounded corner on a panel, or reintroduce `.clip-notch-sm`.",
+      "Don't treat the inherited 2/4/6px shadcn radius scale as the form language — it stays on the vendor primitives it came with.",
+      "Don't introduce a second accent hue anywhere in the UI, and don't cite the mint-teal avatar as precedent.",
+      "Don't use `chart-1`…`chart-5` outside a chart on `/data`.",
+      "Don't add a grid backdrop, a radial accent glow, a gradient wash, or a decorative divider.",
+      "Don't put an eyebrow or kicker label above a heading, and don't rebuild the eyebrow→display→description section template.",
+      "Don't open a page with a stat-metric grid; supporting figures belong inline in a sentence.",
+      "Don't write two-clause antithesis headlines (\"Not X. Just Y.\") or use em-dashes as body rhythm.",
+      "Don't set navigation, section labels, footer headings, feed chrome, or form labels in monospace.",
+      "Don't set headings in uppercase — the wordmark is the only uppercase in the system.",
+      "Don't add a marquee, a scroll-triggered reveal, or any looping decorative motion.",
+      "Don't \"fix\" Geist because a detector calls it overused. The face is chosen deliberately and confirmed."
+    ]
+  }
+}

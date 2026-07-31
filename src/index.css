@@ -46,15 +46,14 @@
 
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
-  --animate-fade-up: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
-  --animate-marquee: marquee 40s linear infinite;
+  --animate-fade-up: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-blink: blink 2s ease-in-out infinite;
 }
 
 @utility container {
   margin-inline: auto;
   @media (width >= 1400px) {
-    max-width: 1400px;
+    max-width: 1360px;
   }
 }
 
@@ -79,21 +78,11 @@
 @keyframes fade-up {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    /* Set per-instance by the Marquee component (exactly one copy's width) */
-    transform: translateX(var(--marquee-shift, -50%));
   }
 }
 
@@ -104,6 +93,19 @@
   }
   50% {
     opacity: 0.35;
+  }
+}
+
+/* A row landing in the live feed. Only newly-keyed rows mount, so this runs
+   on arrival rather than on every refetch. */
+@keyframes feed-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -120,69 +122,47 @@
     text-decoration-color: hsl(var(--primary));
   }
 
-  /* Battlefield-style notched corners */
+  /* The one ornament: a 9px cut corner, one radius everywhere.
+     Surfaces cut the top-right; controls cut two opposite corners so a
+     control never reads as a panel. */
   .clip-notch {
-    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
-  }
-  .clip-notch-sm {
     clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 0 100%);
   }
   .clip-btn {
     clip-path: polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px);
   }
 
-  /* Section eyebrow: ── LABEL */
-  .eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.625rem;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: hsl(var(--primary));
-  }
-  .eyebrow::before {
-    content: "";
-    display: block;
-    width: 2rem;
-    height: 2px;
-    background: hsl(var(--primary));
-  }
-
+  /* Headings. Weight and size carry emphasis; nothing else does. */
   .display {
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: -0.02em;
-    line-height: 0.95;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.02;
     text-wrap: balance;
   }
 
-  /* Panel: the standard surface of the design */
+  /* The standard surface. Elevation is declared once, as a border. */
   .panel {
-    position: relative;
-    background: linear-gradient(160deg, hsl(var(--foreground) / 0.035), transparent 40%), hsl(var(--card));
+    background: hsl(var(--card));
     border: 1px solid hsl(var(--border));
   }
 
-  /* Subtle blueprint grid backdrop */
-  .bg-grid {
-    background-image:
-      linear-gradient(to right, hsl(var(--foreground) / 0.045) 1px, transparent 1px),
-      linear-gradient(to bottom, hsl(var(--foreground) / 0.045) 1px, transparent 1px);
-    background-size: 44px 44px;
+  /* Data type: figures that must align and stay legible in a column. */
+  .figure {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
   }
 
   .fade-up {
     animation: var(--animate-fade-up);
   }
 
+  .feed-in {
+    animation: feed-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .fade-up {
-      animation: none;
-    }
-    .animate-marquee {
+    .fade-up,
+    .feed-in {
       animation: none;
     }
   }
@@ -201,13 +181,13 @@
     --secondary: 222 10% 93%;
     --secondary-foreground: 222 15% 10%;
     --muted: 222 10% 94%;
-    --muted-foreground: 222 8% 38%;
+    --muted-foreground: 222 9% 35%;
     --accent: 25 80% 93%;
     --accent-foreground: 25 88% 25%;
     --destructive: 0 67% 45%;
     --destructive-foreground: 0 0% 98%;
-    --border: 222 10% 86%;
-    --input: 222 10% 82%;
+    --border: 222 10% 87%;
+    --input: 222 10% 80%;
     --ring: 25 88% 40%;
     /* Validated (dataviz six checks) light-surface palette */
     --chart-1: 28 85% 46%;
@@ -215,27 +195,30 @@
     --chart-3: 155 78% 27%;
     --chart-4: 262 83% 58%;
     --chart-5: 0 67% 45%;
+    /* Ink for labels sitting on a chart fill. Chart-1 is L=46% in both themes,
+       so one dark ink clears 4.5:1 on the bar in light and dark alike. */
+    --chart-ink: 220 20% 8%;
     --radius: 0.375rem;
   }
   .dark {
-    --background: 220 12% 5%;
-    --foreground: 210 10% 92%;
-    --card: 220 11% 7%;
-    --card-foreground: 210 10% 92%;
-    --popover: 220 11% 8%;
-    --popover-foreground: 210 10% 92%;
+    --background: 220 14% 4%;
+    --foreground: 210 12% 95%;
+    --card: 220 12% 6.5%;
+    --card-foreground: 210 12% 95%;
+    --popover: 220 12% 8%;
+    --popover-foreground: 210 12% 95%;
     --primary: 32 100% 59%;
     --primary-foreground: 220 15% 6%;
-    --secondary: 220 8% 13%;
-    --secondary-foreground: 210 10% 92%;
-    --muted: 220 8% 12%;
-    --muted-foreground: 220 6% 64%;
-    --accent: 220 8% 15%;
-    --accent-foreground: 210 10% 92%;
-    --destructive: 0 70% 55%;
+    --secondary: 220 9% 13%;
+    --secondary-foreground: 210 12% 95%;
+    --muted: 220 9% 11%;
+    --muted-foreground: 220 7% 66%;
+    --accent: 220 9% 14%;
+    --accent-foreground: 210 12% 95%;
+    --destructive: 0 70% 58%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 9% 15%;
-    --input: 220 9% 18%;
+    --border: 220 10% 14%;
+    --input: 220 10% 20%;
     --ring: 32 100% 59%;
     /* Validated (dataviz six checks) dark-surface palette */
     --chart-1: 30 80% 46%;
@@ -243,6 +226,7 @@
     --chart-3: 155 74% 36%;
     --chart-4: 263 84% 69%;
     --chart-5: 0 70% 60%;
+    --chart-ink: 220 20% 8%;
   }
 }
 
@@ -253,10 +237,15 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "ss01";
+    -webkit-font-smoothing: antialiased;
   }
   ::selection {
     background: hsl(var(--primary) / 0.85);
     color: hsl(var(--primary-foreground));
+  }
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
   }
 }
 
@@ -275,7 +264,7 @@
 }
 .recharts-brush text {
   fill: hsl(var(--muted-foreground));
-  font-size: 0.65rem;
+  font-size: 0.6875rem;
 }
 .brush-disabled,
 .brush-disabled * {

@@ -29,7 +29,7 @@ type FeedItem =
   | { kind: "output"; date: string; session: OutputSession }
   | { kind: "event"; date: string; event: DBEvent };
 
-const FEED_ROWS = 12;
+const FEED_ROWS = 10;
 
 /** Real-time feed of the bot's recent deliveries and install/link events, straight from the public API. */
 export const LiveFeed = () => {
@@ -101,17 +101,12 @@ export const LiveFeed = () => {
   return (
     <div className="panel clip-notch flex h-full flex-col">
       <div className="flex items-center justify-between border-b px-4 py-3">
-        <span className="flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-widest">
+        <span className="flex items-center gap-2 text-sm font-medium">
           <RadioIcon className="size-4 text-primary" />
           Live feed
           <ActivityLegend />
         </span>
-        <span
-          className={cn(
-            "flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-widest transition-colors",
-            statusMeta.text,
-          )}
-        >
+        <span className={cn("flex items-center gap-1.5 text-xs transition-colors", statusMeta.text)}>
           <span className={cn("size-1.5 rounded-full", statusMeta.dot)} />
           {statusMeta.label}
         </span>
@@ -140,18 +135,17 @@ export const LiveFeed = () => {
           </ul>
         ) : (
           <ul className="divide-y divide-border/60">
-            {Array.from({ length: 12 }, (_, i) => i).map((i) => (
+            {Array.from({ length: FEED_ROWS }, (_, i) => i).map((i) => (
               <li className="py-2" key={i}>
                 <div className="h-5 w-full animate-pulse rounded bg-muted" style={{ animationDelay: `${i * 80}ms` }} />
               </li>
             ))}
           </ul>
         )}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-linear-to-t from-card to-transparent" />
       </div>
 
-      <div className="flex items-baseline justify-between gap-3 border-t px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
-        <span className="truncate">Latest deliveries & events</span>
+      <div className="flex items-baseline justify-between gap-3 border-t px-4 py-2.5 text-xs text-muted-foreground">
+        <span className="truncate">Latest deliveries and events</span>
         <Link
           className="group flex shrink-0 items-center gap-1 transition-colors hover:text-primary"
           hash="recent-outputs"
@@ -166,8 +160,11 @@ export const LiveFeed = () => {
   );
 };
 
+/** Keyed per delivery, so only rows that just arrived mount — and only those animate. */
 const FeedRow = ({ children, className }: { children: ReactNode; className?: string }) => (
-  <li className={cn("relative flex items-baseline justify-between gap-3 py-2 text-sm", className)}>{children}</li>
+  <li className={cn("feed-in relative flex items-baseline justify-between gap-3 py-2 text-sm", className)}>
+    {children}
+  </li>
 );
 
 const EventRow = ({ event }: { event: DBEvent }) => {

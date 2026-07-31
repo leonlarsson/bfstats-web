@@ -124,7 +124,7 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
     <TooltipProvider>
       <div className="grid gap-6 lg:grid-cols-[minmax(0,340px)_1fr] lg:gap-8">
         {/* ---- Controls ---- */}
-        <form className="panel clip-notch-sm flex flex-col gap-5 p-5" onSubmit={handleSubmit}>
+        <form className="panel clip-notch flex flex-col gap-5 self-start p-5" onSubmit={handleSubmit}>
           <Field label="Game">
             <Select value={gameKey} onValueChange={handleGameChange}>
               <SelectTrigger>
@@ -204,7 +204,7 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
           </Field>
 
           <Button
-            className="clip-btn mt-1"
+            className="clip-btn mt-1 disabled:bg-muted disabled:text-muted-foreground disabled:opacity-100"
             disabled={status === "loading" || cooldown > 0 || !username.trim()}
             type="submit"
           >
@@ -221,13 +221,13 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
             )}
           </Button>
 
-          <p className="font-mono text-[11px] leading-relaxed text-muted-foreground">
-            Live from the bot's image renderer — the same output you'd get in Discord.
+          <p className="text-xs leading-relaxed text-muted-foreground">
+            Live from the bot's image renderer. This is the same output you'd get in Discord.
           </p>
         </form>
 
         {/* ---- Preview ---- */}
-        <div className="panel clip-notch-sm relative flex aspect-[1200/750] items-center justify-center overflow-hidden bg-muted/30">
+        <div className="panel clip-notch relative flex aspect-[1200/750] items-center justify-center overflow-hidden bg-muted/30">
           {status === "success" && result ? (
             <>
               <button
@@ -244,7 +244,7 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
               </button>
               <a
                 aria-label="Download image"
-                className="absolute top-2 right-2 flex items-center gap-1.5 rounded-md border bg-background/80 px-2.5 py-1.5 font-mono text-[11px] uppercase tracking-widest text-muted-foreground backdrop-blur transition-colors hover:border-primary/60 hover:text-foreground"
+                className="absolute top-2 right-2 flex items-center gap-1.5 rounded-md border bg-background/80 px-2.5 py-1.5 text-xs text-muted-foreground backdrop-blur transition-colors hover:border-primary/60 hover:text-foreground"
                 download={downloadName}
                 href={result.src}
               >
@@ -274,7 +274,7 @@ export const ImageDemo = ({ onExpand }: { onExpand: (image: GalleryImage) => voi
 
 const Field = ({ label, children }: { label: string; children: ReactNode }) => (
   <div className="flex flex-col gap-1.5">
-    <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">{label}</span>
+    <span className="text-xs font-medium text-muted-foreground">{label}</span>
     {children}
   </div>
 );
