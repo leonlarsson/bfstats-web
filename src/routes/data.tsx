@@ -486,7 +486,9 @@ const ActivityList = <T extends { date: string }>({
             )}
           >
             <span className="flex min-w-0 items-baseline gap-2">{renderedItem}</span>
-            <TimeAgo date={item.date} />
+            <div className="pl-6">
+              <TimeAgo date={item.date} />
+            </div>
           </li>
         );
       })}
