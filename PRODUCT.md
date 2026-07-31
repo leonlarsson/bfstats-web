@@ -54,7 +54,7 @@ Notably **not** the oldest bot. Do not position on longevity or "first."
 - Voice: military/field-report register used lightly ("Field report", "Briefing room", "Ready to deploy?"), never at the cost of clarity.
 - Developer/social identity: `@mozzyfx` (X), `leonlarsson` (GitHub). Source is public.
 - **Standing visual preference: the category standard, executed at full craft.** Offered a set of distinctive alternate visual worlds on 2026-07-31, the owner deliberately chose the conventional dark product-site idiom. This is a durable commitment, not a fallback: future work executes the convention without irony, without smuggled quirk, and without being talked out of it. The distinguishing quality is finish, not novelty.
-- **Quality bar: tracker.gg + Faceit for data, Vercel + Resend for finish.** These four set the craft level. From the first pair: dense stat presentation that stays scannable, game-switching treated as a first-class navigation problem, and data as the hero rather than the garnish. From the second: immaculate spacing systems, live interactive demos used as proof, and documentation-grade clarity in every label.
+- **Quality bar: tracker.gg + Faceit for data, Resend for finish.** These three set the craft level. From the first pair: dense stat presentation that stays scannable, game-switching treated as a first-class navigation problem, and data as the hero rather than the garnish. From Resend: immaculate spacing systems, live interactive demos used as proof, and documentation-grade clarity in every label.
 
 ## Evidence on Hand
 
