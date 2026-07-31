@@ -29,7 +29,7 @@ type FeedItem =
   | { kind: "output"; date: string; session: OutputSession }
   | { kind: "event"; date: string; event: DBEvent };
 
-const FEED_ROWS = 10;
+const FEED_ROWS = 8;
 
 /** Real-time feed of the bot's recent deliveries and install/link events, straight from the public API. */
 export const LiveFeed = () => {
