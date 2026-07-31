@@ -131,7 +131,7 @@ function PrivacyComponent() {
           <p>
             <a
               className="link"
-              href="https://api.battlefieldstats.com/outputs/by-identifier?identifier=FECbLioP"
+              href="https://api.battlefieldstats.com/outputs/by-identifier?identifier=PDEDflQi"
               rel="noreferrer"
               target="_blank"
             >
