@@ -1,13 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRightIcon, LockIcon, TerminalIcon } from "lucide-react";
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useRef, useState } from "react";
 import { BotCommand } from "@/components/BotCommand";
 import { CountUp } from "@/components/CountUp";
 import { CtaButton } from "@/components/CtaButton";
 import type { GalleryImage } from "@/components/Gallery";
 import { GALLERY_IMAGES, Lightbox } from "@/components/Gallery";
 import { DISCORD_INVITE_URL } from "@/components/Header";
+import { HScroll } from "@/components/HScroll";
 import { ImageDemo } from "@/components/ImageDemo";
 import { Icons } from "@/components/icons";
 import { LiveFeed } from "@/components/LiveFeed";
@@ -65,14 +66,19 @@ const STEPS = [
     title: "Run a command",
     body: (
       <>
-        <BotCommand command="/bf6 stats" /> for your numbers, <BotCommand command="/bf2042 servers" /> to search live
-        servers. <BotCommand command="/help" /> lists everything.
+        <BotCommand command="/bf6 stats" /> for your own numbers, <BotCommand command="/bf6 leaderboard" /> for the top
+        players. <BotCommand command="/help" /> lists everything.
       </>
     ),
   },
   {
     title: "Read your card",
-    body: <>A rendered image lands in the channel: K/D, W/L, playtime, per-class and per-weapon breakdowns.</>,
+    body: (
+      <>
+        A rendered image lands in the channel: K/D, W/L, playtime, per-class and per-weapon breakdowns. A few segments,
+        like maps and modes, come back as text.
+      </>
+    ),
   },
 ];
 
@@ -85,6 +91,17 @@ function HomeComponent() {
 
   const activeImages = GALLERY_IMAGES.filter((image) => image.game === activeGame);
   const activeMeta = GAMES.find((game) => game.name === activeGame);
+
+  // Warm a game's examples on pointer or keyboard intent, so switching tabs doesn't
+  // sit on an empty panel. Fetching all of them upfront would cost megabytes nobody asked for.
+  const prefetched = useRef(new Set<string>());
+  const prefetchGame = (gameName: string) => {
+    for (const image of GALLERY_IMAGES) {
+      if (image.game !== gameName || prefetched.current.has(image.src)) continue;
+      prefetched.current.add(image.src);
+      new Image().src = image.src;
+    }
+  };
 
   return (
     <>
@@ -108,8 +125,8 @@ function HomeComponent() {
               className="fade-up mt-5 max-w-lg leading-relaxed text-muted-foreground"
               style={{ animationDelay: "70ms" }}
             >
-              Real-time stats, leaderboards, and live server search for every major Battlefield title, from Battlefield
-              2 to Battlefield 6. Rendered as an image card and delivered in seconds.
+              Real-time stats and leaderboards for every major Battlefield title, from Battlefield 2 to Battlefield 6.
+              Rendered as an image card and delivered in seconds.
             </p>
 
             <div className="fade-up mt-6 flex flex-wrap items-center gap-3" style={{ animationDelay: "140ms" }}>
@@ -120,7 +137,7 @@ function HomeComponent() {
 
               <CtaButton asChild className="w-full sm:w-auto" variant="outline">
                 <Link hash="demo" hashScrollIntoView={{ behavior: "instant", block: "start" }} to="/">
-                  Render a card now
+                  Try the renderer
                   <ArrowRightIcon className="size-4" />
                 </Link>
               </CtaButton>
@@ -151,24 +168,22 @@ function HomeComponent() {
         title="Pick your game"
         description="Every major Battlefield title is supported. Choose one to see exactly what the bot returns for it, as real unedited output."
       >
-        <div
-          aria-label="Select a game"
-          className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-3 [scrollbar-width:none] lg:-mx-8 lg:px-8 [&::-webkit-scrollbar]:hidden"
-          role="tablist"
-        >
+        <HScroll trackProps={{ "aria-label": "Select a game", className: "gap-2", role: "tablist" }}>
           {GAMES.map((game) => {
             const selected = game.name === activeGame;
             return (
               <button
                 aria-selected={selected}
                 className={cn(
-                  "clip-notch shrink-0 cursor-pointer border px-4 py-2.5 text-left transition-colors",
+                  "clip-notch shrink-0 snap-start cursor-pointer border px-4 py-2.5 text-left transition-colors",
                   selected
                     ? "border-primary/70 bg-primary/10"
                     : "border-border bg-card hover:border-muted-foreground/40",
                 )}
                 key={game.name}
                 onClick={() => setActiveGame(game.name)}
+                onFocus={() => prefetchGame(game.name)}
+                onMouseEnter={() => prefetchGame(game.name)}
                 role="tab"
                 type="button"
               >
@@ -184,7 +199,7 @@ function HomeComponent() {
               </button>
             );
           })}
-        </div>
+        </HScroll>
 
         {activeMeta && (
           <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
@@ -194,22 +209,22 @@ function HomeComponent() {
           </div>
         )}
 
-        <div
-          className={cn(
-            "mt-5 grid gap-4",
-            activeImages.length > 1 ? "sm:grid-cols-2 lg:grid-cols-3" : "max-w-3xl grid-cols-1",
-          )}
-        >
+        {/* Cards keep one width and scroll, however many a title has, so switching
+            games never reflows the row into a different shape. */}
+        <HScroll className="mt-5">
           {activeImages.map((image) => (
             <button
-              className="panel clip-notch group cursor-zoom-in overflow-hidden text-left transition-colors hover:border-primary/60"
+              className="panel clip-notch group w-[300px] shrink-0 snap-start cursor-zoom-in overflow-hidden text-left transition-colors hover:border-primary/60 sm:w-[360px] lg:w-[420px]"
               key={image.src}
               onClick={() => setLightboxImage(image)}
               type="button"
             >
               <img
                 alt={`${image.game} ${image.segment} example output`}
-                className="aspect-[1200/750] w-full object-cover"
+                // Inert so a drag across the card scrolls the row instead of
+                // starting a native image drag.
+                className="pointer-events-none aspect-[1200/750] w-full object-cover"
+                draggable={false}
                 height={750}
                 loading="lazy"
                 src={image.src}
@@ -223,7 +238,7 @@ function HomeComponent() {
               </span>
             </button>
           ))}
-        </div>
+        </HScroll>
       </Section>
 
       {/* ============ HOW IT WORKS ============ */}
@@ -334,11 +349,7 @@ function HomeComponent() {
             <div>
               <h2 className="display text-3xl sm:text-4xl">Common questions</h2>
               <p className="mt-4 leading-relaxed text-muted-foreground">
-                More about the bot, where its data comes from, and who maintains it is on the{" "}
-                <Link className="link" to="/about">
-                  about page
-                </Link>
-                .
+                Anything not covered here, <BotCommand command="/feedback" /> in Discord reaches me directly.
               </p>
             </div>
 

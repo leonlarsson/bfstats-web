@@ -65,6 +65,12 @@ typography:
     fontWeight: 500
     lineHeight: 1.4
     letterSpacing: "normal"
+  micro:
+    fontFamily: "ui-monospace, 'Cascadia Code', 'Segoe UI Mono', 'Roboto Mono', monospace"
+    fontSize: "0.6875rem"
+    fontWeight: 500
+    lineHeight: 1.3
+    letterSpacing: "normal"
   figure:
     fontFamily: "Geist, sans-serif"
     fontSize: "1.5rem"
@@ -186,7 +192,7 @@ A near-black neutral ladder with a single warm amber accent — cold ground, one
 Dark is the canonical theme: `<html class="dark">` ships in the markup, `ThemeProvider` defaults to `dark`, and a pre-paint script in `index.html` removes the class only when the visitor has stored `light`. Light is a complete, supported counterpart, not an afterthought — every token carries a light value and both themes must stay legible. Tokens are declared as bare HSL channel triplets on `:root` and `.dark` and consumed as `hsl(var(--token))`, which is what lets opacity modifiers like `hsl(var(--primary) / 0.3)` work throughout the system.
 
 ### Primary
-- **Signal Amber** (`{colors.primary}`): The one accent. It marks the live feed's transmitting dot, the primary install button, the active nav underline, the selected game tab, the send and event glyphs in every feed row, the chain rail tying a session's rows together, the deep-linked card highlight on `/data`, link underlines, and the focus ring. It never fills a surface, and it never appears twice in the same role on one screen.
+- **Signal Amber** (`{colors.primary}`): The one accent. It marks the live feed's transmitting dot, the primary install button, the active nav underline, the selected game tab, the send and event glyphs in every feed row, the chain rail tying a session's rows together on `/data`, the deep-linked card highlight on `/data`, link underlines, and the focus ring. It never fills a surface, and it never appears twice in the same role on one screen.
 
 ### Neutral
 - **Near-Black Ground** (`{colors.background}`): The page. The lowest step of the tonal ladder.
@@ -222,11 +228,12 @@ The body sets `font-feature-settings: "ss01"` globally, and figures use `.figure
 
 ### Hierarchy
 - **Display** (800, `clamp(2.25rem, 7vw, 4rem)`, 1.02, -0.03em): `.display`. The hero headline. Sentence case, balanced wrap. The old uppercase-900 treatment is gone.
-- **Headline** (800, 1.875rem → 2.25rem, 1.02, -0.03em): `.display` at a smaller size. Section headings on `/`, and the page `h1` on `/data`, `/about`, `/privacy`, `/tos`. Sentence case.
+- **Headline** (800, 1.875rem → 2.25rem, 1.02, -0.03em): `.display` at a smaller size. Section headings on `/`, and the page `h1` on `/data`, `/privacy`, `/tos`. Sentence case.
 - **Title** (600, 1rem–1.125rem, 1.4): Panel header rows, step titles, FAQ triggers, footer column headings.
 - **Body** (400, 1rem, 1.625): Running prose in quiet ink, capped at `max-w-2xl` for section descriptions and `max-w-3xl` for policy text.
 - **Label** (500, 0.75rem, 1.4): Field labels, tile captions, feed chrome, "Click to copy" hints. Sentence case, quiet ink. Never uppercase, never letterspaced.
-- **Mono** (500, 0.6875rem–0.75rem): Bot commands, timestamps, chart and data badges, and the command line on a game tab.
+- **Mono** (500, 0.75rem): Bot commands, timestamps, and the command line on a game tab.
+- **Micro** (500, 0.6875rem): The smallest step in the system, mono only. Session and page badges, and the contents of a tooltip. Nothing larger than a badge may use it.
 - **Figure** (600, 1.5rem–1.875rem, tabular): `.figure`. Data tile values and the inline hero counters.
 
 ### Named Rules
@@ -314,6 +321,15 @@ Buttons and panels are plain and load-bearing: rectangles with one corner sliced
 - **Border:** 1px `border` on the panel, and again on each internal header or footer strip.
 - **Internal Padding:** 12–16px for header and footer rows, 16–20px for body content. A `/data` StatCard deep-linked by hash swaps to an amber border and a 5% amber tint.
 
+### Horizontal Scroller
+`HScroll`. One row that scrolls sideways rather than wrapping, used for the game tabs and the example-image row on `/`. Items are fixed-width and `snap-start`; the track hides its scrollbar and bleeds past the container to the viewport edge at every width.
+
+Three ways in, one per input method. Touch swipes it natively. A mouse **drags** it: pointer down on the track starts a drag, 5px of travel commits it, snap is suspended for the duration, and the pointer is captured so the drag survives leaving the row. A drag that ends on top of an item must not also activate it, so the track cancels that click in the capture phase — items stay plain buttons and never learn about the drag. Keyboard and mouse also get a 40px `.clip-btn` **arrow** floated over each end, vertically centred, `sm` and up, translucent with a backdrop blur; it fades to zero opacity and leaves the tab order on the side that has nothing left to reveal. Arrows page by one item plus its gap, measured off the real layout rather than assumed, and drop to an instant jump under `prefers-reduced-motion`. A 24px `background` fade marks each live edge. Images inside a scroller are `pointer-events-none` and `draggable={false}` so a drag across one scrolls the row instead of starting a native image drag.
+
+**The Scroll, Don't Wrap Rule.** A row of peers that overflows scrolls; it never wraps into a ragged second line. Wrapping turns one row of equals into a shape that changes with the viewport, and a lone item stranded on row two reads as a mistake.
+
+**The Every Input Rule.** A row that hides its scrollbar owes something to each way of pointing at it: swipe for touch, drag *and* arrows for a mouse, focus order for a keyboard. Arrows alone are not enough — a mouse expects to grab the row itself.
+
 ### Inputs / Fields
 - **Style:** 40px tall, `background` fill, 1px `input` border, 4px radius (inherited), 12px side padding, quiet-ink placeholder. Selects match the input silhouette exactly.
 - **Label:** A 12px sans label sits 6px above the field, in quiet ink. Not uppercase, not mono.
@@ -326,9 +342,11 @@ Buttons and panels are plain and load-bearing: rectangles with one corner sliced
 - **Footer:** `card` ground, 1px top border, a `2fr 1fr 1fr` column grid, sans column headings, quiet-ink link lists, and a bordered legal strip at the bottom.
 
 ### Live Feed (signature)
-The landing page's lead proof, and the component the first viewport is built around. A full-height `.panel` in three parts: a header row carrying an amber radio glyph, the title, and a right-aligned status pair (a 6px dot plus a label — amber and blinking when transmitting, quiet and pulsing while connecting, red when both queries have failed); a body of at most 12 rows, hairline-divided at 60% border opacity; and a footer strip linking through to `/data`.
+The landing page's lead proof, and the component the first viewport is built around. A full-height `.panel` in three parts: a header row carrying an amber radio glyph, the title, and a right-aligned status pair (a 6px dot plus a label — amber and blinking when transmitting, quiet and pulsing while connecting, red when both queries have failed); a body of at most 8 rows, hairline-divided at 60% border opacity; and a footer strip linking through to `/data`.
 
-Each row is one delivery or install event: an amber glyph, the game in medium weight, the segment and language in quiet ink, an optional monospace badge, and a right-aligned relative timestamp. Sessions from one user are grouped and tied together by a 1px amber-at-30% chain rail down the left with an 8px elbow into each continuation row; continuation rows drop the game and language because the rail already says they share a command. Rows are keyed per delivery, so only genuinely new rows mount — and only those animate. Before data arrives, 12 pulsing `muted` skeleton bars hold the exact same height, so the panel never resizes.
+Each row is one delivery session or install event: an amber glyph, the game in medium weight, the segments and language in quiet ink, an optional monospace badge, and a right-aligned relative timestamp. Rows are keyed per session, so only genuinely new rows mount — and only those animate, and a session that gains a segment updates in place. Before data arrives, 8 pulsing `muted` skeleton bars hold the exact same height, so the panel never resizes.
+
+**The Compact Session Rule.** In the feed, a multi-segment session occupies exactly one row: the segments listed in the order they were run, and a `×N` badge carrying the count with the full run in a tooltip. The chain rail belongs to `/data`, where rows are plentiful; at an 8-row budget one long session would otherwise consume the whole panel and hide every other request. Two renderings of the same data, each sized to the room it has.
 
 ### Charts (`/data`)
 Horizontal bars on a `muted` track, 32px tall with an 8px gap, 2px radius on the right end only. The x-domain is capped at `dataMax * 1.7`, so the longest bar reaches roughly 59% of the track and can never run under the fixed, right-aligned value column. Each row's name label picks its ink per row: `chart-ink` when the label sits wholly inside the fill, `foreground` when it sits wholly on the track. The value column is always `foreground`, on the track.

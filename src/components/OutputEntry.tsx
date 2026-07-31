@@ -2,7 +2,7 @@ import humanizeDuration from "humanize-duration";
 import { SendIcon, SortAscIcon, SortDescIcon } from "lucide-react";
 import { type ComponentPropsWithoutRef, Fragment } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { chainChip, type OutputGroup, type OutputRow, pageDepth } from "@/lib/outputs";
+import { chainChip, type OutputGroup, type OutputRow, type OutputSession, pageDepth } from "@/lib/outputs";
 import { cn, parseUTCDate } from "@/lib/utils";
 
 const humanizeSpan = humanizeDuration.humanizer({ round: true, largest: 1, units: ["d", "h", "m", "s"] });
@@ -37,6 +37,60 @@ export const OutputEntry = ({ row }: { row: OutputRow }) => {
         <ChainChip group={row.group} />
       </span>
     </>
+  );
+};
+
+/**
+ * A whole session on one row: the game, the segments it moved through, and a ×N badge.
+ * For surfaces with a tight row budget, where a multi-segment chain would otherwise
+ * crowd every other request out of view.
+ */
+export const CompactOutputEntry = ({ session }: { session: OutputSession }) => {
+  // Oldest first, so the segments read in the order they were run.
+  const segments = [...session.segments].reverse();
+  const { game, language } = session.latest;
+
+  return (
+    <>
+      <SendIcon className="size-3.5 shrink-0 translate-y-0.5 text-primary" />
+      <span className="truncate">
+        <span className="font-medium">{game} </span>
+        <span className="text-muted-foreground">
+          {segments.map((group) => group.latest.segment).join(", ")}
+          {` · ${language}`}
+        </span>
+        {/* A lone segment keeps its own badge; the session badge would say nothing. */}
+        {segments.length === 1 && <ChainChip group={segments[0]} />}
+      </span>
+      {segments.length > 1 && <SessionChip segments={segments} session={session} />}
+    </>
+  );
+};
+
+/** Segment count for a collapsed session, with the full run in a tooltip. */
+const SessionChip = ({ session, segments }: { session: OutputSession; segments: OutputGroup[] }) => {
+  const span = spanOf(session.firstDate, session.date);
+
+  return (
+    <Tooltip delayDuration={0}>
+      <TooltipTrigger asChild>
+        <Badge className="shrink-0">×{segments.length}</Badge>
+      </TooltipTrigger>
+      <TooltipContent className="font-mono text-[11px]">
+        <div className="mb-1">
+          {session.count} outputs across {segments.length} segments
+          {span >= 1000 && ` over ${humanizeSpan(span)}`}
+        </div>
+        <ol className="grid gap-y-0.5 text-muted-foreground">
+          {segments.map((group, i) => (
+            <li key={`${group.latest.segment}-${group.firstDate}`}>
+              {i + 1}. {group.latest.segment}
+              {group.count > 1 && ` ×${group.count}`}
+            </li>
+          ))}
+        </ol>
+      </TooltipContent>
+    </Tooltip>
   );
 };
 

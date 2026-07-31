@@ -458,6 +458,10 @@
       "figure": {
         "displayName": "Figure",
         "purpose": "Data tile values and inline hero counters via .figure. Tabular numerals at -0.01em so counters don't reflow as they tick."
+      },
+      "micro": {
+        "displayName": "Micro",
+        "purpose": "The smallest step in the system, mono only. Session and page badges, and tooltip contents. Nothing larger than a badge uses it."
       }
     },
     "shadows": [],
@@ -494,12 +498,30 @@
       }
     ],
     "breakpoints": [
-      { "name": "sm", "value": "640px" },
-      { "name": "md", "value": "768px" },
-      { "name": "lg", "value": "1024px" },
-      { "name": "xl", "value": "1280px" },
-      { "name": "2xl", "value": "1536px" },
-      { "name": "container-cap", "value": "1400px (container maxes out at 1360px above this)" }
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      },
+      {
+        "name": "2xl",
+        "value": "1536px"
+      },
+      {
+        "name": "container-cap",
+        "value": "1400px (container maxes out at 1360px above this)"
+      }
     ]
   },
   "components": [
@@ -547,7 +569,7 @@
       "name": "Live Feed",
       "kind": "custom",
       "refersTo": "feed-row",
-      "description": "The signature component and the landing page's lead proof: real deliveries and install events arriving from the public API, with a blinking status dot and an amber chain rail grouping one user's session.",
+      "description": "The signature component and the landing page's lead proof: real deliveries and install events arriving from the public API, with a blinking status dot and each multi-segment session collapsed to one row carrying a ×N badge.",
       "html": "<div class=\"ds-feed\"><div class=\"ds-feed__head\"><span class=\"ds-feed__title\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4.9 19.1C1 15.2 1 8.8 4.9 4.9\"/><path d=\"M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5\"/><circle cx=\"12\" cy=\"12\" r=\"2\"/><path d=\"M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5\"/><path d=\"M19.1 4.9C23 8.8 23 15.1 19.1 19\"/></svg>Live feed</span><span class=\"ds-feed__status\"><span class=\"ds-feed__dot\"></span>Transmitting</span></div><ul class=\"ds-feed__list\"><li class=\"ds-feed__row\"><span class=\"ds-feed__entry\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m22 2-7 20-4-9-9-4Z\"/><path d=\"M22 2 11 13\"/></svg><span class=\"ds-feed__game\">Battlefield 6</span><span class=\"ds-feed__meta\">Overview &middot; English</span></span><span class=\"ds-feed__time\">12s ago</span></li><li class=\"ds-feed__row\"><span class=\"ds-feed__entry\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2\"/><circle cx=\"12\" cy=\"7\" r=\"4\"/></svg><span class=\"ds-feed__meta\">Installed to an account</span></span><span class=\"ds-feed__time\">1m ago</span></li></ul><div class=\"ds-feed__foot\"><span>Latest deliveries and events</span><a class=\"ds-feed__link\" href=\"#\">See all</a></div></div>",
       "css": ".ds-feed { display: flex; flex-direction: column; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); font-family: \"Geist\", sans-serif; clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 0 100%); max-width: 460px; } .ds-feed__head { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid hsl(var(--border)); } .ds-feed__title { display: flex; align-items: center; gap: 8px; font-size: 0.875rem; font-weight: 500; color: hsl(var(--foreground)); } .ds-feed__title svg { color: hsl(var(--primary)); } .ds-feed__status { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: hsl(var(--muted-foreground)); } .ds-feed__dot { width: 6px; height: 6px; border-radius: 9999px; background: hsl(var(--primary)); animation: ds-blink 2s ease-in-out infinite; } @keyframes ds-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } } .ds-feed__list { list-style: none; margin: 0; padding: 8px 16px; } .ds-feed__row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 8px 0; font-size: 0.875rem; animation: ds-feed-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; } .ds-feed__row + .ds-feed__row { border-top: 1px solid hsl(var(--border) / 0.6); } @keyframes ds-feed-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } } .ds-feed__entry { display: flex; align-items: baseline; gap: 8px; min-width: 0; } .ds-feed__entry svg { color: hsl(var(--primary)); flex-shrink: 0; transform: translateY(2px); } .ds-feed__game { font-weight: 500; color: hsl(var(--foreground)); } .ds-feed__meta { color: hsl(var(--muted-foreground)); } .ds-feed__time { flex-shrink: 0; font-family: ui-monospace, \"Cascadia Code\", \"Segoe UI Mono\", \"Roboto Mono\", monospace; font-size: 0.6875rem; color: hsl(var(--muted-foreground)); } .ds-feed__foot { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 10px 16px; border-top: 1px solid hsl(var(--border)); font-size: 0.75rem; color: hsl(var(--muted-foreground)); } .ds-feed__link { color: inherit; text-decoration: none; transition: color 150ms; } .ds-feed__link:hover { color: hsl(var(--primary)); } @media (prefers-reduced-motion: reduce) { .ds-feed__row { animation: none; } .ds-feed__dot { animation: none; } }"
     },
@@ -663,6 +685,16 @@
       {
         "name": "The Arrival-Only Motion Rule",
         "body": "Motion marks something arriving — the hero on load, a new row in the feed, the live dot. Nothing loops for decoration, nothing parallaxes, nothing moves on scroll, and every animation has a `prefers-reduced-motion` off switch.",
+        "section": "components"
+      },
+      {
+        "name": "The Scroll, Don't Wrap Rule",
+        "body": "A row of peers that overflows scrolls; it never wraps into a ragged second line. Wrapping turns one row of equals into a shape that changes with the viewport, and a lone item stranded on row two reads as a mistake. Any row that hides its scrollbar owes the desktop an affordance.",
+        "section": "components"
+      },
+      {
+        "name": "The Every Input Rule",
+        "body": "A row that hides its scrollbar owes something to each way of pointing at it: swipe for touch, drag and arrows for a mouse, focus order for a keyboard. Arrows alone are not enough — a mouse expects to grab the row itself.",
         "section": "components"
       }
     ],
