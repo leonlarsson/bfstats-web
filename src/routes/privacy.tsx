@@ -28,7 +28,7 @@ function PrivacyComponent() {
             show your recent username searches in the command options to make searching faster and easier. The full code
             for the database can be viewed{" "}
             <a className="link" href="https://github.com/leonlarsson/bfstats-api" rel="noreferrer" target="_blank">
-              here
+              on GitHub
             </a>
             . Only I can ever access this data*, and is used as described below. This bot can never read any messages
             you send.
