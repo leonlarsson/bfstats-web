@@ -9,8 +9,8 @@ export default defineConfig({
   plugins: [TanStackRouterVite({}), react(), tailwindcss()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
-      types: path.resolve(__dirname, "./types.ts"),
+      "@": path.resolve(import.meta.dirname, "./src"),
+      types: path.resolve(import.meta.dirname, "./types.ts"),
     },
   },
 });

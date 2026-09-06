@@ -14,18 +14,18 @@
     "biome": "biome check --write ."
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.8",
+    "@biomejs/biome": "2.5.11",
     "@tailwindcss/vite": "^4.2.2",
     "@tanstack/router-plugin": "^1.168.35",
     "@types/humanize-duration": "^3.27.4",
-    "@types/node": "^25.5.0",
+    "@types/node": "^26.4.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
     "tailwindcss": "^4.2.2",
     "typescript": "^7.0.2",
     "vite": "^8.2.2",
-    "wrangler": "^4.76.0"
+    "wrangler": "^4.127.1"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",
@@ -44,7 +44,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "humanize-duration": "^3.33.2",
-    "lucide-react": "^0.577.0",
+    "lucide-react": "^1.37.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "recharts": "^3.8.0",
